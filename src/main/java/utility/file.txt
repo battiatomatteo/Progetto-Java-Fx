@@ -1,0 +1,21 @@
+models/Terapia.java → la classe modello
+controllers/DoctorPageController.java → la logica
+view/DoctorPageView.java → la classe che mostra la finestra
+fxml/DoctorPage.fxml → la struttura grafica
+css/ → eventuali stili
+
+1. Modello (models)
+La classe interna Terapie va in un file dedicato in models: Terapia.java
+
+2. Controller (controllers)
+La logica di DoctorPage va in un controller, ad esempio: DoctorPageController
+
+3. Vista (view + FXML)
+La parte di interfaccia grafica va in un file FXML (in resources/com.dashapp.diabeticsystem/fxml/DoctorPage.fxml)
+e una classe JavaFX che la carica: DoctorPageView.java
+
+4. FXML (resources)
+Definisci la UI in FXML (puoi generarla anche con SceneBuilder): DoctorPage.fxml
+
+5. CSS (resources)
+Per lo stile, usa i file in resources/com.dashapp.diabeticsystem/css/.

@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.chart.*?>
+
+<ScrollPane fx:id="mainScrollPane"
+            xmlns="http://javafx.com/javafx/8"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="controllers.DoctorPageController"
+            fitToWidth="true" stylesheets="/css/doctor-page.css">
+    <content>
+        <VBox spacing="10" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml">
+
+            <!-- Sezione funzionalità del dottore -->
+            <GridPane hgap="10" vgap="10">
+                <Label fx:id="label0" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
+                <Button fx:id="logOutButton" text="LogOut" GridPane.columnIndex="60" GridPane.rowIndex="0" />
+                <Label text="Funzionalità del dottore:" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+                <Label text="1. Visualizza pazienti" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
+                <Label text="2. Gestisci terapie" GridPane.columnIndex="1" GridPane.rowIndex="3"/>
+                <Label text="3. Aggiorna informazioni pazienti" GridPane.columnIndex="1" GridPane.rowIndex="4"/>
+                <Label text="4. Visualizza andamento terapia" GridPane.columnIndex="1" GridPane.rowIndex="5"/>
+            </GridPane>
+
+            <TitledPane text="Ricerca paziente 1" >
+                <VBox spacing="10">
+                <HBox spacing="10">
+                    <TextField fx:id="usernameInput" promptText="Username"/>
+                    <Button fx:id="searchButton" text="Cerca"/>
+                    <Label fx:id="labelUsername"/>
+                </HBox>
+                <Label fx:id="label"/>
+                <GridPane hgap="10" vgap="10">
+                    <Label text="Nuovo Farmaco:" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
+                    <TextField fx:id="newFarmacoInput" promptText="Inserisci il nuovo Farmaco" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
+                    <Label text="Nuove assunzioni giornaliere:" GridPane.columnIndex="1" GridPane.rowIndex="0"/>
+                    <TextField fx:id="newAssunzioniInput" promptText="Inserisci le nuove assunzioni giornaliere" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+                    <Label text="Nuova quantità (mg):" GridPane.columnIndex="2" GridPane.rowIndex="0"/>
+                    <TextField fx:id="newQuantitaInput" promptText="Inserisci la nuova quantità (mg)" GridPane.columnIndex="2" GridPane.rowIndex="1"/>
+                    <Label text="Nuove note:" GridPane.columnIndex="0" GridPane.rowIndex="2"/>
+                    <TextField fx:id="newNoteInput" promptText="Inserisci le nuove note" GridPane.columnIndex="0" GridPane.rowIndex="3"/>
+                    <Button fx:id="addFarmacoButton" text="Aggiungi Terapia" GridPane.columnIndex="2" GridPane.rowIndex="3"/>
+                    <Button fx:id="updateButton" text="Aggiorna Terapia" GridPane.columnIndex="2" GridPane.rowIndex="4"/>
+                </GridPane>
+                <TableView fx:id="table" prefHeight="250" prefWidth="500" VBox.vgrow="ALWAYS">
+                    <columns>
+                        <TableColumn fx:id="terapiaCol" text="ID Terapia" minWidth="103"/>
+                        <TableColumn fx:id="farmacoCol" text="Farmaco" minWidth="190"/>
+                        <TableColumn fx:id="assunzioniCol" text="Assunzioni giornaliere" minWidth="170"/>
+                        <TableColumn fx:id="quantFarCol" text="Quantità farmaco (mg)" minWidth="170"/>
+                        <TableColumn fx:id="noteCol" text="Note" minWidth="260"/>
+                    </columns>
+                </TableView>
+                <Button fx:id="deleteButton" text="Elimina Terapia"/>
+                <Label fx:id="label2"/>
+                <LineChart fx:id="lineChart" prefHeight="350" prefWidth="750">
+                    <xAxis>
+                        <CategoryAxis label="Tempo"/>
+                    </xAxis>
+                    <yAxis>
+                        <NumberAxis label="Valore"/>
+                    </yAxis>
+                </LineChart>
+                </VBox>
+            </TitledPane>
+        </VBox>
+    </content>
+</ScrollPane>

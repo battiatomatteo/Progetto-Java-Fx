@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="lib">
+    <CLASSES>
+      <root url="file://$USER_HOME$/Documents/java_environment_windows (1)/EnvironmentWindows/JavaEnvironment/zulu19.32.15-ca-fx-jdk19.0.2-win_x64/zulu19.32.15-ca-fx-jdk19.0.2-win_x64/lib" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="file://$USER_HOME$/Documents/java_environment_windows (1)/EnvironmentWindows/JavaEnvironment/zulu19.32.15-ca-fx-jdk19.0.2-win_x64/zulu19.32.15-ca-fx-jdk19.0.2-win_x64/lib" />
+    </SOURCES>
+    <jarDirectory url="file://$USER_HOME$/Documents/java_environment_windows (1)/EnvironmentWindows/JavaEnvironment/zulu19.32.15-ca-fx-jdk19.0.2-win_x64/zulu19.32.15-ca-fx-jdk19.0.2-win_x64/lib" recursive="false" />
+    <jarDirectory url="file://$USER_HOME$/Documents/java_environment_windows (1)/EnvironmentWindows/JavaEnvironment/zulu19.32.15-ca-fx-jdk19.0.2-win_x64/zulu19.32.15-ca-fx-jdk19.0.2-win_x64/lib" recursive="false" type="SOURCES" />
+  </library>
+</component>

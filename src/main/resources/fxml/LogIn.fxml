@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<GridPane fx:controller="controllers.LogInController"
+          xmlns:fx="http://javafx.com/fxml" stylesheets="/css/style.css"
+          alignment="CENTER" hgap="10" vgap="10">
+    <padding>
+        <Insets top="20" right="20" bottom="20" left="20"/>
+    </padding>
+
+    <Label text="LogIn Page" GridPane.columnIndex="1" GridPane.rowIndex="0"/>
+
+    <Label text="Username:" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
+    <TextField fx:id="userField" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+
+    <Label text="Password:" GridPane.columnIndex="0" GridPane.rowIndex="2"/>
+    <HBox spacing="5" GridPane.columnIndex="1" GridPane.rowIndex="2">
+        <StackPane>
+            <PasswordField fx:id="passField" promptText="Password"/>
+            <TextField fx:id="visiblePassField" promptText="Password" visible="false" managed="false"/>
+        </StackPane>
+        <ToggleButton fx:id="showPasswordToggle" text="👁" focusTraversable="false"/>
+    </HBox>
+
+    <Label fx:id="messageLabel" GridPane.columnIndex="1" GridPane.rowIndex="3"/>
+    <Button fx:id="loginButton" text="Accedi" GridPane.columnIndex="1" GridPane.rowIndex="4"/>
+</GridPane>
