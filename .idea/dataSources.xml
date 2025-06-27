@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="DataSourceManagerImpl" format="xml" multifile-model="true">
-    <data-source source="LOCAL" name="miodatabase" uuid="010459f4-12c8-4478-af47-aa5a7b360f42">
+    <data-source source="LOCAL" name="miodatabase2" uuid="baad46d1-7669-4d61-ad6f-81f3a3b5d39c">
       <driver-ref>sqlite.xerial</driver-ref>
       <synchronize>true</synchronize>
       <jdbc-driver>org.sqlite.JDBC</jdbc-driver>
-      <jdbc-url>jdbc:sqlite:$PROJECT_DIR$/miodatabase.db</jdbc-url>
+      <jdbc-url>jdbc:sqlite:$PROJECT_DIR$/src/main/java/miodatabase.db</jdbc-url>
       <jdbc-additional-properties>
         <property name="com.intellij.clouds.kubernetes.db.enabled" value="false" />
       </jdbc-additional-properties>
       <working-dir>$ProjectFileDir$</working-dir>
     </data-source>
-    <data-source source="LOCAL" name="miodatabase2" uuid="baad46d1-7669-4d61-ad6f-81f3a3b5d39c">
+    <data-source source="LOCAL" name="miodatabase.db" uuid="6ac6e5cd-cd79-4bf0-b455-a53e8129a2eb">
       <driver-ref>sqlite.xerial</driver-ref>
       <synchronize>true</synchronize>
       <jdbc-driver>org.sqlite.JDBC</jdbc-driver>

@@ -3,10 +3,10 @@ package controllers;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
+import utility.UIUtils;
 import view.AdminPageView;
 import view.DoctorPageView;
 import view.PatientPageView;
-
 import java.sql.*;
 
 public class LogInController {
@@ -18,16 +18,24 @@ public class LogInController {
     @FXML private TextField visiblePassField;
     @FXML private ToggleButton showPasswordToggle;
 
+    @FXML
+    private void initialize() {
+        visiblePassField.textProperty().bindBidirectional(passField.textProperty());
 
-    // @FXML
-    /*private void initialize() {
+        showPasswordToggle.selectedProperty().addListener((obs, oldVal, isSelected) -> {
+            visiblePassField.setVisible(isSelected);
+            visiblePassField.setManaged(isSelected);
+            passField.setVisible(!isSelected);
+            passField.setManaged(!isSelected);
+        });
+
         loginButton.setOnAction(e -> handleLogin());
-    }*/
+    }
 
     private void handleLogin() {
         String username = userField.getText();
         String password = passField.getText();
-        if (authenticate(username, password)) {
+        if (UIUtils.authenticate(username, password, 0)) {
             messageLabel.setText("Accesso riuscito!");
             String tipo_utente = getTipoUtente(username);
 
@@ -52,21 +60,6 @@ public class LogInController {
         }
     }
 
-    private static boolean authenticate(String username, String password) {
-        String url = "jdbc:sqlite:miodatabase.db";
-        String sql = "SELECT * FROM utenti WHERE username = ? AND password = ?";
-        try (Connection conn = DriverManager.getConnection(url);
-             PreparedStatement pstmt = conn.prepareStatement(sql)) {
-            pstmt.setString(1, username);
-            pstmt.setString(2, password);
-            ResultSet rs = pstmt.executeQuery();
-            return rs.next();
-        } catch (Exception e) {
-            e.printStackTrace();
-            return false;
-        }
-    }
-
     private static String getTipoUtente(String username) {
         String url = "jdbc:sqlite:miodatabase.db";
         String sql = "SELECT tipo_utente FROM utenti WHERE username = ?";
@@ -87,19 +80,5 @@ public class LogInController {
 
     private static String getErrore() {
         return "Errore di autenticazione. Riprova.";
-    }
-
-    @FXML
-    private void initialize() {
-        visiblePassField.textProperty().bindBidirectional(passField.textProperty());
-
-        showPasswordToggle.selectedProperty().addListener((obs, oldVal, isSelected) -> {
-            visiblePassField.setVisible(isSelected);
-            visiblePassField.setManaged(isSelected);
-            passField.setVisible(!isSelected);
-            passField.setManaged(!isSelected);
-        });
-
-        loginButton.setOnAction(e -> handleLogin());
     }
 }

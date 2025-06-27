@@ -6,6 +6,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.stage.Stage;
 import models.User;
+import utility.UIUtils;
 import java.sql.*;
 
 public class AdminPageController {
@@ -71,7 +72,7 @@ public class AdminPageController {
         String medico = medicoInput.getText();
 
         if (username.isEmpty() || tipoUtente.isEmpty() || password.isEmpty()) {
-            showAlert(Alert.AlertType.ERROR, "Errore", "Compila tutti i campi obbligatori!");
+            UIUtils.showAlert(Alert.AlertType.ERROR, "Errore", "Compila tutti i campi obbligatori!");
             return;
         }
 
@@ -82,7 +83,7 @@ public class AdminPageController {
             pstmt.setString(1, username);
             ResultSet rs = pstmt.executeQuery();
             if (rs.next() && rs.getInt(1) > 0) {
-                showAlert(Alert.AlertType.ERROR, "Errore", "L'utente con questo username esiste già!");
+                UIUtils.showAlert(Alert.AlertType.ERROR, "Errore", "L'utente con questo username esiste già!");
                 usernameInput.clear();
                 tipoUtenteInput.clear();
                 passwordInput.clear();
@@ -107,7 +108,7 @@ public class AdminPageController {
             tipoUtenteInput.clear();
             passwordInput.clear();
             medicoInput.clear();
-            showAlert(Alert.AlertType.INFORMATION, "Utente aggiunto", "Nuovo utente inserito con successo!");
+            UIUtils.showAlert(Alert.AlertType.INFORMATION, "Utente aggiunto", "Nuovo utente inserito con successo!");
         } catch (Exception ex) {
             ex.printStackTrace();
         }
@@ -132,15 +133,7 @@ public class AdminPageController {
                 }
             }
         } else {
-            showAlert(Alert.AlertType.WARNING, "Nessuna selezione", "Seleziona un utente dalla tabella da eliminare.");
+            UIUtils.showAlert(Alert.AlertType.WARNING, "Nessuna selezione", "Seleziona un utente dalla tabella da eliminare.");
         }
-    }
-
-    private void showAlert(Alert.AlertType type, String title, String content) {
-        Alert alert = new Alert(type);
-        alert.setTitle(title);
-        alert.setHeaderText(null);
-        alert.setContentText(content);
-        alert.showAndWait();
     }
 }

@@ -1,7 +1,6 @@
 package controllers;
 
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.scene.control.*;
 import javafx.scene.chart.*;
 import javafx.scene.chart.XYChart;
@@ -9,8 +8,6 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import models.Terapia;
 import utility.UIUtils;
-
-import java.io.IOException;
 import java.sql.*;
 
 public class PatientPaneController {
@@ -47,7 +44,7 @@ public class PatientPaneController {
             UIUtils.showAlert(Alert.AlertType.WARNING, "Nessuna selezione", "Inserire un utente prima di eseguire la ricerca.");
             return;
         }
-        if (!authenticate(username)) {
+        if (!UIUtils.authenticate(username, "", 1)) {
             UIUtils.showAlert(Alert.AlertType.ERROR, "Errore di ricerca", "Paziente non trovato.");
             return;
         }
@@ -174,20 +171,4 @@ public class PatientPaneController {
             UIUtils.showAlert(Alert.AlertType.WARNING, "Nessuna selezione", "Seleziona una terapia da eliminare.");
         }
     }
-
-    private boolean authenticate(String username) {
-        String url = "jdbc:sqlite:miodatabase.db";
-        String sql = "SELECT * FROM utenti WHERE username = ?";
-        try (Connection conn = DriverManager.getConnection(url);
-             PreparedStatement pstmt = conn.prepareStatement(sql)) {
-            pstmt.setString(1, username);
-            ResultSet rs = pstmt.executeQuery();
-            return rs.next();
-        } catch (Exception e) {
-            e.printStackTrace();
-            return false;
-        }
-    }
-
-
 }
