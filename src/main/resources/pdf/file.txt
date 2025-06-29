@@ -1,0 +1,70 @@
+models/Terapia.java → la classe modello
+controllers/DoctorPageController.java → la logica
+view/DoctorPageView.java → la classe che mostra la finestra
+fxml/DoctorPage.fxml → la struttura grafica
+css/ → eventuali stili
+
+1. Modello (models)
+La classe interna Terapie va in un file dedicato in models: Terapia.java
+
+2. Controller (controllers)
+La logica di DoctorPage va in un controller, ad esempio: DoctorPageController
+
+3. Vista (view + FXML)
+La parte di interfaccia grafica va in un file FXML (in resources/com.dashapp.diabeticsystem/fxml/DoctorPage.fxml)
+e una classe JavaFX che la carica: DoctorPageView.java
+
+4. FXML (resources)
+Definisci la UI in FXML (puoi generarla anche con SceneBuilder): DoctorPage.fxml
+
+5. CSS (resources)
+Per lo stile, usa i file in resources/com.dashapp.diabeticsystem/css/.
+
+
+
+
+
+<VBox fx:id="patientsContainer" spacing="10">
+                <!-- Il primo TitledPane (originale) -->
+                <TitledPane text="Ricerca paziente 1" >
+                    <VBox spacing="10">
+                        <HBox spacing="10">
+                            <TextField fx:id="usernameInput" promptText="Username"/>
+                            <Button fx:id="searchButton" text="Cerca"/>
+                            <Label fx:id="labelUsername"/>
+                        </HBox>
+                        <Label fx:id="label"/>
+                        <GridPane hgap="10" vgap="10">
+                            <Label text="Nuovo Farmaco:" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
+                            <TextField fx:id="newFarmacoInput" promptText="Inserisci il nuovo Farmaco" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
+                            <Label text="Assunzioni giornaliere:" GridPane.columnIndex="1" GridPane.rowIndex="0"/>
+                            <TextField fx:id="newAssunzioniInput" promptText="..." GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+                            <Label text="Quantità (mg):" GridPane.columnIndex="2" GridPane.rowIndex="0"/>
+                            <TextField fx:id="newQuantitaInput" promptText="..." GridPane.columnIndex="2" GridPane.rowIndex="1"/>
+                            <Label text="Note:" GridPane.columnIndex="0" GridPane.rowIndex="2"/>
+                            <TextField fx:id="newNoteInput" promptText="..." GridPane.columnIndex="0" GridPane.rowIndex="3"/>
+                            <Button fx:id="addFarmacoButton" text="Aggiungi Terapia" GridPane.columnIndex="2" GridPane.rowIndex="3"/>
+                            <Button fx:id="updateButton" text="Aggiorna Terapia" GridPane.columnIndex="2" GridPane.rowIndex="4"/>
+                        </GridPane>
+                        <TableView fx:id="table" prefHeight="250" prefWidth="500" VBox.vgrow="ALWAYS">
+                            <columns>
+                                <TableColumn fx:id="terapiaCol" text="ID Terapia" minWidth="103"/>
+                                <TableColumn fx:id="farmacoCol" text="Farmaco" minWidth="190"/>
+                                <TableColumn fx:id="assunzioniCol" text="Assunzioni" minWidth="170"/>
+                                <TableColumn fx:id="quantFarCol" text="Quantità" minWidth="170"/>
+                                <TableColumn fx:id="noteCol" text="Note" minWidth="260"/>
+                            </columns>
+                        </TableView>
+                        <Button fx:id="deleteButton" text="Elimina Terapia"/>
+                        <Label fx:id="label2"/>
+                        <LineChart fx:id="lineChart" prefHeight="300">
+                            <xAxis>
+                                <CategoryAxis label="Tempo"/>
+                            </xAxis>
+                            <yAxis>
+                                <NumberAxis label="Valore"/>
+                            </yAxis>
+                        </LineChart>
+                    </VBox>
+                </TitledPane>
+            </VBox>

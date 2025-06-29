@@ -1,14 +1,29 @@
 package controllers;
 
+import com.lowagie.text.Font;
+import com.lowagie.text.Image;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.chart.*;
 import javafx.scene.chart.XYChart;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import models.Terapia;
 import utility.UIUtils;
 import java.sql.*;
+
+import com.lowagie.text.*;
+import com.lowagie.text.pdf.*;
+import javafx.embed.swing.SwingFXUtils;
+import javafx.scene.SnapshotParameters;
+import javafx.scene.image.WritableImage;
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.FileOutputStream;
 
 public class PatientPaneController {
 
@@ -16,7 +31,7 @@ public class PatientPaneController {
     @FXML private Label labelUsername, label, label2;
     @FXML private TableView<Terapia> table;
     @FXML private TableColumn<Terapia, String> terapiaCol, farmacoCol, assunzioniCol, quantFarCol, noteCol;
-    @FXML private Button searchButton, addFarmacoButton, updateButton, deleteButton;
+    @FXML private Button searchButton, addFarmacoButton, updateButton, deleteButton, generaPDF;
     @FXML private LineChart<String, Number> lineChart;
 
     private final ObservableList<Terapia> data = FXCollections.observableArrayList();
@@ -35,6 +50,7 @@ public class PatientPaneController {
         searchButton.setOnAction(e -> searchTerapie());
         addFarmacoButton.setOnAction(e -> aggiungiTerapia());
         deleteButton.setOnAction(e -> eliminaTerapia());
+        generaPDF.setOnAction(e -> generaPDFReport("Paziente-PDF"));
     }
 
     private void searchTerapie() {
@@ -169,6 +185,63 @@ public class PatientPaneController {
             }
         } else {
             UIUtils.showAlert(Alert.AlertType.WARNING, "Nessuna selezione", "Seleziona una terapia da eliminare.");
+        }
+    }
+
+    public void generaPDFReport(String nomePaziente) {
+        try {
+            // 1. Crea documento
+            Document document = new Document(PageSize.A4);
+            String nome_file = nomePaziente + ".pdf";
+            PdfWriter.getInstance(document, new FileOutputStream(nome_file));    // cambia percorso salvataggio file col nomepaziente
+            document.open();
+
+            // 2. Titolo e nome paziente
+            Font titoloFont = new Font(Font.HELVETICA, 18, Font.BOLD);
+            Paragraph titolo = new Paragraph("Report Paziente", titoloFont);
+            titolo.setAlignment(Element.ALIGN_CENTER);
+            document.add(titolo);
+            document.add(new Paragraph("Nome: " + nomePaziente));
+            document.add(Chunk.NEWLINE);
+
+            // 3. Tabella PDF
+            PdfPTable pdfTable = new PdfPTable(5);
+            pdfTable.setWidthPercentage(100);
+            pdfTable.addCell("Terapia");
+            pdfTable.addCell("Farmaco");
+            pdfTable.addCell("Assunzioni");
+            pdfTable.addCell("Quantità");
+            pdfTable.addCell("Note");
+
+            for (Terapia terapia : table.getItems()) {
+                pdfTable.addCell(terapia.getIdTerapia());
+                pdfTable.addCell(terapia.getFarmaco());
+                pdfTable.addCell(terapia.getAssunzioni());
+                pdfTable.addCell(terapia.getQuantita());
+                pdfTable.addCell(terapia.getNote());
+            }
+
+            document.add(pdfTable);
+            document.add(Chunk.NEWLINE);
+
+            // 4. Grafico come immagine
+            WritableImage snapshot = lineChart.snapshot(new SnapshotParameters(), null);
+            BufferedImage bufferedImage = SwingFXUtils.fromFXImage(snapshot, null);
+            File chartFile = new File("grafico.png");
+            ImageIO.write(bufferedImage, "png", chartFile);
+
+            Image chartImage = Image.getInstance("grafico.png");
+            chartImage.scaleToFit(500, 300);
+            chartImage.setAlignment(Image.MIDDLE);
+            document.add(chartImage);
+
+            // 5. Chiudi
+            document.close();
+            chartFile.delete(); // pulizia file temporaneo
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            UIUtils.showAlert(Alert.AlertType.ERROR, "Errore", "Impossibile generare il PDF.");
         }
     }
 }

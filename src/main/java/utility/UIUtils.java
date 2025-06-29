@@ -1,6 +1,10 @@
 package utility;
 
+import javafx.embed.swing.JFXPanel;
 import javafx.scene.control.Alert;
+import javafx.stage.Stage;
+import view.LogInView;
+
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -46,4 +50,15 @@ public class UIUtils {
             }
         }
     }
+
+    /*public static void LogOutButton(){
+        try {
+            JFXPanel logOutButton = new JFXPanel();
+            Stage stage = (Stage) logOutButton.getScene().getWindow();
+            stage.close();
+            new LogInView().start(new Stage());
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }*/
 }

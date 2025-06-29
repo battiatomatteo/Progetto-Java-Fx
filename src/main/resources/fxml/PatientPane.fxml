@@ -42,5 +42,8 @@
                 <NumberAxis label="Valore"/>
             </yAxis>
         </LineChart>
+        <GridPane>
+            <Button fx:id="generaPDF" text="GeneraPDF" />
+        </GridPane>
     </VBox>
 </TitledPane>

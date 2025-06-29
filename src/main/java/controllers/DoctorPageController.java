@@ -42,6 +42,9 @@ public class DoctorPageController {
             if (count > 0) patientsContainer.getChildren().remove(count - 1);
         });
 
+
+        aggiungiPaziente();
+
     }
 
     private void LogOutButton(){
@@ -59,6 +62,7 @@ public class DoctorPageController {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/PatientPane.fxml"));
             TitledPane pane = loader.load();
             pane.setText("Ricerca paziente " + (patientsContainer.getChildren().size() + 1));
+            pane.setText("Ricerca paziente ");
             patientsContainer.getChildren().add(pane);
         } catch (IOException e) {
             e.printStackTrace();

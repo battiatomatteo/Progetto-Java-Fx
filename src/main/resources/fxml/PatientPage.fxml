@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox fx:controller="controllers.PatientPageController"
+        xmlns:fx="http://javafx.com/fxml" stylesheets="/css/style.css">
+
+    <GridPane hgap="10" vgap="10">
+
+        <Button fx:id="logOutButton" text="LogOut" GridPane.columnIndex="6" GridPane.rowIndex="0" />
+
+        <Label text="Qui puoi inserire le somministrazioni giornaliere pre e post pasto ." GridPane.columnIndex="0" GridPane.rowIndex="0"/>
+
+        <TableView fx:id="tableView" editable="true" minWidth="415" maxWidth="420" minHeight="100" maxHeight="105" GridPane.columnIndex="0" GridPane.rowIndex="2">
+            <columns>
+                <TableColumn fx:id="pastoColumn" text="Pasto" minWidth="103"/>
+                <TableColumn fx:id="orarioColumn" text="Orario" minWidth="103"/>
+                <TableColumn fx:id="preColumn" text="Pre Pasto" minWidth="103"/>
+                <TableColumn fx:id="postColumn" text="Post Pasto" minWidth="103"/>
+            </columns>
+        </TableView>
+
+        <Button text="Salva somministrazione" onAction="#handleAddRow" GridPane.columnIndex="0" GridPane.rowIndex="4"/>
+    </GridPane>
+</VBox>
