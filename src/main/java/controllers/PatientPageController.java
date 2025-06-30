@@ -15,6 +15,7 @@ import models.Pasto;
 import javafx.animation.KeyFrame;
 import javafx.util.Duration;
 import javafx.application.Platform;
+import utility.UIUtils;
 import view.LogInView;
 
 
@@ -25,25 +26,48 @@ public class PatientPageController {
     @FXML private TableColumn<Pasto, String> postColumn;
     @FXML private TableColumn<Pasto, String> orarioColumn;
     @FXML private Label messageStart;
-    @FXML private Button logOutButton;
+    @FXML private Button logOutButton, nuovaSomministrazioneButton;
 
     private final ObservableList<Pasto> pastiData = FXCollections.observableArrayList();
 
     @FXML
     private void initialize() {
         //messageStart.setText("Qui puoi inserire le somministrazioni giornaliere pre e post pasto .");
+        tableView.setEditable(true);
 
-        pastoColumn.setCellValueFactory(cell -> cell.getValue().pastoProperty());
-        orarioColumn.setCellValueFactory(cell -> cell.getValue().orarioProperty());
-        preColumn.setCellValueFactory(cell -> cell.getValue().preProperty());
-        postColumn.setCellValueFactory(cell -> cell.getValue().postProperty());
+        // Imposta le proprietà dei dati
+        pastoColumn.setCellValueFactory(cellData -> cellData.getValue().pastoProperty());
+        orarioColumn.setCellValueFactory(cellData -> cellData.getValue().orarioProperty());
+        preColumn.setCellValueFactory(cellData -> cellData.getValue().preProperty());
+        postColumn.setCellValueFactory(cellData -> cellData.getValue().postProperty());
 
+        // Rendi le celle editabili
         pastoColumn.setCellFactory(TextFieldTableCell.forTableColumn());
         orarioColumn.setCellFactory(TextFieldTableCell.forTableColumn());
         preColumn.setCellFactory(TextFieldTableCell.forTableColumn());
         postColumn.setCellFactory(TextFieldTableCell.forTableColumn());
 
-        tableView.setEditable(true);
+        // Salva le modifiche nel modello
+        pastoColumn.setOnEditCommit(event -> {
+            Pasto p = event.getRowValue();
+            p.setPasto(event.getNewValue());
+        });
+
+        orarioColumn.setOnEditCommit(event -> {
+            Pasto p = event.getRowValue();
+            p.setOrario(event.getNewValue());
+        });
+
+        preColumn.setOnEditCommit(event -> {
+            Pasto p = event.getRowValue();
+            p.setPre(event.getNewValue());
+        });
+
+        postColumn.setOnEditCommit(event -> {
+            Pasto p = event.getRowValue();
+            p.setPost(event.getNewValue());
+        });
+
         tableView.setItems(pastiData);
 
         // Dati iniziali
@@ -52,7 +76,7 @@ public class PatientPageController {
                 new Pasto("Pranzo", "13:00", "", ""),
                 new Pasto("Cena", "19:30", "", "")
         );
-
+        nuovaSomministrazioneButton.setOnAction(e -> nuovaSomministrazione());
         avviaPromemoria();
         logOutButton.setOnAction(e -> LogOutButton());
     }
@@ -92,8 +116,38 @@ public class PatientPageController {
         }
     }
 
-    @FXML
-    private void handleAddRow() {
-        pastiData.add(new Pasto("Nuovo Pasto", "", "", ""));
+    private void nuovaSomministrazione(){
+        try{
+            stampaTabella();
+            StringBuilder riepilogo = new StringBuilder("Riepilogo somministrazione:\n");
+
+            for (Pasto p : tableView.getItems()) {
+                riepilogo.append("🍽 ")
+                        .append(p.getPasto())
+                        .append(" (").append(p.getOrario()).append("): ")
+                        .append("Pre = ").append(p.getPre()).append(", ")
+                        .append("Post = ").append(p.getPost()).append("\n");
+            }
+
+            UIUtils.showAlert(Alert.AlertType.INFORMATION, "Somministrazione salvata", riepilogo.toString());
+
+            // Qui potresti anche chiamare il metodo DAO per salvare nel DB
+            // esempio: pastoDAO.updatePasto(p);
+        }catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
+
+    private void stampaTabella() {
+        System.out.println("===== CONTENUTO TABELLA =====");
+        for (Pasto p : tableView.getItems()) {
+            System.out.println(
+                    "Pasto: " + p.getPasto() +
+                    " | Orario: " + p.getOrario() +
+                    " | Pre Pasto: " + p.getPre() +
+                    " | Post Pasto: " + p.getPost());
+        }
+        System.out.println("=============================");
+    }
+
 }

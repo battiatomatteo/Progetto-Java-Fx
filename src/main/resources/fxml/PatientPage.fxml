@@ -9,7 +9,7 @@
 
         <Button fx:id="logOutButton" text="LogOut" GridPane.columnIndex="6" GridPane.rowIndex="0" />
 
-        <Label text="Qui puoi inserire le somministrazioni giornaliere pre e post pasto ." GridPane.columnIndex="0" GridPane.rowIndex="0"/>
+        <Label text="Qui puoi inserire le somministrazioni giornaliere pre e post pasto ." GridPane.columnIndex="0" GridPane.rowIndex="0" GridPane.columnSpan="1"/>
 
         <TableView fx:id="tableView" editable="true" minWidth="415" maxWidth="420" minHeight="100" maxHeight="105" GridPane.columnIndex="0" GridPane.rowIndex="2">
             <columns>
@@ -20,6 +20,6 @@
             </columns>
         </TableView>
 
-        <Button text="Salva somministrazione" onAction="#handleAddRow" GridPane.columnIndex="0" GridPane.rowIndex="4"/>
+        <Button fx:id="nuovaSomministrazioneButton" text="Salva somministrazione" GridPane.columnIndex="0" GridPane.rowIndex="4"/>
     </GridPane>
 </VBox>
