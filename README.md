@@ -8,7 +8,7 @@ Questo progetto è sviluppato utilizzando:
 ## 📑 Struttura del Progetto
 
 ### 🔑 Pagina di Login
-- Simile a quella di React.
+
 - Non prevede la registrazione: gestisce e crea l'Admin.
 
 ### 👥 Tipologie di Utenti
