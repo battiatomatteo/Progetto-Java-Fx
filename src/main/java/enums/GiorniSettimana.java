@@ -9,4 +9,3 @@ public enum GiorniSettimana {
     SABATO,
     DOMENICA
 }
-

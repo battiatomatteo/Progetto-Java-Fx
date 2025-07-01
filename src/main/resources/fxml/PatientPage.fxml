@@ -3,7 +3,7 @@
 <?import javafx.scene.layout.*?>
 
 <VBox fx:controller="controllers.PatientPageController"
-        xmlns:fx="http://javafx.com/fxml" stylesheets="/css/style.css">
+        xmlns:fx="http://javafx.com/fxml" stylesheets="/css/patient-page.css">
 
     <GridPane hgap="10" vgap="10">
 
@@ -21,5 +21,11 @@
         </TableView>
 
         <Button fx:id="nuovaSomministrazioneButton" text="Salva somministrazione" GridPane.columnIndex="0" GridPane.rowIndex="4"/>
+
+        <Label text="Inserire qui eventuali sintomi :" GridPane.columnIndex="0" GridPane.rowIndex="6" />
+
+        <TextArea fx:id="textArea" promptText="Scrivi qualcosa qui..." wrapText="true" prefRowCount="10" GridPane.columnIndex="0" GridPane.rowIndex="7" />
+        <Button text="Salva sintomi" fx:id="salvaSintomi"  GridPane.columnIndex="0" GridPane.rowIndex="9" />
+
     </GridPane>
 </VBox>

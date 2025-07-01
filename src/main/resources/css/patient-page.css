@@ -1,0 +1,59 @@
+/* Layout generale */
+.vbox {
+    -fx-padding: 20;
+    -fx-spacing: 15;
+    -fx-background-color: #f9f9f9;
+}
+
+/* Pulsanti */
+.button {
+    -fx-background-color:  #4285f4;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-padding: 8 16;
+    -fx-background-radius: 5;
+    -fx-cursor: hand;
+}
+
+.button:hover {
+    -fx-background-color:  #4285f4;
+}
+
+/* Label */
+.label {
+    -fx-font-size: 14px;
+    -fx-text-fill: #333;
+}
+
+/* TableView */
+.table-view {
+    -fx-border-color: #ccc;
+    -fx-border-radius: 5;
+    -fx-background-radius: 5;
+    -fx-background-color: #ffffff;
+    -fx-table-cell-border-color: #ddd;
+    -fx-font-size: 13px;
+}
+
+/* Colonne della tabella */
+.table-column {
+    -fx-alignment: CENTER;
+}
+
+/* TextArea */
+.text-area {
+    -fx-font-size: 13px;
+    -fx-border-color: #ccc;
+    -fx-border-radius: 5;
+    -fx-background-radius: 5;
+}
+
+/* Focus per TextArea */
+.text-area:focused {
+    -fx-border-color: #4285f4;
+}
+
+/* GridPane spacing (non funziona direttamente via CSS ma utile per margini interni degli elementi) */
+.grid-pane {
+    -fx-padding: 10;
+}

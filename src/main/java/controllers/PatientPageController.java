@@ -26,7 +26,8 @@ public class PatientPageController {
     @FXML private TableColumn<Pasto, String> postColumn;
     @FXML private TableColumn<Pasto, String> orarioColumn;
     @FXML private Label messageStart;
-    @FXML private Button logOutButton, nuovaSomministrazioneButton;
+    @FXML private Button logOutButton, nuovaSomministrazioneButton, salvaSintomi;
+    @FXML private TextArea textArea;
 
     private final ObservableList<Pasto> pastiData = FXCollections.observableArrayList();
 
@@ -79,6 +80,7 @@ public class PatientPageController {
         nuovaSomministrazioneButton.setOnAction(e -> nuovaSomministrazione());
         avviaPromemoria();
         logOutButton.setOnAction(e -> LogOutButton());
+        salvaSintomi.setOnAction(e -> salvaSintomi());
     }
 
     private void avviaPromemoria() {
@@ -148,6 +150,11 @@ public class PatientPageController {
                     " | Post Pasto: " + p.getPost());
         }
         System.out.println("=============================");
+    }
+
+    private void salvaSintomi() {
+        String testo = textArea.getText();
+        System.out.println("Hai scritto: " + testo);
     }
 
 }
