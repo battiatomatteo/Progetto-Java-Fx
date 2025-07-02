@@ -8,8 +8,10 @@ import javafx.animation.Timeline;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.scene.chart.LineChart;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.TextFieldTableCell;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import models.Pasto;
 import javafx.animation.KeyFrame;
@@ -28,6 +30,7 @@ public class PatientPageController {
     @FXML private Label messageStart;
     @FXML private Button logOutButton, nuovaSomministrazioneButton, salvaSintomi;
     @FXML private TextArea textArea;
+    @FXML private VBox lineChart;
 
     private final ObservableList<Pasto> pastiData = FXCollections.observableArrayList();
 
@@ -35,6 +38,8 @@ public class PatientPageController {
     private void initialize() {
         //messageStart.setText("Qui puoi inserire le somministrazioni giornaliere pre e post pasto .");
         tableView.setEditable(true);
+
+        LineChart<?, ?> chart = (LineChart<?, ?>) lineChart.getChildren().get(0);
 
         // Imposta le proprietà dei dati
         pastoColumn.setCellValueFactory(cellData -> cellData.getValue().pastoProperty());

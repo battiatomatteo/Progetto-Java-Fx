@@ -26,6 +26,6 @@
 
         <TextArea fx:id="textArea" promptText="Scrivi qualcosa qui..." wrapText="true" prefRowCount="10" GridPane.columnIndex="0" GridPane.rowIndex="7" />
         <Button text="Salva sintomi" fx:id="salvaSintomi"  GridPane.columnIndex="0" GridPane.rowIndex="9" />
-
+        <fx:include source="PatientChart.fxml" fx:id="lineChart" />
     </GridPane>
 </VBox>

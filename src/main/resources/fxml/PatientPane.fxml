@@ -34,14 +34,7 @@
         </TableView>
         <Button fx:id="deleteButton" text="Elimina Terapia"/>
         <Label fx:id="label2"/>
-        <LineChart fx:id="lineChart" prefHeight="300">
-            <xAxis>
-                <CategoryAxis label="Tempo"/>
-            </xAxis>
-            <yAxis>
-                <NumberAxis label="Valore"/>
-            </yAxis>
-        </LineChart>
+        <fx:include source="PatientChart.fxml" fx:id="lineChart" />
         <GridPane>
             <Button fx:id="generaPDF" text="GeneraPDF" />
         </GridPane>

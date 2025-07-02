@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.chart.LineChart?>
+<?import javafx.scene.chart.CategoryAxis?>
+<?import javafx.scene.chart.NumberAxis?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.PatientChartController">
+    <LineChart fx:id="PatientChart" prefWidth="800" prefHeight="600">
+        <xAxis>
+            <CategoryAxis fx:id="xAxis" label="Giorno/ora"/>
+        </xAxis>
+        <yAxis>
+            <NumberAxis fx:id="yAxis" label="Valore"/>
+        </yAxis>
+    </LineChart>
+</VBox>

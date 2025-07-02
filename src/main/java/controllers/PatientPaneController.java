@@ -3,6 +3,7 @@ package controllers;
 import com.lowagie.text.Font;
 import com.lowagie.text.Image;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.control.*;
 import javafx.scene.chart.*;
 import javafx.scene.chart.XYChart;
@@ -11,8 +12,11 @@ import javafx.collections.ObservableList;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.VBox;
 import models.Terapia;
 import utility.UIUtils;
+
+import java.io.IOException;
 import java.sql.*;
 
 import com.lowagie.text.*;
@@ -32,8 +36,7 @@ public class PatientPaneController {
     @FXML private TableView<Terapia> table;
     @FXML private TableColumn<Terapia, String> terapiaCol, farmacoCol, assunzioniCol, quantFarCol, noteCol;
     @FXML private Button searchButton, addFarmacoButton, updateButton, deleteButton, generaPDF;
-    @FXML private LineChart<String, Number> lineChart;
-
+    @FXML private VBox lineChart;
     private final ObservableList<Terapia> data = FXCollections.observableArrayList();
 
     @FXML
@@ -45,7 +48,7 @@ public class PatientPaneController {
         noteCol.setCellValueFactory(cell -> cell.getValue().noteProperty());
         table.setItems(data);
 
-        lineChart.setTitle("Andamento paziente");
+        LineChart<?, ?> chart = (LineChart<?, ?>) lineChart.getChildren().get(0);
 
         searchButton.setOnAction(e -> searchTerapie());
         addFarmacoButton.setOnAction(e -> aggiungiTerapia());
@@ -89,16 +92,7 @@ public class PatientPaneController {
         table.setItems(data);
 
         label2.setText("Grafico andamento terapia del paziente :");
-        lineChart.getData().clear();
-        XYChart.Series<String, Number> series = new XYChart.Series<>();
-        series.setName("Valori");
-        // Esempio dati fittizi
-        series.getData().add(new XYChart.Data<>("Lun", 36.5));
-        series.getData().add(new XYChart.Data<>("Mar", 37.0));
-        series.getData().add(new XYChart.Data<>("Mer", 36.8));
-        series.getData().add(new XYChart.Data<>("Gio", 37.2));
-        series.getData().add(new XYChart.Data<>("Ven", 36.9));
-        lineChart.getData().add(series);
+
     }
 
     private void aggiungiTerapia() {
