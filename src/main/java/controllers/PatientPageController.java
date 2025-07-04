@@ -1,6 +1,10 @@
 package controllers;
 
 import javafx.animation.Animation;
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.time.*;
 import java.time.format.DateTimeFormatter;
 
@@ -19,6 +23,7 @@ import javafx.util.Duration;
 import javafx.application.Platform;
 import utility.UIUtils;
 import view.LogInView;
+import java.time.LocalDate;
 
 
 public class PatientPageController {
@@ -31,13 +36,14 @@ public class PatientPageController {
     @FXML private Button logOutButton, nuovaSomministrazioneButton, salvaSintomi;
     @FXML private TextArea textArea;
     @FXML private VBox lineChart;
-
+    LocalDate oggi = LocalDate.now();
     private final ObservableList<Pasto> pastiData = FXCollections.observableArrayList();
 
     @FXML
     private void initialize() {
         //messageStart.setText("Qui puoi inserire le somministrazioni giornaliere pre e post pasto .");
         tableView.setEditable(true);
+        tableView.setColumnResizePolicy(TableView.UNCONSTRAINED_RESIZE_POLICY);
 
         LineChart<?, ?> chart = (LineChart<?, ?>) lineChart.getChildren().get(0);
 
@@ -77,13 +83,14 @@ public class PatientPageController {
         tableView.setItems(pastiData);
 
         // Dati iniziali
-        pastiData.addAll(
+        /*pastiData.addAll(
                 new Pasto("Colazione", "08:00", "", ""),
                 new Pasto("Pranzo", "13:00", "", ""),
                 new Pasto("Cena", "19:30", "", "")
-        );
+        );*/
         nuovaSomministrazioneButton.setOnAction(e -> nuovaSomministrazione());
         avviaPromemoria();
+        caricaSomministrazioniOdierne();
         logOutButton.setOnAction(e -> LogOutButton());
         salvaSintomi.setOnAction(e -> salvaSintomi());
     }
@@ -124,7 +131,28 @@ public class PatientPageController {
     }
 
     private void nuovaSomministrazione(){
-        try{
+
+        /*int giorno = oggi.getDayOfMonth();
+        int mese = oggi.getMonthValue(); // 1-12
+        int anno = oggi.getYear();
+        String dataFormattata = oggi.format(DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+        String dataPerDatabase = oggi.toString();*/
+
+        String url = "jdbc:sqlite:miodatabase.db";
+        String sql = "INSERT INTO rilevazioni_giornaliere (data_rilevazione, rilevazione_post_pasto, note_rilevazione, ID_terapia, rilevazione_pre_pasto, orario) VALUES ( ?, ?, ?, ?, ?, ?)";
+        try(Connection conn = DriverManager.getConnection(url);
+            PreparedStatement pstmt = conn.prepareStatement(sql)){
+            // salvo i dati nel db
+            for (Pasto p : tableView.getItems()) {
+                pstmt.setString(1,  oggi.toString() );
+                pstmt.setFloat(2, Float.parseFloat(p.getPost()));
+                pstmt.setString(3, "note...");
+                pstmt.setInt(4, 2);
+                pstmt.setFloat(5, Float.parseFloat(p.getPre()));
+                pstmt.setString(6,p.getOrario());
+                pstmt.executeUpdate();
+            }
+
             stampaTabella();
             StringBuilder riepilogo = new StringBuilder("Riepilogo somministrazione:\n");
 
@@ -144,6 +172,59 @@ public class PatientPageController {
             throw new RuntimeException(e);
         }
     }
+
+    private void caricaSomministrazioniOdierne() {
+        String url = "jdbc:sqlite:miodatabase.db";
+        LocalDate oggi = LocalDate.now();
+        String dataOdierna = oggi.toString(); // es: 2025-07-03
+        String sql = "SELECT * FROM rilevazioni_giornaliere WHERE data_rilevazione == ?";
+
+        pastiData.clear(); // Pulisce la tabella
+
+        try (Connection conn = DriverManager.getConnection(url);
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setString(1, dataOdierna);
+            var rs = pstmt.executeQuery();
+            boolean trovato = false;
+            while (rs.next()) {
+                System.out.println("ciao , sono nel while !");
+                trovato = true;
+                String orarioCompleto = rs.getString("data_rilevazione");
+                String orario = rs.getString("orario");
+                String pre = Float.toString(rs.getFloat("rilevazione_pre_pasto"));
+                String post = Float.toString(rs.getFloat("rilevazione_post_pasto"));
+
+                String nomePasto = switch (orario) {
+                    case "08:00" -> "Colazione";
+                    case "13:00" -> "Pranzo";
+                    case "19:30" -> "Cena";
+                    default -> "Pasto";
+                };
+
+                Pasto pasto = new Pasto(nomePasto, orario, pre, post);
+
+                pastiData.add(pasto);
+            }
+
+            // Se nessuna somministrazione trovata, carico la tabella vuota base
+            if (!trovato) {
+                pastiData.addAll(
+                        new Pasto("Colazione", "08:00", "", ""),
+                        new Pasto("Pranzo", "13:00", "", ""),
+                        new Pasto("Cena", "19:30", "", "")
+                );
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            UIUtils.showAlert(Alert.AlertType.ERROR, "Errore", "Errore durante il caricamento delle somministrazioni.");
+        }
+    }
+
+
+
+
 
     private void stampaTabella() {
         System.out.println("===== CONTENUTO TABELLA =====");

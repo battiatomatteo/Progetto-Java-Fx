@@ -2,30 +2,36 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<VBox fx:controller="controllers.PatientPageController"
-        xmlns:fx="http://javafx.com/fxml" stylesheets="/css/patient-page.css">
+<?import javafx.geometry.Insets?>
+<ScrollPane fx:controller="controllers.PatientPageController"
+            xmlns:fx="http://javafx.com/fxml" stylesheets="/css/patient-page.css">
+    <content>
+        <GridPane hgap="10" vgap="10">
 
-    <GridPane hgap="10" vgap="10">
+            <Button fx:id="logOutButton" text="LogOut" GridPane.columnIndex="6" GridPane.rowIndex="0" />
 
-        <Button fx:id="logOutButton" text="LogOut" GridPane.columnIndex="6" GridPane.rowIndex="0" />
+            <Label text="Qui puoi inserire le somministrazioni giornaliere pre e post pasto ." GridPane.columnIndex="0" GridPane.rowIndex="0" GridPane.columnSpan="1"/>
 
-        <Label text="Qui puoi inserire le somministrazioni giornaliere pre e post pasto ." GridPane.columnIndex="0" GridPane.rowIndex="0" GridPane.columnSpan="1"/>
+            <TableView fx:id="tableView" editable="true"
+                       minWidth="440" maxWidth="440" prefWidth="440"
+                       minHeight="120" maxHeight="120" prefHeight="120"
+                       GridPane.columnIndex="0" GridPane.rowIndex="2">
+                <columns>
+                    <TableColumn fx:id="pastoColumn" text="Pasto" minWidth="110" maxWidth="110" prefWidth="110"/>
+                    <TableColumn fx:id="orarioColumn" text="Orario" minWidth="110" maxWidth="110" prefWidth="110"/>
+                    <TableColumn fx:id="preColumn" text="Pre Pasto" minWidth="110" maxWidth="110" prefWidth="110"/>
+                    <TableColumn fx:id="postColumn" text="Post Pasto" minWidth="110" maxWidth="110" prefWidth="110"/>
+                </columns>
+            </TableView>
 
-        <TableView fx:id="tableView" editable="true" minWidth="415" maxWidth="420" minHeight="100" maxHeight="105" GridPane.columnIndex="0" GridPane.rowIndex="2">
-            <columns>
-                <TableColumn fx:id="pastoColumn" text="Pasto" minWidth="103"/>
-                <TableColumn fx:id="orarioColumn" text="Orario" minWidth="103"/>
-                <TableColumn fx:id="preColumn" text="Pre Pasto" minWidth="103"/>
-                <TableColumn fx:id="postColumn" text="Post Pasto" minWidth="103"/>
-            </columns>
-        </TableView>
 
-        <Button fx:id="nuovaSomministrazioneButton" text="Salva somministrazione" GridPane.columnIndex="0" GridPane.rowIndex="4"/>
+            <Button fx:id="nuovaSomministrazioneButton" text="Salva somministrazione" GridPane.columnIndex="0" GridPane.rowIndex="4"/>
 
-        <Label text="Inserire qui eventuali sintomi :" GridPane.columnIndex="0" GridPane.rowIndex="6" />
+            <Label text="Inserire qui eventuali sintomi :" GridPane.columnIndex="0" GridPane.rowIndex="6" />
 
-        <TextArea fx:id="textArea" promptText="Scrivi qualcosa qui..." wrapText="true" prefRowCount="10" GridPane.columnIndex="0" GridPane.rowIndex="7" />
-        <Button text="Salva sintomi" fx:id="salvaSintomi"  GridPane.columnIndex="0" GridPane.rowIndex="9" />
-        <fx:include source="PatientChart.fxml" fx:id="lineChart" />
-    </GridPane>
-</VBox>
+            <TextArea fx:id="textArea" promptText="Scrivi qualcosa qui..." wrapText="true" GridPane.columnIndex="0" GridPane.rowIndex="7" />
+            <Button text="Salva sintomi" fx:id="salvaSintomi"  GridPane.columnIndex="0" GridPane.rowIndex="9" />
+            <fx:include source="PatientChart.fxml" fx:id="lineChart" GridPane.columnIndex="0" GridPane.rowIndex="10" />
+        </GridPane>
+    </content>
+</ScrollPane>
