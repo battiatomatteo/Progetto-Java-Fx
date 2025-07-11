@@ -24,6 +24,9 @@ import javafx.application.Platform;
 import utility.UIUtils;
 import view.LogInView;
 import java.time.LocalDate;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 
 public class PatientPageController {
@@ -145,10 +148,12 @@ public class PatientPageController {
             // salvo i dati nel db
             for (Pasto p : tableView.getItems()) {
                 pstmt.setString(1,  oggi.toString() );
-                pstmt.setFloat(2, Float.parseFloat(p.getPost()));
+                float post = (p.getPost() == null || p.getPost().isEmpty()) ? 0 : Float.parseFloat(p.getPost());
+                pstmt.setFloat(2, post);
                 pstmt.setString(3, "note...");
                 pstmt.setInt(4, 2);
-                pstmt.setFloat(5, Float.parseFloat(p.getPre()));
+                float pre = (p.getPre() == null || p.getPre().isEmpty()) ? 0 : Float.parseFloat(p.getPre());
+                pstmt.setFloat(5, pre);
                 pstmt.setString(6,p.getOrario());
                 pstmt.executeUpdate();
             }
@@ -176,21 +181,20 @@ public class PatientPageController {
     private void caricaSomministrazioniOdierne() {
         String url = "jdbc:sqlite:miodatabase.db";
         LocalDate oggi = LocalDate.now();
-        String dataOdierna = oggi.toString(); // es: 2025-07-03
+        String dataOdierna = oggi.toString();
         String sql = "SELECT * FROM rilevazioni_giornaliere WHERE data_rilevazione == ?";
 
         pastiData.clear(); // Pulisce la tabella
+
+        Map<String, Pasto> rilevati = new HashMap<>();
 
         try (Connection conn = DriverManager.getConnection(url);
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
             pstmt.setString(1, dataOdierna);
             var rs = pstmt.executeQuery();
-            boolean trovato = false;
+
             while (rs.next()) {
-                System.out.println("ciao , sono nel while !");
-                trovato = true;
-                String orarioCompleto = rs.getString("data_rilevazione");
                 String orario = rs.getString("orario");
                 String pre = Float.toString(rs.getFloat("rilevazione_pre_pasto"));
                 String post = Float.toString(rs.getFloat("rilevazione_post_pasto"));
@@ -203,17 +207,25 @@ public class PatientPageController {
                 };
 
                 Pasto pasto = new Pasto(nomePasto, orario, pre, post);
-
-                pastiData.add(pasto);
+                rilevati.put(orario, pasto);
             }
 
-            // Se nessuna somministrazione trovata, carico la tabella vuota base
-            if (!trovato) {
-                pastiData.addAll(
-                        new Pasto("Colazione", "08:00", "", ""),
-                        new Pasto("Pranzo", "13:00", "", ""),
-                        new Pasto("Cena", "19:30", "", "")
-                );
+            // Definisci gli orari attesi
+            Map<String, String> orariPrevisti = new LinkedHashMap<>();  // new LinkedHashMap<>(): simile as HashMap ma mantiene l'ordine di inserimento degli elementi
+            orariPrevisti.put("08:00", "Colazione");
+            orariPrevisti.put("13:00", "Pranzo");
+            orariPrevisti.put("19:30", "Cena");
+
+            // Aggiunge i pasti ordinati (colazione, pranzo, cena)
+            for (Map.Entry<String, String> entry : orariPrevisti.entrySet()) {
+                String orario = entry.getKey();
+                String nome = entry.getValue();
+
+                if (rilevati.containsKey(orario)) {
+                    pastiData.add(rilevati.get(orario));
+                } else {
+                    pastiData.add(new Pasto(nome, orario, "", ""));
+                }
             }
 
         } catch (Exception e) {
@@ -221,6 +233,7 @@ public class PatientPageController {
             UIUtils.showAlert(Alert.AlertType.ERROR, "Errore", "Errore durante il caricamento delle somministrazioni.");
         }
     }
+
 
 
 
