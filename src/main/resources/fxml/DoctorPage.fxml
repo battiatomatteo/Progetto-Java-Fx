@@ -3,7 +3,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.chart.*?>
 
-<ScrollPane fx:id="mainScrollPane" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml" fx:controller="controllers.DoctorPageController" fitToWidth="true" stylesheets="/css/doctor-page.css" ">
+<ScrollPane fx:id="mainScrollPane" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml" fx:controller="controllers.DoctorPageController" fitToWidth="true" stylesheets="/css/doctor-page.css" >
     <content>
         <VBox fx:id="mainVBox" spacing="10" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml" >
             <!-- Sezione funzionalità del dottore -->

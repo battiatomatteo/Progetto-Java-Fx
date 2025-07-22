@@ -5,6 +5,7 @@ import javafx.animation.Animation;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.time.*;
 import java.time.format.DateTimeFormatter;
 
@@ -85,17 +86,11 @@ public class PatientPageController {
 
         tableView.setItems(pastiData);
 
-        // Dati iniziali
-        /*pastiData.addAll(
-                new Pasto("Colazione", "08:00", "", ""),
-                new Pasto("Pranzo", "13:00", "", ""),
-                new Pasto("Cena", "19:30", "", "")
-        );*/
         nuovaSomministrazioneButton.setOnAction(e -> nuovaSomministrazione());
         avviaPromemoria();
         caricaSomministrazioniOdierne();
         logOutButton.setOnAction(e -> LogOutButton());
-        salvaSintomi.setOnAction(e -> salvaSintomi());
+        salvaSintomi.setOnAction(e -> salvaSintomibox(textArea.getText()));
     }
 
     private void avviaPromemoria() {
@@ -133,50 +128,81 @@ public class PatientPageController {
         }
     }
 
-    private void nuovaSomministrazione(){
-
-        /*int giorno = oggi.getDayOfMonth();
-        int mese = oggi.getMonthValue(); // 1-12
-        int anno = oggi.getYear();
-        String dataFormattata = oggi.format(DateTimeFormatter.ofPattern("dd/MM/yyyy"));
-        String dataPerDatabase = oggi.toString();*/
-
+    /*
+    * Cosa fa nuovaSomministrazione() :
+    * Controlla per ogni pasto se esiste già un record con quella data e orario, Se esiste: non lo reinserisce.
+    * Se non esiste e pre/post sono validi, lo inserisce.
+    * Mostra un riepilogo solo dei pasti inseriti.
+    * */
+    private void nuovaSomministrazione() {
         String url = "jdbc:sqlite:miodatabase.db";
-        String sql = "INSERT INTO rilevazioni_giornaliere (data_rilevazione, rilevazione_post_pasto, note_rilevazione, ID_terapia, rilevazione_pre_pasto, orario) VALUES ( ?, ?, ?, ?, ?, ?)";
-        try(Connection conn = DriverManager.getConnection(url);
-            PreparedStatement pstmt = conn.prepareStatement(sql)){
-            // salvo i dati nel db
-            for (Pasto p : tableView.getItems()) {
-                pstmt.setString(1,  oggi.toString() );
-                float post = (p.getPost() == null || p.getPost().isEmpty()) ? 0 : Float.parseFloat(p.getPost());
-                pstmt.setFloat(2, post);
-                pstmt.setString(3, "note...");
-                pstmt.setInt(4, 2);
-                float pre = (p.getPre() == null || p.getPre().isEmpty()) ? 0 : Float.parseFloat(p.getPre());
-                pstmt.setFloat(5, pre);
-                pstmt.setString(6,p.getOrario());
-                pstmt.executeUpdate();
+        String sqlInsert = "INSERT INTO rilevazioni_giornaliere (data_rilevazione, rilevazione_post_pasto, note_rilevazione, ID_terapia, rilevazione_pre_pasto, orario) VALUES (?, ?, ?, ?, ?, ?)";
+        String sqlCheck = "SELECT COUNT(*) FROM rilevazioni_giornaliere WHERE data_rilevazione = ? AND orario = ?";
+        LocalDate oggi = LocalDate.now();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+
+        try (Connection conn = DriverManager.getConnection(url)) {
+            try (PreparedStatement insertStmt = conn.prepareStatement(sqlInsert);
+                 PreparedStatement checkStmt = conn.prepareStatement(sqlCheck)) {
+
+                StringBuilder riepilogo = new StringBuilder("Riepilogo somministrazione:\n");
+                boolean almenoUnoInserito = false;
+
+                for (Pasto p : tableView.getItems()) {
+                    String preStr = p.getPre();
+                    String postStr = p.getPost();
+                    String orario = p.getOrario();
+
+                    if (preStr == null || preStr.isEmpty() || postStr == null || postStr.isEmpty() || orario == null || orario.isEmpty())
+                        continue;
+
+                    float pre = Float.parseFloat(preStr);
+                    float post = Float.parseFloat(postStr);
+
+                    if (pre == 0 || post == 0)
+                        continue;
+
+                    // Verifica se esiste già una rilevazione per oggi con questo orario
+                    checkStmt.setString(1, oggi.format(formatter));
+                    checkStmt.setString(2, orario);
+                    ResultSet rs = checkStmt.executeQuery();
+
+                    if (rs.next() && rs.getInt(1) > 0) {
+                        continue; // Esiste già, quindi salto
+                    }
+
+                    // Inserisci solo se non esiste già
+                    insertStmt.setString(1, oggi.format(formatter));
+                    insertStmt.setFloat(2, post);
+                    insertStmt.setString(3, "note...");
+                    insertStmt.setInt(4, 2);
+                    insertStmt.setFloat(5, pre);
+                    insertStmt.setString(6, orario);
+                    insertStmt.executeUpdate();
+
+                    almenoUnoInserito = true;
+
+                    riepilogo.append("🍽 ")
+                            .append(p.getPasto())
+                            .append(" (").append(orario).append("): ")
+                            .append("Pre = ").append(pre).append(", ")
+                            .append("Post = ").append(post).append("\n");
+                }
+
+                if (almenoUnoInserito) {
+                    stampaTabella();
+                    UIUtils.showAlert(Alert.AlertType.INFORMATION, "Somministrazione salvata", riepilogo.toString());
+                } else {
+                    UIUtils.showAlert(Alert.AlertType.WARNING, "Nessun pasto inserito", "Tutti i pasti erano già presenti o non validi (pre/post nulli o 0).");
+                }
+
             }
-
-            stampaTabella();
-            StringBuilder riepilogo = new StringBuilder("Riepilogo somministrazione:\n");
-
-            for (Pasto p : tableView.getItems()) {
-                riepilogo.append("🍽 ")
-                        .append(p.getPasto())
-                        .append(" (").append(p.getOrario()).append("): ")
-                        .append("Pre = ").append(p.getPre()).append(", ")
-                        .append("Post = ").append(p.getPost()).append("\n");
-            }
-
-            UIUtils.showAlert(Alert.AlertType.INFORMATION, "Somministrazione salvata", riepilogo.toString());
-
-            // Qui potresti anche chiamare il metodo DAO per salvare nel DB
-            // esempio: pastoDAO.updatePasto(p);
-        }catch (Exception e) {
+        } catch (Exception e) {
+            UIUtils.showAlert(Alert.AlertType.ERROR, "Errore", "Errore durante il salvataggio: " + e.getMessage());
             throw new RuntimeException(e);
         }
     }
+
 
     private void caricaSomministrazioniOdierne() {
         String url = "jdbc:sqlite:miodatabase.db";
@@ -234,9 +260,72 @@ public class PatientPageController {
         }
     }
 
+    /*
+    * Cosa fa salvaSintomibox(String nuovaNota) :
+    * salvo la nota nell'ultima somministrazione inserita nel giorno, nel caso in cui non si ha nessuna somministrazione oggi
+    * controllo se l'ultima somministrazione del giorno precedente ha una nota != "note..." , se true la sovrascrivo,
+    * se false mando un alert dicendo di contattare il medico o di aspettare di inserire una somministrazione
+    * */
+    private void salvaSintomibox(String nuovaNota){
+        // salvo nel database (in "note_rivelazione") ciò che l'utente scrive nel box sintomi che poi verrà mostrato al medico
+        String url = "jdbc:sqlite:miodatabase.db";
+        LocalDate oggi = LocalDate.now();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        try (Connection conn = DriverManager.getConnection(url)){
 
 
+            // 1. Controllo se ci sono somministrazioni oggi
+            String queryOggi = "SELECT ID_rilevazioni FROM rilevazioni_giornaliere WHERE data_rilevazione = ? ORDER BY ID_rilevazioni DESC LIMIT 1";
+            try (PreparedStatement pstmtOggi = conn.prepareStatement(queryOggi)) {
+                pstmtOggi.setString(1, oggi.format(formatter));
+                ResultSet rsOggi = pstmtOggi.executeQuery();
 
+                if (rsOggi.next()) {
+                    // Somministrazione trovata per oggi → aggiorna la più recente
+                    int id = rsOggi.getInt("ID_rilevazioni");
+                    String update = "UPDATE rilevazioni_giornaliere SET note_rilevazione = ? WHERE ID_rilevazioni = ?";
+                    try (PreparedStatement updateStmt = conn.prepareStatement(update)) {
+                        updateStmt.setString(1, nuovaNota);
+                        updateStmt.setInt(2, id);
+                        updateStmt.executeUpdate();
+                        UIUtils.showAlert(Alert.AlertType.INFORMATION, "Nota salvata", "Nota salvata sulla somministrazione odierna.");
+                        return;
+                    }
+                }
+            }
+
+            // 2. Nessuna somministrazione oggi → cerco l’ultima disponibile
+            String queryUltima = "SELECT ID_rilevazioni, note_rilevazione, data_rilevazione FROM rilevazioni_giornaliere ORDER BY data_rilevazione DESC, ID_rilevazioni DESC LIMIT 1";
+            try (PreparedStatement pstmtUltima = conn.prepareStatement(queryUltima);
+                 ResultSet rsUltima = pstmtUltima.executeQuery()) {
+
+                if (rsUltima.next()) {
+                    String note = rsUltima.getString("note_rilevazione");
+                    int id = rsUltima.getInt("ID_rilevazioni");
+                    String dataUltima = rsUltima.getString("data_rilevazione");
+
+                    if ("note...".equalsIgnoreCase(note)) {
+                        // Aggiorno la nota
+                        String update = "UPDATE rilevazioni_giornaliere SET note_rilevazione = ? WHERE ID_rilevazioni = ?";
+                        try (PreparedStatement updateStmt = conn.prepareStatement(update)) {
+                            updateStmt.setString(1, nuovaNota);
+                            updateStmt.setInt(2, id);
+                            updateStmt.executeUpdate();
+                            UIUtils.showAlert(Alert.AlertType.INFORMATION, "Nota salvata", "Nota salvata nella somministrazione più recente del " + dataUltima);
+                        }
+                    } else {
+                        // Nota già presente → mostro alert
+                        UIUtils.showAlert(Alert.AlertType.WARNING, "Nota non salvata", "Hai già scritto una nota nella somministrazione più recente. Contatta il medico o attendi una nuova somministrazione.");
+                    }
+                } else {
+                    UIUtils.showAlert(Alert.AlertType.WARNING, "Nessuna rilevazione", "Non è presente alcuna somministrazione su cui salvare la nota.");
+                }
+            }
+        } catch (Exception e) {
+            UIUtils.showAlert(Alert.AlertType.ERROR, "Errore", "Errore durante il salvataggio della nota: " + e.getMessage());
+            throw new RuntimeException(e);
+        }
+    }
 
 
     private void stampaTabella() {

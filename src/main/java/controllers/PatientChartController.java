@@ -37,10 +37,13 @@ public class PatientChartController {
             while(rs.next()){
                 int idTerapia = rs.getInt("ID_terapia");
                 String farmaco = rs.getString("farmaco");
-                XYChart.Series<String, Number> series = new XYChart.Series<>();
-                series.setName(farmaco);
-                setChartSeries(series, username, idTerapia);
-                PatientChart.getData().add(series);
+                XYChart.Series<String, Number> series_pre = new XYChart.Series<>();
+                XYChart.Series<String, Number> series_post = new XYChart.Series<>();
+                series_pre.setName(farmaco + "(prima dei pasti)");
+                series_post.setName(farmaco + "(dopo dei pasti)");
+                setChartSeries(series_pre,series_post, username, idTerapia);
+                PatientChart.getData().add(series_pre);
+                PatientChart.getData().add(series_post);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -49,9 +52,9 @@ public class PatientChartController {
 
 
 
-    private void setChartSeries(XYChart.Series<String, Number> series , String username , int idTerapia) {
+    private void setChartSeries(XYChart.Series<String, Number> series_pre ,XYChart.Series<String, Number> series_post , String username , int idTerapia) {
         String url = "jdbc:sqlite:miodatabase.db";
-        String sql = "SELECT data_rilevazione, rilevazione_post_pasto " +
+        String sql = "SELECT data_rilevazione, rilevazione_post_pasto, rilevazione_pre_pasto " +
                 "FROM (rilevazioni_giornaliere INNER JOIN terapie ON rilevazioni_giornaliere.ID_terapia = terapie.ID_terapia )" +
                 "WHERE username = ? AND terapie.ID_terapia = ?";
             try (Connection conn = DriverManager.getConnection(url)) {
@@ -61,8 +64,10 @@ public class PatientChartController {
                 ResultSet rs = pstmt.executeQuery();
                 while(rs.next()){
                     String date = rs.getString("data_rilevazione");
-                    int mensuration = rs.getInt("rilevazione_post_pasto");
-                    newChartItem(series, date, mensuration);
+                    int mensuration_pre = rs.getInt("rilevazione_pre_pasto");
+                    newChartItem(series_pre, date, mensuration_pre);
+                    int mensuration_post = rs.getInt("rilevazione_post_pasto");
+                    newChartItem(series_post, date, mensuration_post);
                 }
             } catch (Exception e) {
                 e.printStackTrace();
