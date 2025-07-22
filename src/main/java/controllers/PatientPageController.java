@@ -40,7 +40,6 @@ public class PatientPageController {
     @FXML private Button logOutButton, nuovaSomministrazioneButton, salvaSintomi;
     @FXML private TextArea textArea;
     @FXML private VBox lineChart;
-    LocalDate oggi = LocalDate.now();
     private final ObservableList<Pasto> pastiData = FXCollections.observableArrayList();
 
     @FXML
@@ -272,7 +271,6 @@ public class PatientPageController {
         LocalDate oggi = LocalDate.now();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         try (Connection conn = DriverManager.getConnection(url)){
-
 
             // 1. Controllo se ci sono somministrazioni oggi
             String queryOggi = "SELECT ID_rilevazioni FROM rilevazioni_giornaliere WHERE data_rilevazione = ? ORDER BY ID_rilevazioni DESC LIMIT 1";

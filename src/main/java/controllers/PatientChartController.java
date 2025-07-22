@@ -24,10 +24,14 @@ public class PatientChartController {
     public void initialize() {
         // Imposta il titolo del grafico
         PatientChart.setTitle("Evoluzione dei Dati del Paziente");
-        setChartData("p");
+    }
+
+    public void setName(String name){
+        setChartData(name);
     }
 
     private void setChartData(String username) {
+        PatientChart.getData().clear();
         String url = "jdbc:sqlite:miodatabase.db";
         String sql = "SELECT ID_terapia, farmaco FROM terapie WHERE username = ?";
         try (Connection conn = DriverManager.getConnection(url)) {

@@ -4,9 +4,9 @@ import com.lowagie.text.Font;
 import com.lowagie.text.Image;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
 import javafx.scene.control.*;
 import javafx.scene.chart.*;
-import javafx.scene.chart.XYChart;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.Button;
@@ -15,8 +15,6 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
 import models.Terapia;
 import utility.UIUtils;
-
-import java.io.IOException;
 import java.sql.*;
 
 import com.lowagie.text.*;
@@ -38,6 +36,8 @@ public class PatientPaneController {
     @FXML private Button searchButton, addFarmacoButton, updateButton, deleteButton, generaPDF;
     @FXML private VBox lineChart;
     private final ObservableList<Terapia> data = FXCollections.observableArrayList();
+    private PatientChartController chartController;
+
 
     @FXML
     private void initialize() {
@@ -48,16 +48,28 @@ public class PatientPaneController {
         noteCol.setCellValueFactory(cell -> cell.getValue().noteProperty());
         table.setItems(data);
 
-        LineChart<?, ?> chart = (LineChart<?, ?>) lineChart.getChildren().get(0);
+        //LineChart<?, ?> chart = (LineChart<?, ?>) lineChart.getChildren().get(0);
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/PatientChart.fxml"));
+            Parent chartNode = loader.load(); // carica il nodo FXML
+            chartController = loader.getController(); // ottieni il controller
+            lineChart.getChildren().add(chartNode); // inserisci il grafico nel VBox
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            System.err.println("Errore nel caricamento del grafico");
+        }
+
 
         searchButton.setOnAction(e -> searchTerapie());
         addFarmacoButton.setOnAction(e -> aggiungiTerapia());
         deleteButton.setOnAction(e -> eliminaTerapia());
         generaPDF.setOnAction(e -> generaPDFReport("Paziente-PDF"));
     }
-
+    @FXML
     private void searchTerapie() {
         String username = usernameInput.getText();
+
         data.clear();
         if (username.isEmpty()) {
             UIUtils.showAlert(Alert.AlertType.WARNING, "Nessuna selezione", "Inserire un utente prima di eseguire la ricerca.");
@@ -68,7 +80,6 @@ public class PatientPaneController {
             return;
         }
         // label che si possono vedere una volta che il paziente inserito viene trovato nel database
-        // labelUsername.setText("Paziente trovato: " + username);
         label.setText("Lista delle terapie del paziente :");
 
         String url = "jdbc:sqlite:miodatabase.db";
@@ -93,6 +104,7 @@ public class PatientPaneController {
 
         label2.setText("Grafico andamento terapia del paziente :");
 
+        chartController.setName(username);
     }
 
     private void aggiungiTerapia() {
