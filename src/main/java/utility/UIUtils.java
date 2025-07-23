@@ -51,14 +51,15 @@ public class UIUtils {
         }
     }
 
-    /*public static void LogOutButton(){
+    public static void LogOutButton(Stage stage){
         try {
-            JFXPanel logOutButton = new JFXPanel();
-            Stage stage = (Stage) logOutButton.getScene().getWindow();
+            //Stage stage = (Stage) logOutButton.getScene().getWindow();
+            // JFXPanel logOutButton = new JFXPanel();
+
             stage.close();
             new LogInView().start(new Stage());
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
-    }*/
+    }
 }

@@ -7,6 +7,7 @@ import java.sql.ResultSet;
 import java.time.format.DateTimeFormatter;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.embed.swing.JFXPanel;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.TextFieldTableCell;
@@ -78,30 +79,11 @@ public class PatientPageController {
 
         nuovaSomministrazioneButton.setOnAction(e -> nuovaSomministrazione());
         caricaSomministrazioniOdierne();
-        logOutButton.setOnAction(e -> LogOutButton());
+        // Come funziona: Quando clicco sul bottone, prendi la finestra corrente e passala a UIUtils.LogOutButton() per eseguire il logout
+        logOutButton.setOnAction(e -> UIUtils.LogOutButton((Stage) logOutButton.getScene().getWindow()));
         salvaSintomi.setOnAction(e -> salvaSintomibox(textArea.getText()));
 
         chartIncludeController.setName(LogInController.getUsername()); // passo il nome del paziente
-    }
-
-    private void mostraAlert(String pasto) {
-        Platform.runLater(() -> {
-            Alert alert = new Alert(Alert.AlertType.INFORMATION);
-            alert.setTitle("Promemoria Pasto");
-            alert.setHeaderText(null);
-            alert.setContentText("È ora di somministrare per il pasto: " + pasto);
-            alert.show();
-        });
-    }
-
-    private void LogOutButton(){
-        try {
-            Stage stage = (Stage) logOutButton.getScene().getWindow();
-            stage.close();
-            new LogInView().start(new Stage());
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
     }
 
     /*

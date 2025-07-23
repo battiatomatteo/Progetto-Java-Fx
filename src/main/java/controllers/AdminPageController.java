@@ -32,15 +32,8 @@ public class AdminPageController {
         // Carica utenti dal database
         loadUsers();
 
-        logoutButton.setOnAction(e -> {
-            Stage stage = (Stage) logoutButton.getScene().getWindow();
-            stage.close();
-            try {
-                new view.LogInView().start(new Stage());
-            } catch (Exception ex) {
-                ex.printStackTrace();
-            }
-        });
+        // Come funziona: Quando clicco sul bottone, prendi la finestra corrente e passala a UIUtils.LogOutButton() per eseguire il logout
+        logoutButton.setOnAction(e -> UIUtils.LogOutButton((Stage) logoutButton.getScene().getWindow()));
 
         addButton.setOnAction(e -> addUser());
         cancelButton.setOnAction(e -> deleteUser());

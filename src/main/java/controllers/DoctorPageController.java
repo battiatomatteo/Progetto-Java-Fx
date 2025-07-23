@@ -28,7 +28,9 @@ public class DoctorPageController {
     @FXML
     private void initialize() {
 
-        logOutButton.setOnAction(e -> LogOutButton());
+        //logOutButton.setOnAction(e -> LogOutButton());
+        // Come funziona: Quando clicco sul bottone, prendi la finestra corrente e passala a UIUtils.LogOutButton() per eseguire il logout
+        logOutButton.setOnAction(e -> UIUtils.LogOutButton((Stage) logOutButton.getScene().getWindow()));
 
 
         removeLastPatientButton.setOnAction(e -> {
@@ -47,7 +49,7 @@ public class DoctorPageController {
 
     }
 
-    private void LogOutButton(){
+    /*private void LogOutButton(){
         try {
             Stage stage = (Stage) logOutButton.getScene().getWindow();
             stage.close();
@@ -55,7 +57,7 @@ public class DoctorPageController {
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
-    }
+    }*/
 
     private void aggiungiPaziente() {
         try{
