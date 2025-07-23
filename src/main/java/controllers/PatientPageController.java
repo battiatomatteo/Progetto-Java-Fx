@@ -1,26 +1,18 @@
 package controllers;
 
-import javafx.animation.Animation;
-
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.time.*;
 import java.time.format.DateTimeFormatter;
-
-import javafx.animation.Timeline;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.scene.chart.LineChart;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import models.Pasto;
-import javafx.animation.KeyFrame;
-import javafx.util.Duration;
 import javafx.application.Platform;
 import utility.UIUtils;
 import view.LogInView;
@@ -41,14 +33,13 @@ public class PatientPageController {
     @FXML private TextArea textArea;
     @FXML private VBox lineChart;
     private final ObservableList<Pasto> pastiData = FXCollections.observableArrayList();
+    @FXML private PatientChartController chartIncludeController;
 
     @FXML
     private void initialize() {
-        //messageStart.setText("Qui puoi inserire le somministrazioni giornaliere pre e post pasto .");
         tableView.setEditable(true);
         tableView.setColumnResizePolicy(TableView.UNCONSTRAINED_RESIZE_POLICY);
 
-        LineChart<?, ?> chart = (LineChart<?, ?>) lineChart.getChildren().get(0);
 
         // Imposta le proprietà dei dati
         pastoColumn.setCellValueFactory(cellData -> cellData.getValue().pastoProperty());
@@ -86,25 +77,11 @@ public class PatientPageController {
         tableView.setItems(pastiData);
 
         nuovaSomministrazioneButton.setOnAction(e -> nuovaSomministrazione());
-        avviaPromemoria();
         caricaSomministrazioniOdierne();
         logOutButton.setOnAction(e -> LogOutButton());
         salvaSintomi.setOnAction(e -> salvaSintomibox(textArea.getText()));
-    }
 
-    private void avviaPromemoria() {
-        Timeline timer = new Timeline(
-                new KeyFrame(Duration.seconds(60), e -> {
-                    String oraCorrente = LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm"));
-                    for (Pasto p : pastiData) {
-                        if (p.orarioProperty().get().equals(oraCorrente)) {
-                            mostraAlert(p.getPasto());
-                        }
-                    }
-                })
-        );
-        timer.setCycleCount(Animation.INDEFINITE);
-        timer.play();
+        chartIncludeController.setName(LogInController.getUsername()); // passo il nome del paziente
     }
 
     private void mostraAlert(String pasto) {
@@ -128,11 +105,11 @@ public class PatientPageController {
     }
 
     /*
-    * Cosa fa nuovaSomministrazione() :
-    * Controlla per ogni pasto se esiste già un record con quella data e orario, Se esiste: non lo reinserisce.
-    * Se non esiste e pre/post sono validi, lo inserisce.
-    * Mostra un riepilogo solo dei pasti inseriti.
-    * */
+     * Cosa fa nuovaSomministrazione() :
+     * Controlla per ogni pasto se esiste già un record con quella data e orario, Se esiste: non lo reinserisce.
+     * Se non esiste e pre/post sono validi, lo inserisce.
+     * Mostra un riepilogo solo dei pasti inseriti.
+     * */
     private void nuovaSomministrazione() {
         String url = "jdbc:sqlite:miodatabase.db";
         String sqlInsert = "INSERT INTO rilevazioni_giornaliere (data_rilevazione, rilevazione_post_pasto, note_rilevazione, ID_terapia, rilevazione_pre_pasto, orario) VALUES (?, ?, ?, ?, ?, ?)";
@@ -260,11 +237,11 @@ public class PatientPageController {
     }
 
     /*
-    * Cosa fa salvaSintomibox(String nuovaNota) :
-    * salvo la nota nell'ultima somministrazione inserita nel giorno, nel caso in cui non si ha nessuna somministrazione oggi
-    * controllo se l'ultima somministrazione del giorno precedente ha una nota != "note..." , se true la sovrascrivo,
-    * se false mando un alert dicendo di contattare il medico o di aspettare di inserire una somministrazione
-    * */
+     * Cosa fa salvaSintomibox(String nuovaNota) :
+     * salvo la nota nell'ultima somministrazione inserita nel giorno, nel caso in cui non si ha nessuna somministrazione oggi
+     * controllo se l'ultima somministrazione del giorno precedente ha una nota != "note..." , se true la sovrascrivo,
+     * se false mando un alert dicendo di contattare il medico o di aspettare di inserire una somministrazione
+     * */
     private void salvaSintomibox(String nuovaNota){
         // salvo nel database (in "note_rivelazione") ciò che l'utente scrive nel box sintomi che poi verrà mostrato al medico
         String url = "jdbc:sqlite:miodatabase.db";
@@ -331,16 +308,11 @@ public class PatientPageController {
         for (Pasto p : tableView.getItems()) {
             System.out.println(
                     "Pasto: " + p.getPasto() +
-                    " | Orario: " + p.getOrario() +
-                    " | Pre Pasto: " + p.getPre() +
-                    " | Post Pasto: " + p.getPost());
+                            " | Orario: " + p.getOrario() +
+                            " | Pre Pasto: " + p.getPre() +
+                            " | Post Pasto: " + p.getPost());
         }
         System.out.println("=============================");
-    }
-
-    private void salvaSintomi() {
-        String testo = textArea.getText();
-        System.out.println("Hai scritto: " + testo);
     }
 
 }

@@ -17,6 +17,7 @@ public class LogInController {
     @FXML private Label messageLabel;
     @FXML private TextField visiblePassField;
     @FXML private ToggleButton showPasswordToggle;
+    private static String user;
 
     @FXML
     private void initialize() {
@@ -32,9 +33,14 @@ public class LogInController {
         loginButton.setOnAction(e -> handleLogin());
     }
 
+    public static String getUsername(){
+        return user;
+    }
+
     private void handleLogin() {
         String username = userField.getText();
         String password = passField.getText();
+        user = username;
         if (UIUtils.authenticate(username, password, 0)) {
             messageLabel.setText("Accesso riuscito!");
             String tipo_utente = getTipoUtente(username);

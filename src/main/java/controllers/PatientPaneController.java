@@ -3,10 +3,7 @@ package controllers;
 import com.lowagie.text.Font;
 import com.lowagie.text.Image;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
 import javafx.scene.control.*;
-import javafx.scene.chart.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.Button;
@@ -36,7 +33,7 @@ public class PatientPaneController {
     @FXML private Button searchButton, addFarmacoButton, updateButton, deleteButton, generaPDF;
     @FXML private VBox lineChart;
     private final ObservableList<Terapia> data = FXCollections.observableArrayList();
-    private PatientChartController chartController;
+    @FXML private PatientChartController chartIncludeController;
 
 
     @FXML
@@ -48,18 +45,7 @@ public class PatientPaneController {
         noteCol.setCellValueFactory(cell -> cell.getValue().noteProperty());
         table.setItems(data);
 
-        //LineChart<?, ?> chart = (LineChart<?, ?>) lineChart.getChildren().get(0);
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/PatientChart.fxml"));
-            Parent chartNode = loader.load(); // carica il nodo FXML
-            chartController = loader.getController(); // ottieni il controller
-            lineChart.getChildren().add(chartNode); // inserisci il grafico nel VBox
-
-        } catch (Exception ex) {
-            ex.printStackTrace();
-            System.err.println("Errore nel caricamento del grafico");
-        }
-
+        // LineChart<?, ?> chart = (LineChart<?, ?>) lineChart.getChildren().get(0);
 
         searchButton.setOnAction(e -> searchTerapie());
         addFarmacoButton.setOnAction(e -> aggiungiTerapia());
@@ -104,7 +90,7 @@ public class PatientPaneController {
 
         label2.setText("Grafico andamento terapia del paziente :");
 
-        chartController.setName(username);
+        chartIncludeController.setName(username); // passo il nome del paziente
     }
 
     private void aggiungiTerapia() {

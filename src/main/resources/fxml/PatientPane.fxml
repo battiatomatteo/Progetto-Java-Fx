@@ -34,7 +34,7 @@
         </TableView>
         <Button fx:id="deleteButton" text="Elimina Terapia"/>
         <Label fx:id="label2"/>
-        <!--<fx:include source="PatientChart.fxml" fx:id="lineChart" />-->
+        <fx:include source="PatientChart.fxml" fx:id="chartInclude"/>
         <GridPane>
             <Button fx:id="generaPDF" text="GeneraPDF" />
         </GridPane>
