@@ -1,6 +1,6 @@
 package utility;
 
-import javafx.embed.swing.JFXPanel;
+import enums.GiorniSettimana;
 import javafx.scene.control.Alert;
 import javafx.stage.Stage;
 import view.LogInView;
@@ -9,6 +9,8 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.time.DayOfWeek;
+import java.time.LocalDate;
 
 public class UIUtils {
 
@@ -55,11 +57,28 @@ public class UIUtils {
         try {
             //Stage stage = (Stage) logOutButton.getScene().getWindow();
             // JFXPanel logOutButton = new JFXPanel();
-
             stage.close();
             new LogInView().start(new Stage());
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
+    }
+
+
+    public static String dataOggi(){
+        LocalDate oggi = LocalDate.now();
+        return oggi.toString();
+    }
+
+    public static String dataConGiorno(){
+        LocalDate oggi = LocalDate.now();
+        DayOfWeek giorno = oggi.getDayOfWeek(); // esempio MONDAY: mi restituisce il giorno in inglese 
+        
+        // calcolo giorno in italiano
+        // Ottieni l'indice (1-7), poi usa -1 perché gli array partono da 0
+        int ind = giorno.getValue() - 1;
+        GiorniSettimana giornoSettimana =  GiorniSettimana.values()[ind];
+
+        return giornoSettimana + " " + oggi.toString();
     }
 }

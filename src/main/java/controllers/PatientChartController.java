@@ -1,5 +1,6 @@
 package controllers;
 
+import enums.StatoTerapia;
 import javafx.fxml.FXML;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.XYChart;
@@ -25,7 +26,8 @@ public class PatientChartController {
         // Imposta il titolo del grafico
         PatientChart.setTitle("Evoluzione dei Dati del Paziente");
     }
-
+// aggiungere filtro per stato terapia
+    //public void setName(String name, StatoTerapia status){
     public void setName(String name){
         setChartData(name);
     }
@@ -33,7 +35,7 @@ public class PatientChartController {
     private void setChartData(String username) {
         PatientChart.getData().clear();
         String url = "jdbc:sqlite:miodatabase.db";
-        String sql = "SELECT ID_terapia, farmaco FROM terapie WHERE username = ?";
+        String sql = "SELECT ID_terapia, farmaco FROM terapie WHERE username = ? ";
         try (Connection conn = DriverManager.getConnection(url)) {
             PreparedStatement pstmt = conn.prepareStatement(sql);
             pstmt.setString(1, username);

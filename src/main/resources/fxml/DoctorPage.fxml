@@ -1,30 +1,59 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
-<?import javafx.scene.chart.*?>
 
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.text.*?>
 <ScrollPane fx:id="mainScrollPane" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml" fx:controller="controllers.DoctorPageController" fitToWidth="true" stylesheets="/css/doctor-page.css" >
     <content>
-        <VBox fx:id="mainVBox" spacing="10" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml" >
-            <!-- Sezione funzionalità del dottore -->
-            <GridPane hgap="10" vgap="10">
-                <Label fx:id="label0" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
-                <Button fx:id="logOutButton" text="LogOut" GridPane.columnIndex="60" GridPane.rowIndex="0" />
-                <Label text="Funzionalità del dottore:" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
-                <Label text="1. Visualizza pazienti" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
-                <Label text="2. Gestisci terapie" GridPane.columnIndex="1" GridPane.rowIndex="3"/>
-                <Label text="3. Aggiorna informazioni pazienti" GridPane.columnIndex="1" GridPane.rowIndex="4"/>
-                <Label text="4. Visualizza andamento terapia" GridPane.columnIndex="1" GridPane.rowIndex="5"/>
-            </GridPane>
+        <HBox xmlns:fx="http://javafx.com/fxml" spacing="0">
 
-            <!-- Pulsante per aggiungere nuovi pazienti -->
-            <HBox spacing="10" alignment="CENTER_LEFT">
-                <Button fx:id="addPatientButton" text="Aggiungi Ricerca Paziente" style="-fx-background-color: #4CAF50; -fx-text-fill: white;"/>
-                <Button fx:id="removeLastPatientButton" text="Rimuovi Ultima Ricerca" style="-fx-background-color: #f44336; -fx-text-fill: white;"/>
-            </HBox>
+            <!-- Parte principale -->
+            <AnchorPane fx:id="mainContent" HBox.hgrow="ALWAYS" style="-fx-background-color: #f9f9f9;">
+                <!-- Barra superiore -->
+                <HBox alignment="CENTER_RIGHT" spacing="10" AnchorPane.topAnchor="10" AnchorPane.rightAnchor="10">
+                    <Button fx:id="logOutButton" text="Logout" GridPane.columnIndex="60" GridPane.rowIndex="0" />
 
-            <!-- Container per i TitledPane dei pazienti -->
-            <VBox fx:id="patientsContainer" spacing="10" />
-        </VBox>
+                    <!-- StackPane per campanella + badge -->
+                    <StackPane fx:id="notificationButton">
+                        <Label fx:id="bellIcon" text="🔔" style="-fx-font-size: 18;" />
+                        <Label fx:id="notificationBadge" text="0"
+                               visible="false"
+                               style="-fx-background-color: red; -fx-text-fill: white; -fx-font-size: 10px; -fx-padding: 2px;"
+                               StackPane.alignment="TOP_RIGHT" />
+                    </StackPane>
+                </HBox>
+
+                <!-- Contenuto fittizio -->
+                <VBox layoutY="50" layoutX="30" fx:id="mainVBox" spacing="10" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml">
+                    <GridPane hgap="10" vgap="10">
+                        <Label fx:id="label0" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
+                        <Label text="Funzionalità del dottore:" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+                        <Label text="1. Visualizza pazienti" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
+                        <Label text="2. Gestisci terapie" GridPane.columnIndex="1" GridPane.rowIndex="3"/>
+                        <Label text="3. Aggiorna informazioni pazienti" GridPane.columnIndex="1" GridPane.rowIndex="4"/>
+                        <Label text="4. Visualizza andamento terapia" GridPane.columnIndex="1" GridPane.rowIndex="5"/>
+                    </GridPane>
+                    <!-- Pulsante per aggiungere nuovi pazienti -->
+                    <HBox spacing="10" alignment="CENTER_LEFT">
+                        <Button fx:id="addPatientButton" text="Aggiungi Ricerca Paziente" style="-fx-background-color: #4CAF50; -fx-text-fill: white;"/>
+                        <Button fx:id="removeLastPatientButton" text="Rimuovi Ultima Ricerca" style="-fx-background-color: #f44336; -fx-text-fill: white;"/>
+                    </HBox>
+                    <!-- Container per i TitledPane dei pazienti -->
+                    <VBox fx:id="patientsContainer" spacing="10" />
+                </VBox>
+            </AnchorPane>
+
+            <!-- Barra laterale notifiche -->
+            <VBox fx:id="notificationPanel"
+                  visible="false" managed="false"
+                  prefWidth="250" minWidth="200"
+                  spacing="8"
+                  style="-fx-background-color: white; -fx-border-color: #ccc; -fx-padding: 10;">
+                <Label text="Notifiche" style="-fx-font-size: 14; -fx-font-weight: bold;" />
+                <!-- Notifiche saranno aggiunte qui -->
+            </VBox>
+
+        </HBox>
     </content>
 </ScrollPane>

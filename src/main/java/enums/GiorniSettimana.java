@@ -1,11 +1,11 @@
 package enums;
 
 public enum GiorniSettimana {
-    LUNEDI,
-    MARTEDI,
-    MERCOLEDI,
-    GIOVEDI,
-    VENERDI,
-    SABATO,
-    DOMENICA
+    Lunedi,
+    Martedi,
+    Mercoledi,
+    Giovedi,
+    Venerdi,
+    Sabato,
+    Domenica
 }

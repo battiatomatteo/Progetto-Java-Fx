@@ -10,7 +10,7 @@
 
             <Button fx:id="logOutButton" text="LogOut" GridPane.columnIndex="6" GridPane.rowIndex="1" />
 
-            <Label text="Qui puoi inserire le somministrazioni giornaliere pre e post pasto ." GridPane.columnIndex="1" GridPane.rowIndex="2" GridPane.columnSpan="1"/>
+            <Label fx:id="messageStart" GridPane.columnIndex="1" GridPane.rowIndex="2" GridPane.columnSpan="1"/>
 
             <TableView fx:id="tableView" editable="true"
                        minWidth="440" maxWidth="440" prefWidth="440"

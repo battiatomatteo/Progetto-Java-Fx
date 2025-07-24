@@ -3,6 +3,10 @@
 <?import javafx.scene.chart.*?>
 <?import javafx.scene.layout.*?>
 
+<?import com.sun.javafx.scene.control.IntegerField?>
+<?import com.sun.javafx.scene.control.DoubleField?>
+<?import javafx.collections.FXCollections?>
+<?import java.lang.String?>
 <TitledPane fx:id="patientPane" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml" fx:controller="controllers.PatientPaneController" text="Ricerca paziente">
     <VBox spacing="10">
         <HBox spacing="10">
@@ -17,7 +21,18 @@
             <Label text="Assunzioni giornaliere:" GridPane.columnIndex="1" GridPane.rowIndex="0"/>
             <TextField fx:id="newAssunzioniInput" promptText="..." GridPane.columnIndex="1" GridPane.rowIndex="1"/>
             <Label text="Quantità (mg):" GridPane.columnIndex="2" GridPane.rowIndex="0"/>
-            <TextField fx:id="newQuantitaInput" promptText="..." GridPane.columnIndex="2" GridPane.rowIndex="1"/>
+            <TextField fx:id="newQuantitaInput" promptText="..." GridPane.columnIndex="2" GridPane.rowIndex="1"  />
+            <Label text="Seleziona lo stato terapia "  GridPane.columnIndex="3" GridPane.rowIndex="0"/>
+            <ComboBox fx:id="statoComboBox" promptText="Seleziona stato" GridPane.columnIndex="3" GridPane.rowIndex="1">
+                <items>
+                    <FXCollections fx:factory="observableArrayList">
+                        <String fx:value="OK" />
+                        <String fx:value="ATTESA" />
+                        <String fx:value="ERRORE" />
+                    </FXCollections>
+                </items>
+            </ComboBox>
+
             <Label text="Note:" GridPane.columnIndex="0" GridPane.rowIndex="2"/>
             <TextField fx:id="newNoteInput" promptText="..." GridPane.columnIndex="0" GridPane.rowIndex="3"/>
             <Button fx:id="addFarmacoButton" text="Aggiungi Terapia" GridPane.columnIndex="2" GridPane.rowIndex="3"/>
@@ -26,9 +41,10 @@
         <TableView fx:id="table" prefHeight="250" prefWidth="500" VBox.vgrow="ALWAYS">
             <columns>
                 <TableColumn fx:id="terapiaCol" text="ID Terapia" minWidth="103"/>
-                <TableColumn fx:id="farmacoCol" text="Farmaco" minWidth="190"/>
-                <TableColumn fx:id="assunzioniCol" text="Assunzioni" minWidth="170"/>
-                <TableColumn fx:id="quantFarCol" text="Quantità" minWidth="170"/>
+                <TableColumn fx:id="statoCol" text="Stato" prefWidth="80" />
+                <TableColumn fx:id="farmacoCol" text="Farmaco" minWidth="140"/>
+                <TableColumn fx:id="assunzioniCol" text="Assunzioni" minWidth="130"/>
+                <TableColumn fx:id="quantFarCol" text="Quantità" minWidth="130"/>
                 <TableColumn fx:id="noteCol" text="Note" minWidth="260"/>
             </columns>
         </TableView>

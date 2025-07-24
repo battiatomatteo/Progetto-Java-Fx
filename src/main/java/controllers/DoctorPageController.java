@@ -6,6 +6,8 @@ import javafx.scene.control.*;
 import javafx.scene.chart.LineChart;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import models.Terapia;
@@ -22,6 +24,14 @@ public class DoctorPageController {
     @FXML private LineChart<String, Number> lineChart;
     @FXML private VBox patientsContainer;
     @FXML private Button addPatientButton, removeLastPatientButton;
+
+    @FXML private StackPane notificationButton;
+    @FXML private Label bellIcon;
+    @FXML private Label notificationBadge;
+    @FXML private VBox notificationPanel;
+
+    private int notificheNonLette = 0;
+
 
     private final ObservableList<Terapia> data = FXCollections.observableArrayList();
 
@@ -44,20 +54,16 @@ public class DoctorPageController {
             if (count > 0) patientsContainer.getChildren().remove(count - 1);
         });
 
+        // Esempio: Aggiungiamo notifiche iniziali
+        aggiungiNotifica("Terapia urgente per Mario");
+        aggiungiNotifica("Controllo visita Rossi alle 14:00");
+
+        // Clic sulla campanella per mostrare/nascondere
+        notificationButton.setOnMouseClicked(this::toggleNotifiche);
 
         aggiungiPaziente();
 
     }
-
-    /*private void LogOutButton(){
-        try {
-            Stage stage = (Stage) logOutButton.getScene().getWindow();
-            stage.close();
-            new LogInView().start(new Stage());
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-    }*/
 
     private void aggiungiPaziente() {
         try{
@@ -72,5 +78,25 @@ public class DoctorPageController {
         }
     }
 
+    private void aggiungiNotifica(String testo) {
+        Label notifica = new Label("• " + testo);
+        notificationPanel.getChildren().add(notifica);
+
+        notificheNonLette++;
+        notificationBadge.setText(String.valueOf(notificheNonLette));
+        notificationBadge.setVisible(true);
+    }
+
+    private void toggleNotifiche(MouseEvent event) {
+        boolean isVisible = notificationPanel.isVisible();
+        notificationPanel.setVisible(!isVisible);
+        notificationPanel.setManaged(!isVisible); // importante per gestire layout
+
+        if (!isVisible) {
+            // Se l'utente apre il pannello, azzeriamo il contatore
+            notificheNonLette = 0;
+            notificationBadge.setVisible(false);
+        }
+    }
 
 }

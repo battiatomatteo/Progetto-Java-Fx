@@ -42,6 +42,7 @@ public class PatientPageController {
         tableView.setColumnResizePolicy(TableView.UNCONSTRAINED_RESIZE_POLICY);
 
 
+        messageStart.setText("Qui puoi inserire le somministrazioni giornaliere pre e post pasto di  " + UIUtils.dataConGiorno()  );
         // Imposta le proprietà dei dati
         pastoColumn.setCellValueFactory(cellData -> cellData.getValue().pastoProperty());
         orarioColumn.setCellValueFactory(cellData -> cellData.getValue().orarioProperty());
@@ -164,8 +165,8 @@ public class PatientPageController {
 
     private void caricaSomministrazioniOdierne() {
         String url = "jdbc:sqlite:miodatabase.db";
-        LocalDate oggi = LocalDate.now();
-        String dataOdierna = oggi.toString();
+        //LocalDate oggi = LocalDate.now();
+        //String dataOdierna = oggi.toString();
         String sql = "SELECT * FROM rilevazioni_giornaliere WHERE data_rilevazione == ?";
 
         pastiData.clear(); // Pulisce la tabella
@@ -175,7 +176,7 @@ public class PatientPageController {
         try (Connection conn = DriverManager.getConnection(url);
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
-            pstmt.setString(1, dataOdierna);
+            pstmt.setString(1, UIUtils.dataOggi());
             var rs = pstmt.executeQuery();
 
             while (rs.next()) {
