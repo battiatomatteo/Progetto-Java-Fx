@@ -27,7 +27,7 @@ import java.io.FileOutputStream;
 
 public class PatientPaneController {
 
-    public ComboBox statoComboBox;
+    @FXML public ComboBox statoComboBox;
     @FXML private TextField usernameInput, newFarmacoInput, newAssunzioniInput, newQuantitaInput, newNoteInput;
     @FXML private Label labelUsername, label, label2;
     @FXML private TableView<Terapia> table;
