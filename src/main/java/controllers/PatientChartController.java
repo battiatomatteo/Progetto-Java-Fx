@@ -1,12 +1,11 @@
 package controllers;
 
-import enums.StatoTerapia;
 import javafx.fxml.FXML;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.XYChart;
 import javafx.scene.chart.CategoryAxis;
 import javafx.scene.chart.NumberAxis;
-
+import models.ChartDataSetter;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -16,26 +15,26 @@ public class PatientChartController {
 
     @FXML
     private LineChart<String, Number> PatientChart;  // Il grafico a linee
-    @FXML
-    private CategoryAxis xAxis;                      // Asse X (Categoria)
-    @FXML
-    private NumberAxis yAxis;                        // Asse Y (Numerico)
+    @FXML private CategoryAxis xAxis;                      // Asse X (Categoria)
+    @FXML private NumberAxis yAxis;                        // Asse Y (Numerico)
 
     @FXML
     public void initialize() {
         // Imposta il titolo del grafico
         PatientChart.setTitle("Evoluzione dei Dati del Paziente");
     }
-// aggiungere filtro per stato terapia
-    //public void setName(String name, StatoTerapia status){
-    public void setName(String name){
-        setChartData(name);
+
+    public void setData(ChartDataSetter setter){
+        setChartData(setter);
     }
 
-    private void setChartData(String username) {
+    private void setChartData(ChartDataSetter setter) {
+        String username = setter.getPatientUserName();
+        //String view = setter.getSqlView();
+        String view ='(' + setter.getSqlView() + ')';
         PatientChart.getData().clear();
         String url = "jdbc:sqlite:miodatabase.db";
-        String sql = "SELECT ID_terapia, farmaco FROM terapie WHERE username = ? ";
+        String sql = "SELECT ID_terapia, farmaco FROM terapie WHERE username = ?  AND "  + view ;
         try (Connection conn = DriverManager.getConnection(url)) {
             PreparedStatement pstmt = conn.prepareStatement(sql);
             pstmt.setString(1, username);

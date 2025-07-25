@@ -7,16 +7,14 @@ import java.sql.ResultSet;
 import java.time.format.DateTimeFormatter;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.embed.swing.JFXPanel;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import models.ChartDataSetter;
 import models.Pasto;
-import javafx.application.Platform;
 import utility.UIUtils;
-import view.LogInView;
 import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -84,7 +82,7 @@ public class PatientPageController {
         logOutButton.setOnAction(e -> UIUtils.LogOutButton((Stage) logOutButton.getScene().getWindow()));
         salvaSintomi.setOnAction(e -> salvaSintomibox(textArea.getText()));
 
-        chartIncludeController.setName(LogInController.getUsername()); // passo il nome del paziente
+        chartIncludeController.setData(new ChartDataSetter(LogInController.getUsername(), ChartDataSetter.ALL)); // passo il nome del paziente
     }
 
     /*

@@ -1,7 +1,13 @@
 package enums;
 
 public enum StatoTerapia {
-    OK,
-    ATTESA,
-    ERRORE,
+    ATTIVA,
+    SOSPESA,
+    TERMINATA;
+
+    public String getStato() {
+        return this.name();
+    }
 }
+
+

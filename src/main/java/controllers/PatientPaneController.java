@@ -1,9 +1,9 @@
 package controllers;
 
-import com.lowagie.text.Font;
-import com.lowagie.text.Image;
 import enums.StatoTerapia;
 import javafx.fxml.FXML;
+import javafx.geometry.Insets;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -11,20 +11,14 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
 import javafx.util.StringConverter;
+import models.ChartDataSetter;
 import models.Terapia;
 import utility.UIUtils;
 import java.sql.*;
-import com.lowagie.text.*;
-import com.lowagie.text.pdf.*;
-import javafx.embed.swing.SwingFXUtils;
-import javafx.scene.SnapshotParameters;
-import javafx.scene.image.WritableImage;
 import javafx.scene.shape.Circle;
-import javax.imageio.ImageIO;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.FileOutputStream;
+
 
 public class PatientPaneController {
 
@@ -34,8 +28,8 @@ public class PatientPaneController {
     @FXML private TableView<Terapia> table;
     @FXML private TableColumn<Terapia, String> terapiaCol, farmacoCol, assunzioniCol, quantFarCol, noteCol;
     @FXML private TableColumn<Terapia, StatoTerapia> statoCol;
-    @FXML private Button searchButton, addFarmacoButton, updateButton, deleteButton, generaPDF;
-    @FXML private VBox lineChart;
+    @FXML private Button searchButton, addFarmacoButton, updateButton, deleteButton, generaPDF, filtraButton;
+    @FXML private VBox chartInclude;
     private final ObservableList<Terapia> data = FXCollections.observableArrayList();
     @FXML private PatientChartController chartIncludeController;
 
@@ -61,18 +55,18 @@ public class PatientPaneController {
                 if (stato == null) return "";
                 // Puoi anche personalizzare meglio: esempio -> "In Attesa"
                 return switch (stato) {
-                    case OK -> "OK";
-                    case ATTESA -> "Attesa";
-                    case ERRORE -> "Errore";
+                    case ATTIVA -> "Attiva";
+                    case SOSPESA -> "Sospesa";
+                    case TERMINATA -> "Terminata";
                 };
             }
 
             @Override
             public StatoTerapia fromString(String string) {
                 return switch (string.toLowerCase()) {
-                    case "ok" -> StatoTerapia.OK;
-                    case "attesa" -> StatoTerapia.ATTESA;
-                    case "errore" -> StatoTerapia.ERRORE;
+                    case "ok" -> StatoTerapia.ATTIVA;
+                    case "attesa" -> StatoTerapia.SOSPESA;
+                    case "errore" -> StatoTerapia.TERMINATA;
                     default -> null;
                 };
             }
@@ -88,9 +82,9 @@ public class PatientPaneController {
                     setGraphic(null);
                 } else {
                     switch (stato) {
-                        case OK -> circle.setStyle("-fx-fill: green;");
-                        case ATTESA -> circle.setStyle("-fx-fill: orange;");
-                        case ERRORE -> circle.setStyle("-fx-fill: red;");
+                        case ATTIVA -> circle.setStyle("-fx-fill: green;");
+                        case SOSPESA -> circle.setStyle("-fx-fill: orange;");
+                        case TERMINATA -> circle.setStyle("-fx-fill: red;");
                     }
                     setGraphic(circle);
                 }
@@ -102,7 +96,8 @@ public class PatientPaneController {
         addFarmacoButton.setOnAction(e -> aggiungiTerapia());
         deleteButton.setOnAction(e -> eliminaTerapia());
         updateButton.setOnAction(e -> updateTerapia());
-        generaPDF.setOnAction(e -> generaPDFReport("Paziente-PDF"));
+        filtraButton.setOnAction(e -> UIUtils.filtraTerapia());
+        generaPDF.setOnAction(e -> UIUtils.generaPDFReport( (Stage) generaPDF.getScene().getWindow(), usernameInput, chartInclude, table));
     }
     @FXML
     private void searchTerapie() {
@@ -143,8 +138,9 @@ public class PatientPaneController {
 
         label2.setText("Grafico andamento terapia del paziente :");
 
-        chartIncludeController.setName(username); // passo il nome del paziente
+        chartIncludeController.setData(new ChartDataSetter(username, ChartDataSetter.ALL)); // passo il nome del paziente
     }
+
 
     private void aggiungiTerapia() {
         String username = usernameInput.getText();
@@ -239,63 +235,6 @@ public class PatientPaneController {
         }
     }
 
-    public void generaPDFReport(String nomePaziente) {
-        try {
-            // 1. Crea documento
-            Document document = new Document(PageSize.A4);
-            String nome_file = nomePaziente + ".pdf";
-            PdfWriter.getInstance(document, new FileOutputStream(nome_file));    // cambia percorso salvataggio file col nomepaziente
-            document.open();
-
-            // 2. Titolo e nome paziente
-            Font titoloFont = new Font(Font.HELVETICA, 18, Font.BOLD);
-            Paragraph titolo = new Paragraph("Report Paziente", titoloFont);
-            titolo.setAlignment(Element.ALIGN_CENTER);
-            document.add(titolo);
-            document.add(new Paragraph("Nome: " + nomePaziente));
-            document.add(Chunk.NEWLINE);
-
-            // 3. Tabella PDF
-            PdfPTable pdfTable = new PdfPTable(5);
-            pdfTable.setWidthPercentage(100);
-            pdfTable.addCell("Terapia");
-            pdfTable.addCell("Farmaco");
-            pdfTable.addCell("Assunzioni");
-            pdfTable.addCell("Quantità");
-            pdfTable.addCell("Note");
-
-            for (Terapia terapia : table.getItems()) {
-                pdfTable.addCell(terapia.getIdTerapia());
-                pdfTable.addCell(terapia.getFarmaco());
-                pdfTable.addCell(terapia.getAssunzioni());
-                pdfTable.addCell(terapia.getQuantita());
-                pdfTable.addCell(terapia.getNote());
-            }
-
-            document.add(pdfTable);
-            document.add(Chunk.NEWLINE);
-
-            // 4. Grafico come immagine
-            WritableImage snapshot = lineChart.snapshot(new SnapshotParameters(), null);
-            BufferedImage bufferedImage = SwingFXUtils.fromFXImage(snapshot, null);
-            File chartFile = new File("grafico.png");
-            ImageIO.write(bufferedImage, "png", chartFile);
-
-            Image chartImage = Image.getInstance("grafico.png");
-            chartImage.scaleToFit(500, 300);
-            chartImage.setAlignment(Image.MIDDLE);
-            document.add(chartImage);
-
-            // 5. Chiudi
-            document.close();
-            chartFile.delete(); // pulizia file temporaneo
-
-        } catch (Exception e) {
-            e.printStackTrace();
-            UIUtils.showAlert(Alert.AlertType.ERROR, "Errore", "Impossibile generare il PDF.");
-        }
-    }
-
     public void updateTerapia(){
 
         String farmaco = newFarmacoInput.getText();
@@ -366,8 +305,8 @@ public class PatientPaneController {
                         pstmt.setString(2, assunzioni);
                         pstmt.setString(3, quantita);
                         pstmt.setString(4, note);
-                        pstmt.setString(5, idTerapia);
-                        pstmt.setString(6, stato);
+                        pstmt.setString(5, stato);
+                        pstmt.setString(6, idTerapia);
                         pstmt.executeUpdate();
                         table.getItems().remove(selected);
                         table.getItems().add(new Terapia(String.valueOf(idTerapia), stato, farmaco, assunzioni, quantita, note));

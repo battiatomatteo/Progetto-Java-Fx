@@ -27,8 +27,8 @@ public class Terapia {
         try {
             statoEnum = StatoTerapia.valueOf(stato.trim().toUpperCase());
         } catch (IllegalArgumentException | NullPointerException e) {
-            statoEnum = StatoTerapia.ATTESA; // valore di default se stringa non valida
-            System.err.println("⚠️ Stato non valido per terapia ID " + id_terapia + ": \"" + stato + "\". Usato valore di default ATTESA.");
+            statoEnum = StatoTerapia.SOSPESA; // valore di default se stringa non valida
+            System.err.println("Stato non valido per terapia ID " + id_terapia + ": \"" + stato + "\". Usato valore di default SOSPESA.");
         }
         this.stato = new SimpleObjectProperty<>(statoEnum);
     }
