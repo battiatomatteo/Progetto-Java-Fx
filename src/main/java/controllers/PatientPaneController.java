@@ -11,6 +11,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
+import javafx.util.StringConverter;
 import models.Terapia;
 import utility.UIUtils;
 import java.sql.*;
@@ -27,7 +28,7 @@ import java.io.FileOutputStream;
 
 public class PatientPaneController {
 
-    @FXML public ComboBox statoComboBox;
+    @FXML private ComboBox<StatoTerapia> statoComboBox;
     @FXML private TextField usernameInput, newFarmacoInput, newAssunzioniInput, newQuantitaInput, newNoteInput;
     @FXML private Label labelUsername, label, label2;
     @FXML private TableView<Terapia> table;
@@ -48,6 +49,35 @@ public class PatientPaneController {
         quantFarCol.setCellValueFactory(cell -> cell.getValue().quantitaProperty());
         noteCol.setCellValueFactory(cell -> cell.getValue().noteProperty());
         table.setItems(data);
+
+        statoComboBox.setItems(FXCollections.observableArrayList(StatoTerapia.values()));
+        /*
+        * assicura che il ComboBox mostri valori leggibili (e non OK, ATTESA, ERRORE tutti in maiuscolo)
+        * e che non si verifichi più il ClassCastException
+        */
+        statoComboBox.setConverter(new StringConverter<StatoTerapia>() {
+            @Override
+            public String toString(StatoTerapia stato) {
+                if (stato == null) return "";
+                // Puoi anche personalizzare meglio: esempio -> "In Attesa"
+                return switch (stato) {
+                    case OK -> "OK";
+                    case ATTESA -> "Attesa";
+                    case ERRORE -> "Errore";
+                };
+            }
+
+            @Override
+            public StatoTerapia fromString(String string) {
+                return switch (string.toLowerCase()) {
+                    case "ok" -> StatoTerapia.OK;
+                    case "attesa" -> StatoTerapia.ATTESA;
+                    case "errore" -> StatoTerapia.ERRORE;
+                    default -> null;
+                };
+            }
+        });
+
 
         statoCol.setCellFactory(column -> new TableCell<>() {
             private final Circle circle = new Circle(6);
@@ -122,7 +152,14 @@ public class PatientPaneController {
         String assunzioni = newAssunzioniInput.getText();
         String quantita = newQuantitaInput.getText();
         String note = newNoteInput.getText();
-        String stato = statoComboBox.getValue().toString();
+        //String stato = statoComboBox.getValue().toString();
+
+        StatoTerapia statoEnum = statoComboBox.getValue();  // ComboBox<StatoTerapia>
+        if (statoEnum == null) {
+            UIUtils.showAlert(Alert.AlertType.WARNING, "Stato mancante", "Seleziona uno stato per la terapia!");
+            return;
+        }
+        String stato = statoEnum.name(); // Ottieni "OK", "ATTESA", "ERRORE"
 
         if (username.isEmpty() || farmaco.isEmpty() || assunzioni.isEmpty() || quantita.isEmpty()) {
             UIUtils.showAlert(Alert.AlertType.WARNING, "Campi mancanti", "Compila tutti i campi obbligatori!");
@@ -168,7 +205,7 @@ public class PatientPaneController {
             pstmt.setString(7, stato);
             pstmt.executeUpdate();
 
-            table.getItems().add(new Terapia(String.valueOf(nextId), farmaco, assunzioni, quantita, note, stato));
+            table.getItems().add(new Terapia(String.valueOf(nextId),stato, farmaco, assunzioni, quantita, note));
             UIUtils.showAlert(Alert.AlertType.INFORMATION, "Terapia aggiunta", "Nuova terapia aggiunta con successo!");
 
             resetCampi();
@@ -265,14 +302,18 @@ public class PatientPaneController {
         String assunzioni = newAssunzioniInput.getText();
         String quantita = newQuantitaInput.getText();
         String note = newNoteInput.getText();
-        String stato = statoComboBox.getValue().toString();
+        //String stato = statoComboBox.getValue().toString();
+        Terapia selected = table.getSelectionModel().getSelectedItem();
+        // ottengo valore del ComboBox (se presente), altrimenti prendo lo stato esistente
+        StatoTerapia statoEnum = statoComboBox.getValue();
+        String stato = (statoEnum != null) ? statoEnum.name() : selected.getStatoEnum().name();
 
         if(farmaco.isEmpty() && assunzioni.isEmpty() && quantita.isEmpty() && note.isEmpty()){
             UIUtils.showAlert(Alert.AlertType.WARNING, "Campi mancanti", "Compila almeno un campo per modificare");
             return;
         }
         try{
-            Terapia selected = table.getSelectionModel().getSelectedItem();
+            //Terapia selected = table.getSelectionModel().getSelectedItem();  // spostata a riga 306
             if (selected != null) {
                 Alert confirm = new Alert(Alert.AlertType.CONFIRMATION);
                 confirm.setTitle("Conferma modifiche");
@@ -329,7 +370,7 @@ public class PatientPaneController {
                         pstmt.setString(6, stato);
                         pstmt.executeUpdate();
                         table.getItems().remove(selected);
-                        table.getItems().add(new Terapia(String.valueOf(idTerapia), farmaco, assunzioni, quantita, note, stato));
+                        table.getItems().add(new Terapia(String.valueOf(idTerapia), stato, farmaco, assunzioni, quantita, note));
                         UIUtils.showAlert(Alert.AlertType.INFORMATION, "Terapia aggiornata", " terapia aggiornata con successo!");
                         resetCampi();
                     } catch (Exception ex) {

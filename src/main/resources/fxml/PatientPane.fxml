@@ -40,12 +40,12 @@
         </GridPane>
         <TableView fx:id="table" prefHeight="250" prefWidth="500" VBox.vgrow="ALWAYS">
             <columns>
-                <TableColumn fx:id="terapiaCol" text="ID Terapia" minWidth="103"/>
-                <TableColumn fx:id="statoCol" text="Stato" prefWidth="80" />
-                <TableColumn fx:id="farmacoCol" text="Farmaco" minWidth="140"/>
-                <TableColumn fx:id="assunzioniCol" text="Assunzioni" minWidth="130"/>
-                <TableColumn fx:id="quantFarCol" text="Quantità" minWidth="130"/>
-                <TableColumn fx:id="noteCol" text="Note" minWidth="260"/>
+                <TableColumn fx:id="terapiaCol" text="ID Terapia" minWidth="93"/>
+                <TableColumn fx:id="statoCol" text="Stato" prefWidth="70" />
+                <TableColumn fx:id="farmacoCol" text="Farmaco" minWidth="150"/>
+                <TableColumn fx:id="assunzioniCol" text="Assunzioni" minWidth="120"/>
+                <TableColumn fx:id="quantFarCol" text="Quantità" minWidth="120"/>
+                <TableColumn fx:id="noteCol" text="Note" minWidth="230"/>
             </columns>
         </TableView>
         <Button fx:id="deleteButton" text="Elimina Terapia"/>

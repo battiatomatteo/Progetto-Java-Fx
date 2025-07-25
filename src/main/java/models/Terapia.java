@@ -20,7 +20,17 @@ public class Terapia {
         this.assunzioni = new SimpleStringProperty(assunzioni);
         this.quantFarmaco = new SimpleStringProperty(quantFarmaco);
         this.note = new SimpleStringProperty(note);
-        this.stato = new SimpleObjectProperty<>(StatoTerapia.valueOf(stato));
+        //this.stato = new SimpleObjectProperty<>(StatoTerapia.valueOf(stato));
+
+        //  per prevenire eccezioni nel caso in cui nel database venga salvata per errore una stringa non valida
+        StatoTerapia statoEnum;
+        try {
+            statoEnum = StatoTerapia.valueOf(stato.trim().toUpperCase());
+        } catch (IllegalArgumentException | NullPointerException e) {
+            statoEnum = StatoTerapia.ATTESA; // valore di default se stringa non valida
+            System.err.println("⚠️ Stato non valido per terapia ID " + id_terapia + ": \"" + stato + "\". Usato valore di default ATTESA.");
+        }
+        this.stato = new SimpleObjectProperty<>(statoEnum);
     }
 
     public String getIdTerapia() { return id_terapia.get(); }
