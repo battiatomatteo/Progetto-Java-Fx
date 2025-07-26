@@ -55,6 +55,13 @@
         <GridPane>
             <Button fx:id="generaPDF" text="GeneraPDF" />
         </GridPane>
+        <Separator />
         <Label text="Informazioni utente :" />
+        <TextArea fx:id="infoTextArea"
+                  promptText="Scrivi qui le informazioni utente..."
+                  wrapText="true"
+                  prefRowCount="6" />
+
+        <Button text="Salva modifiche"  fx:id="salvaInfo" />
     </VBox>
 </TitledPane>

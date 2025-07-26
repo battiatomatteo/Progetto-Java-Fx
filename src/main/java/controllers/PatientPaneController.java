@@ -28,11 +28,11 @@ public class PatientPaneController {
     @FXML private TableView<Terapia> table;
     @FXML private TableColumn<Terapia, String> terapiaCol, farmacoCol, assunzioniCol, quantFarCol, noteCol;
     @FXML private TableColumn<Terapia, StatoTerapia> statoCol;
-    @FXML private Button searchButton, addFarmacoButton, updateButton, deleteButton, generaPDF, filtraButton;
+    @FXML private Button searchButton, addFarmacoButton, updateButton, deleteButton, generaPDF, filtraButton, salvaInfo;
     @FXML private VBox chartInclude;
     private final ObservableList<Terapia> data = FXCollections.observableArrayList();
     @FXML private PatientChartController chartIncludeController;
-
+    @FXML private TextArea infoTextArea;
 
     @FXML
     private void initialize() {
@@ -137,7 +137,8 @@ public class PatientPaneController {
         table.setItems(data);
 
         label2.setText("Grafico andamento terapia del paziente :");
-
+        caricaInfoUtente(username);
+        salvaInfo.setOnAction(e -> salvaModifiche(username));
         chartIncludeController.setData(new ChartDataSetter(username, ChartDataSetter.ALL)); // passo il nome del paziente
     }
 
@@ -331,5 +332,45 @@ public class PatientPaneController {
         newNoteInput.clear();
         newAssunzioniInput.clear();
         newQuantitaInput.clear();
+    }
+
+
+    public void caricaInfoUtente(String username) {
+        String sql = "SELECT informazioni FROM utenti WHERE username = ?";
+
+        try (Connection conn = DriverManager.getConnection("jdbc:sqlite:miodatabase.db");
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setString(1, username);
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                infoTextArea.setText(rs.getString("informazioni"));
+            }
+
+        } catch (SQLException e) {
+            UIUtils.showAlert(Alert.AlertType.ERROR, "Errore","Errore nel caricamento delle informazioni utente.");
+            e.printStackTrace();
+        }
+    }
+
+    private void salvaModifiche(String username) {
+        String nuoveNote = infoTextArea.getText();
+
+        String updateSql = "UPDATE utenti SET informazioni = ? WHERE username = ?";
+
+        try (Connection conn = DriverManager.getConnection("jdbc:sqlite:miodatabase.db");
+             PreparedStatement pstmt = conn.prepareStatement(updateSql)) {
+
+            pstmt.setString(1, nuoveNote);
+            pstmt.setString(2, username);
+            pstmt.executeUpdate();
+
+            UIUtils.showAlert(Alert.AlertType.INFORMATION,"Successo", "Le informazioni utente sono state aggiornate.");
+
+        } catch (SQLException ex) {
+            UIUtils.showAlert(Alert.AlertType.ERROR, "Errore", "Errore durante il salvataggio delle modifiche.");
+            ex.printStackTrace();
+        }
     }
 }

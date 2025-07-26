@@ -42,6 +42,7 @@
                     <!-- Container per i TitledPane dei pazienti -->
                     <VBox fx:id="patientsContainer" spacing="10" />
                 </VBox>
+                <Separator />
             </AnchorPane>
 
             <!-- Barra laterale notifiche -->
