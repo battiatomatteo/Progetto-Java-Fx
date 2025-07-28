@@ -1,5 +1,6 @@
 package controllers;
 
+import DAO.PatientPaneDao;
 import enums.StatoTerapia;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
@@ -26,23 +27,26 @@ public class PatientPaneController {
     @FXML private TextField usernameInput, newFarmacoInput, newAssunzioniInput, newQuantitaInput, newNoteInput;
     @FXML private Label labelUsername, label, label2;
     @FXML private TableView<Terapia> table;
-    @FXML private TableColumn<Terapia, String> terapiaCol, farmacoCol, assunzioniCol, quantFarCol, noteCol;
+    @FXML private TableColumn<Terapia, String> farmacoCol, assunzioniCol, quantFarCol, noteCol;
+    @FXML private TableColumn<Terapia, Integer > terapiaCol;
     @FXML private TableColumn<Terapia, StatoTerapia> statoCol;
     @FXML private Button searchButton, addFarmacoButton, updateButton, deleteButton, generaPDF, filtraButton, salvaInfo;
     @FXML private VBox chartInclude;
-    private final ObservableList<Terapia> data = FXCollections.observableArrayList();
+   //private final ObservableList<Terapia> data = FXCollections.observableArrayList();
     @FXML private PatientChartController chartIncludeController;
     @FXML private TextArea infoTextArea;
+    private PatientPaneDao dao;
 
     @FXML
     private void initialize() {
-        terapiaCol.setCellValueFactory(cell -> cell.getValue().idTerapiaProperty());
+        terapiaCol.setCellValueFactory(cell -> cell.getValue().idTerapiaProperty().asObject());
         statoCol.setCellValueFactory(cell -> cell.getValue().statoEnumProperty());
         farmacoCol.setCellValueFactory(cell -> cell.getValue().farmacoProperty());
         assunzioniCol.setCellValueFactory(cell -> cell.getValue().assunzioniProperty());
         quantFarCol.setCellValueFactory(cell -> cell.getValue().quantitaProperty());
         noteCol.setCellValueFactory(cell -> cell.getValue().noteProperty());
-        table.setItems(data);
+        dao = new PatientPaneDao();
+        //table.setItems(data);
 
         statoComboBox.setItems(FXCollections.observableArrayList(StatoTerapia.values()));
         /*
@@ -96,14 +100,13 @@ public class PatientPaneController {
         addFarmacoButton.setOnAction(e -> aggiungiTerapia());
         deleteButton.setOnAction(e -> eliminaTerapia());
         updateButton.setOnAction(e -> updateTerapia());
-        filtraButton.setOnAction(e -> UIUtils.filtraTerapia());
+        filtraButton.setOnAction(e -> UIUtils.filtraTerapia(usernameInput.getText()));
         generaPDF.setOnAction(e -> UIUtils.generaPDFReport( (Stage) generaPDF.getScene().getWindow(), usernameInput, chartInclude, table));
     }
     @FXML
     private void searchTerapie() {
         String username = usernameInput.getText();
 
-        data.clear();
         if (username.isEmpty()) {
             UIUtils.showAlert(Alert.AlertType.WARNING, "Nessuna selezione", "Inserire un utente prima di eseguire la ricerca.");
             return;
@@ -115,33 +118,14 @@ public class PatientPaneController {
         // label che si possono vedere una volta che il paziente inserito viene trovato nel database
         label.setText("Lista delle terapie del paziente :");
 
-        String url = "jdbc:sqlite:miodatabase.db";
-        String sql = "SELECT ID_terapia, stato, farmaco, count_farmaco, quantità_farmaco, note FROM terapie WHERE username = ?";
-        try (Connection conn = DriverManager.getConnection(url);
-             PreparedStatement pstmt = conn.prepareStatement(sql)) {
-            pstmt.setString(1, username);
-            ResultSet rs = pstmt.executeQuery();
-            while (rs.next()) {
-                data.add(new Terapia(
-                        rs.getString("ID_terapia"),
-                        rs.getString("stato"),
-                        rs.getString("farmaco"),
-                        rs.getString("count_farmaco"),
-                        rs.getString("quantità_farmaco"),
-                        rs.getString("note")
-                ));
-            }
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
-        table.setItems(data);
+        table.setItems(dao.getTerapieList(username));
+        //table.setItems(data);
 
         label2.setText("Grafico andamento terapia del paziente :");
         caricaInfoUtente(username);
         salvaInfo.setOnAction(e -> salvaModifiche(username));
         chartIncludeController.setData(new ChartDataSetter(username, ChartDataSetter.ALL)); // passo il nome del paziente
     }
-
 
     private void aggiungiTerapia() {
         String username = usernameInput.getText();
@@ -177,38 +161,9 @@ public class PatientPaneController {
             return;
         }
 
-        String url = "jdbc:sqlite:miodatabase.db";
-        int nextId = 1;
-        String idSql = "SELECT MAX(ID_terapia) FROM terapie";
-        try (Connection conn = DriverManager.getConnection(url);
-             PreparedStatement pstmt = conn.prepareStatement(idSql);
-             ResultSet rs = pstmt.executeQuery()) {
-            if (rs.next()) {
-                nextId = rs.getInt(1) + 1;
-            }
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
-
-        String insertSql = "INSERT INTO terapie (ID_terapia, username, farmaco, count_farmaco, quantità_farmaco, note, stato) VALUES (?, ?, ?, ?, ?, ?, ?)";
-        try (Connection conn = DriverManager.getConnection(url);
-             PreparedStatement pstmt = conn.prepareStatement(insertSql)) {
-            pstmt.setInt(1, nextId);
-            pstmt.setString(2, username);
-            pstmt.setString(3, farmaco);
-            pstmt.setString(4, assunzioni);
-            pstmt.setString(5, quantita);
-            pstmt.setString(6, note);
-            pstmt.setString(7, stato);
-            pstmt.executeUpdate();
-
-            table.getItems().add(new Terapia(String.valueOf(nextId),stato, farmaco, assunzioni, quantita, note));
-            UIUtils.showAlert(Alert.AlertType.INFORMATION, "Terapia aggiunta", "Nuova terapia aggiunta con successo!");
-
-            resetCampi();
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
+        table.getItems().add(dao.addNewTerapia(username, stato, farmaco, assunzioni, quantita, note));
+        UIUtils.showAlert(Alert.AlertType.INFORMATION, "Terapia aggiunta", "Nuova terapia aggiunta con successo!");
+        resetCampi();
     }
 
     private void eliminaTerapia() {
@@ -219,17 +174,9 @@ public class PatientPaneController {
             confirm.setHeaderText(null);
             confirm.setContentText("Vuoi davvero eliminare la terapia selezionata?");
             if (confirm.showAndWait().orElse(ButtonType.CANCEL) == ButtonType.OK) {
-                String idTerapia = selected.getIdTerapia();
-                String sql = "DELETE FROM terapie WHERE id_terapia = ?";
-                String url = "jdbc:sqlite:miodatabase.db";
-                try (Connection conn = DriverManager.getConnection(url);
-                     PreparedStatement pstmt = conn.prepareStatement(sql)) {
-                    pstmt.setString(1, idTerapia);
-                    pstmt.executeUpdate();
-                    table.getItems().remove(selected);
-                } catch (Exception ex) {
-                    ex.printStackTrace();
-                }
+                int idTerapia = selected.getIdTerapia();
+                dao.removeTerapia(idTerapia);
+                table.getItems().remove(selected);
             }
         } else {
             UIUtils.showAlert(Alert.AlertType.WARNING, "Nessuna selezione", "Seleziona una terapia da eliminare.");
@@ -237,21 +184,20 @@ public class PatientPaneController {
     }
 
     public void updateTerapia(){
-
         String farmaco = newFarmacoInput.getText();
         String assunzioni = newAssunzioniInput.getText();
         String quantita = newQuantitaInput.getText();
         String note = newNoteInput.getText();
-        //String stato = statoComboBox.getValue().toString();
         Terapia selected = table.getSelectionModel().getSelectedItem();
         // ottengo valore del ComboBox (se presente), altrimenti prendo lo stato esistente
         StatoTerapia statoEnum = statoComboBox.getValue();
-        String stato = (statoEnum != null) ? statoEnum.name() : selected.getStatoEnum().name();
+        //String stato = (statoEnum != null) ? statoEnum.name() : selected.getStatoEnum().name();
 
-        if(farmaco.isEmpty() && assunzioni.isEmpty() && quantita.isEmpty() && note.isEmpty()){
+        if(farmaco.isEmpty() && assunzioni.isEmpty() && quantita.isEmpty() && note.isEmpty() && statoEnum == null){
             UIUtils.showAlert(Alert.AlertType.WARNING, "Campi mancanti", "Compila almeno un campo per modificare");
             return;
         }
+        String stato = statoEnum.name();
         try{
             //Terapia selected = table.getSelectionModel().getSelectedItem();  // spostata a riga 306
             if (selected != null) {
@@ -261,62 +207,45 @@ public class PatientPaneController {
                 confirm.setContentText("Vuoi davvero modificare la terapia selezionata?");
                 if (confirm.showAndWait().orElse(ButtonType.CANCEL) == ButtonType.OK) {
 
-                    String idTerapia = selected.getIdTerapia();
+                    int idTerapia = selected.getIdTerapia();
 
-                    String sql = "UPDATE terapie SET farmaco = ?, count_farmaco = ?, quantità_farmaco = ?, note = ?, stato= ?  WHERE id_terapia = ?";
-                    String url = "jdbc:sqlite:miodatabase.db";
-
-                    try (Connection conn = DriverManager.getConnection(url);
-                         PreparedStatement pstmt = conn.prepareStatement(sql)) {
-
-                        if(farmaco.isEmpty()){
-                            farmaco = selected.getFarmaco();
+                    if(farmaco.isEmpty()){
+                        farmaco = selected.getFarmaco();
+                    }
+                    if(assunzioni.isEmpty()){
+                        assunzioni = selected.getAssunzioni();
+                    }
+                    else {
+                        try {
+                            int n = Integer.parseInt(assunzioni);
                         }
-                        if(assunzioni.isEmpty()){
-                            assunzioni = selected.getAssunzioni();
-                        }
-                        else {
-                            try {
-                                int n = Integer.parseInt(assunzioni);
-                            }
-                            catch ( NumberFormatException e) {
-                                UIUtils.showAlert(Alert.AlertType.ERROR, "Errore inserimento", "Hai inserito una lettera o simbolo al posto di un numero");
-                                resetCampi();
-                                return;
-                            }
-
-                        }
-                        if(quantita.isEmpty()){
-                            quantita = selected.getQuantita();
-                        }else {
-                            try {
-                                double n = Double.parseDouble(quantita);
-                            }
-                            catch ( NumberFormatException e) {
-                                UIUtils.showAlert(Alert.AlertType.ERROR, "Errore inserimento", "Hai inserito una lettera o simbolo al posto di un numero");
-                                resetCampi();
-                                return;
-                            }
-                        }
-                        if(note.isEmpty()){
-                            note = selected.getNote();
+                        catch ( NumberFormatException e) {
+                            UIUtils.showAlert(Alert.AlertType.ERROR, "Errore inserimento", "Hai inserito una lettera o simbolo al posto di un numero");
+                            resetCampi();
+                            return;
                         }
 
-                        pstmt.setString( 1, farmaco);
-                        pstmt.setString(2, assunzioni);
-                        pstmt.setString(3, quantita);
-                        pstmt.setString(4, note);
-                        pstmt.setString(5, stato);
-                        pstmt.setString(6, idTerapia);
-                        pstmt.executeUpdate();
-                        table.getItems().remove(selected);
-                        table.getItems().add(new Terapia(String.valueOf(idTerapia), stato, farmaco, assunzioni, quantita, note));
-                        UIUtils.showAlert(Alert.AlertType.INFORMATION, "Terapia aggiornata", " terapia aggiornata con successo!");
-                        resetCampi();
-                    } catch (Exception ex) {
-                        ex.printStackTrace();
+                    }
+                    if(quantita.isEmpty()){
+                        quantita = selected.getQuantita();
+                    }else {
+                        try {
+                            double n = Double.parseDouble(quantita);
+                        }
+                        catch ( NumberFormatException e) {
+                            UIUtils.showAlert(Alert.AlertType.ERROR, "Errore inserimento", "Hai inserito una lettera o simbolo al posto di un numero");
+                            resetCampi();
+                            return;
+                        }
+                    }
+                    if(note.isEmpty()){
+                        note = selected.getNote();
                     }
 
+                    table.getItems().remove(selected);
+                    table.getItems().add(dao.updateTerapia(idTerapia, stato, farmaco, assunzioni, quantita, note));
+                    UIUtils.showAlert(Alert.AlertType.INFORMATION, "Terapia aggiornata", " terapia aggiornata con successo!");
+                    resetCampi();
                 }
             } else {
                 UIUtils.showAlert(Alert.AlertType.WARNING, "Nessuna selezione", "Seleziona una terapia da modificare.");
@@ -334,43 +263,19 @@ public class PatientPaneController {
         newQuantitaInput.clear();
     }
 
-
-    public void caricaInfoUtente(String username) {
-        String sql = "SELECT informazioni FROM utenti WHERE username = ?";
-
-        try (Connection conn = DriverManager.getConnection("jdbc:sqlite:miodatabase.db");
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
-
-            stmt.setString(1, username);
-            ResultSet rs = stmt.executeQuery();
-
-            if (rs.next()) {
-                infoTextArea.setText(rs.getString("informazioni"));
-            }
-
-        } catch (SQLException e) {
-            UIUtils.showAlert(Alert.AlertType.ERROR, "Errore","Errore nel caricamento delle informazioni utente.");
-            e.printStackTrace();
-        }
-    }
-
-    private void salvaModifiche(String username) {
+    private void salvaModifiche(String username){
         String nuoveNote = infoTextArea.getText();
-
-        String updateSql = "UPDATE utenti SET informazioni = ? WHERE username = ?";
-
-        try (Connection conn = DriverManager.getConnection("jdbc:sqlite:miodatabase.db");
-             PreparedStatement pstmt = conn.prepareStatement(updateSql)) {
-
-            pstmt.setString(1, nuoveNote);
-            pstmt.setString(2, username);
-            pstmt.executeUpdate();
-
-            UIUtils.showAlert(Alert.AlertType.INFORMATION,"Successo", "Le informazioni utente sono state aggiornate.");
-
-        } catch (SQLException ex) {
-            UIUtils.showAlert(Alert.AlertType.ERROR, "Errore", "Errore durante il salvataggio delle modifiche.");
-            ex.printStackTrace();
-        }
+        dao.updateInfoUtente(username, nuoveNote);
     }
+
+    public void caricaInfoUtente(String username){
+        String result = dao.getInfoUtente(username);
+        if(result == null){
+            infoTextArea.setText("non ci sono informazioni");
+        }
+        else infoTextArea.setText(result);
+    }
+
+
+
 }

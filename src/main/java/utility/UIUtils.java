@@ -15,7 +15,6 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import models.Terapia;
 import view.LogInView;
-
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -79,7 +78,6 @@ public class UIUtils {
         }
     }
 
-
     public static String dataOggi(){
         LocalDate oggi = LocalDate.now();
         return oggi.toString();
@@ -135,7 +133,7 @@ public class UIUtils {
             pdfTable.addCell("Note");
 
             for (Terapia terapia : table.getItems()) {
-                pdfTable.addCell(terapia.getIdTerapia());
+                pdfTable.addCell(String.valueOf(terapia.getIdTerapia()));
                 pdfTable.addCell(terapia.getStatoEnum().toString());
                 pdfTable.addCell(terapia.getFarmaco());
                 pdfTable.addCell(terapia.getAssunzioni());
@@ -167,7 +165,7 @@ public class UIUtils {
         }
     }
 
-    public static void filtraTerapia(){
+    public static void filtraTerapia(String username){
 
         // Nuovo Stage (finestra)
         Stage finestraFiltro = new Stage();
@@ -180,7 +178,24 @@ public class UIUtils {
 
         // ComboBox per Tipo farmaco
         ComboBox<String> tipoFarmacoCombo = new ComboBox<>();
-        tipoFarmacoCombo.getItems().addAll("Tutti", "Antibiotico", "Antidolorifico", "Altro");
+
+        String url = "jdbc:sqlite:miodatabase.db";
+        String sql = "SELECT farmaco FROM terapie WHERE username = ?";
+        try (Connection conn = DriverManager.getConnection(url);
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setString(1, username);
+            ResultSet rs = pstmt.executeQuery();
+            while (rs.next()) {
+                tipoFarmacoCombo.getItems().add(
+                        rs.getString("farmaco"
+                ));
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+
+        //tipoFarmacoCombo.getItems().addAll("Tutti", "Antibiotico", "Antidolorifico", "Altro");
+
         tipoFarmacoCombo.setValue("Tutti");
 
         // Pulsante per filtrare
