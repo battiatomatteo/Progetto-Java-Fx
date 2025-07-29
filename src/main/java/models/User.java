@@ -22,4 +22,18 @@ public class User {
     public SimpleStringProperty tipo_utenteProperty() { return tipo_utente; }
     public SimpleStringProperty passwordProperty() { return password; }
     public SimpleStringProperty medicoProperty() { return medico; }
+
+    /*
+    * controlla se o è un istanza di utente all'ora entro nell'if
+    * altrimenti return false
+    * all'interno dell'if controllo se hanno lo stesso username
+    * */
+    @Override
+    public boolean equals(Object o) {
+        if( o instanceof User user2){
+            return username.get().equals(user2.getUsername());
+        }
+        else return false;
+    }
 }
+

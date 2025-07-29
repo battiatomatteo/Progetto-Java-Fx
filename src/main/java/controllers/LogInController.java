@@ -1,5 +1,6 @@
 package controllers;
 
+import DAO.UIUtilsDao;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
@@ -7,7 +8,6 @@ import utility.UIUtils;
 import view.AdminPageView;
 import view.DoctorPageView;
 import view.PatientPageView;
-import java.sql.*;
 
 public class LogInController {
 
@@ -18,6 +18,7 @@ public class LogInController {
     @FXML private TextField visiblePassField;
     @FXML private ToggleButton showPasswordToggle;
     private static String user;
+    private UIUtilsDao dao = new UIUtilsDao();
 
     @FXML
     private void initialize() {
@@ -66,22 +67,8 @@ public class LogInController {
         }
     }
 
-    private static String getTipoUtente(String username) {
-        String url = "jdbc:sqlite:miodatabase.db";
-        String sql = "SELECT tipo_utente FROM utenti WHERE username = ?";
-        try (Connection conn = DriverManager.getConnection(url);
-             PreparedStatement pstmt = conn.prepareStatement(sql)) {
-            pstmt.setString(1, username);
-            ResultSet rs = pstmt.executeQuery();
-            if (rs.next()) {
-                return rs.getString("tipo_utente");
-            } else {
-                return null;
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
-        }
+    private String getTipoUtente(String username) {
+         return dao.tipoUtente(username);
     }
 
     private static String getErrore() {

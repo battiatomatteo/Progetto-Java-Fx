@@ -5,22 +5,16 @@ import javafx.collections.ObservableList;
 import javafx.scene.control.Alert;
 import models.Terapia;
 import utility.UIUtils;
-
 import java.sql.*;
 
 
-public class PatientPaneDao{
-    private final Connection conn;
+public class PatientPaneDao extends DBConnection{
     private ObservableList<Terapia> TerapieData = FXCollections.observableArrayList();
 
+    // utilizza il costuttore della classe padre DBConnection
+    // che si occupa di effettuare una connessione con il database usato nel progetto
     public PatientPaneDao() {
-
-        try {
-            this.conn = DBConnection.getConnection();
-
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
+        super();
     }
 
     public ObservableList<Terapia> getTerapieList(String username){

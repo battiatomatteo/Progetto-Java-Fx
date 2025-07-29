@@ -1,5 +1,6 @@
 package controllers;
 
+import DAO.AdminDao;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.collections.FXCollections;
@@ -17,9 +18,7 @@ public class AdminPageController {
     @FXML private PasswordField passwordInput;
     @FXML private TableView<User> table;
     @FXML private TableColumn<User, String> usernameCol, tipoUtenteCol, passwordCol, medicoCol;
-
-    private final ObservableList<User> data = FXCollections.observableArrayList();
-    private final String url = "jdbc:sqlite:miodatabase.db";
+    private AdminDao dao = new AdminDao();
 
     @FXML
     private void initialize() {
@@ -27,10 +26,7 @@ public class AdminPageController {
         tipoUtenteCol.setCellValueFactory(cellData -> cellData.getValue().tipo_utenteProperty());
         passwordCol.setCellValueFactory(cellData -> cellData.getValue().passwordProperty());
         medicoCol.setCellValueFactory(cellData -> cellData.getValue().medicoProperty());
-        table.setItems(data);
-
-        // Carica utenti dal database
-        loadUsers();
+        table.setItems(dao.caricaUtentiDao());         // Carica utenti dal database
 
         // Come funziona: Quando clicco sul bottone, prendi la finestra corrente e passala a UIUtils.LogOutButton() per eseguire il logout
         logoutButton.setOnAction(e -> UIUtils.LogOutButton((Stage) logoutButton.getScene().getWindow()));
@@ -39,72 +35,35 @@ public class AdminPageController {
         cancelButton.setOnAction(e -> deleteUser());
     }
 
-    private void loadUsers() {
-        data.clear();
-        String sql = "SELECT username, tipo_utente, password, medico FROM utenti";
-        try (Connection conn = DriverManager.getConnection(url);
-             PreparedStatement pstmt = conn.prepareStatement(sql);
-             ResultSet rs = pstmt.executeQuery()) {
-            while (rs.next()) {
-                data.add(new User(
-                        rs.getString("username"),
-                        rs.getString("tipo_utente"),
-                        rs.getString("password"),
-                        rs.getString("medico")
-                ));
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
     private void addUser() {
         String username = usernameInput.getText();
         String tipoUtente = tipoUtenteInput.getText();
         String password = passwordInput.getText();
         String medico = medicoInput.getText();
+        User user = new User(username, tipoUtente, password, medico);
 
         if (username.isEmpty() || tipoUtente.isEmpty() || password.isEmpty()) {
             UIUtils.showAlert(Alert.AlertType.ERROR, "Errore", "Compila tutti i campi obbligatori!");
             return;
         }
-
         // Controlla se l'utente esiste già
-        String checkSql = "SELECT COUNT(*) FROM utenti WHERE username = ?";
-        try (Connection conn = DriverManager.getConnection(url);
-             PreparedStatement pstmt = conn.prepareStatement(checkSql)) {
-            pstmt.setString(1, username);
-            ResultSet rs = pstmt.executeQuery();
-            if (rs.next() && rs.getInt(1) > 0) {
-                UIUtils.showAlert(Alert.AlertType.ERROR, "Errore", "L'utente con questo username esiste già!");
-                usernameInput.clear();
-                tipoUtenteInput.clear();
-                passwordInput.clear();
-                return;
-            }
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
-
-        // Inserisci nel database
-        String insertSql = "INSERT INTO utenti(username, tipo_utente, password, medico) VALUES (?, ?, ?, ?)";
-        try (Connection conn = DriverManager.getConnection(url);
-             PreparedStatement pstmt = conn.prepareStatement(insertSql)) {
-            pstmt.setString(1, username);
-            pstmt.setString(2, tipoUtente);
-            pstmt.setString(3, password);
-            pstmt.setString(4, medico);
-            pstmt.executeUpdate();
-
-            data.add(new User(username, tipoUtente, password, medico));
+        if(dao.esisteUtente(user)){
+            UIUtils.showAlert(Alert.AlertType.ERROR, "Errore", "L'utente con questo username esiste già!");
             usernameInput.clear();
             tipoUtenteInput.clear();
             passwordInput.clear();
-            medicoInput.clear();
-            UIUtils.showAlert(Alert.AlertType.INFORMATION, "Utente aggiunto", "Nuovo utente inserito con successo!");
-        } catch (Exception ex) {
-            ex.printStackTrace();
+            return;
         }
+
+        // Inserisci nel database
+        dao.aggiungiUtente(user);
+        // svuoto i campi
+        usernameInput.clear();
+        tipoUtenteInput.clear();
+        passwordInput.clear();
+        medicoInput.clear();
+        UIUtils.showAlert(Alert.AlertType.INFORMATION, "Utente aggiunto", "Nuovo utente inserito con successo!");
+
     }
 
     private void deleteUser() {
@@ -115,15 +74,7 @@ public class AdminPageController {
             confirm.setHeaderText(null);
             confirm.setContentText("Sei sicuro di voler eliminare l'utente " + selectedUser.getUsername() + "?");
             if (confirm.showAndWait().orElse(ButtonType.CANCEL) == ButtonType.OK) {
-                String deleteSql = "DELETE FROM utenti WHERE username = ?";
-                try (Connection conn = DriverManager.getConnection(url);
-                     PreparedStatement pstmt = conn.prepareStatement(deleteSql)) {
-                    pstmt.setString(1, selectedUser.getUsername());
-                    pstmt.executeUpdate();
-                    data.remove(selectedUser);
-                } catch (Exception ex) {
-                    ex.printStackTrace();
-                }
+                dao.eliminaUtenteDao(selectedUser);
             }
         } else {
             UIUtils.showAlert(Alert.AlertType.WARNING, "Nessuna selezione", "Seleziona un utente dalla tabella da eliminare.");

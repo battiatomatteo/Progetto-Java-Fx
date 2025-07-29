@@ -1,5 +1,6 @@
 package utility;
 
+import DAO.UIUtilsDao;
 import com.lowagie.text.*;
 import com.lowagie.text.pdf.PdfPTable;
 import com.lowagie.text.pdf.PdfWriter;
@@ -27,6 +28,7 @@ import java.time.DayOfWeek;
 import java.time.LocalDate;
 
 public class UIUtils {
+    private static final UIUtilsDao dao = new UIUtilsDao();
 
     //  mostra l'Alert
     public static void showAlert(Alert.AlertType t, String title, String txt) {
@@ -39,31 +41,10 @@ public class UIUtils {
 
     // metodo authenticate, in base al tipo 'flag' = 0 o 'flag' = 1 esegue un tipo di autenticazione
     public static boolean authenticate(String username, String password, int flag) {
-        String url = "jdbc:sqlite:miodatabase.db";
-        String sql = "";
         if(flag == 0 ){
-            sql = "SELECT * FROM utenti WHERE username = ? AND password = ?";
-            try (Connection conn = DriverManager.getConnection(url);
-                 PreparedStatement pstmt = conn.prepareStatement(sql)) {
-                pstmt.setString(1, username);
-                pstmt.setString(2, password);
-                ResultSet rs = pstmt.executeQuery();
-                return rs.next();
-            } catch (Exception e) {
-                e.printStackTrace();
-                return false;
-            }
+             return dao.authenticateLogin(username, password);
         } else {
-            sql = "SELECT * FROM utenti WHERE username = ?";
-            try (Connection conn = DriverManager.getConnection(url);
-                 PreparedStatement pstmt = conn.prepareStatement(sql)) {
-                pstmt.setString(1, username);
-                ResultSet rs = pstmt.executeQuery();
-                return rs.next();
-            } catch (Exception e) {
-                e.printStackTrace();
-                return false;
-            }
+            return dao.authenticatePatient(username);
         }
     }
 
