@@ -1,0 +1,66 @@
+.root {
+    -fx-font-family: "Segoe UI", sans-serif;
+    -fx-background-color: linear-gradient(to bottom right, #e3eafc, #ffffff);
+}
+
+/* Etichette */
+.label {
+    -fx-font-size: 14px;
+    -fx-text-fill: #2c3e50;
+    -fx-font-weight: 500;
+}
+
+/* Messaggio errore/info */
+#messageLabel {
+    -fx-text-fill: #e74c3c;
+    -fx-font-weight: bold;
+}
+
+/* Bottone Accedi */
+#loginButton {
+    -fx-background-color: linear-gradient(to bottom, #4285f4, #357ae8);
+    -fx-text-fill: white;
+    -fx-padding: 8 16 8 16;
+    -fx-font-size: 14px;
+    -fx-background-radius: 5;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 2, 0, 0, 1);
+    -fx-transition: background-color 0.3s;
+}
+
+#loginButton:hover {
+    -fx-background-color: linear-gradient(to bottom, #3367d6, #2a56c6);
+}
+
+/* Campi di testo */
+.text-field, .password-field {
+    -fx-background-color: #ffffff;
+    -fx-border-color: #ccd6e0;
+    -fx-border-radius: 3;
+    -fx-padding: 5 10 5 10;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.05), 1, 0, 0, 1);
+}
+
+.text-field:focused, .password-field:focused {
+    -fx-border-color: #4285f4;
+    -fx-border-width: 1.2;
+}
+
+/* Pulsante toggle password */
+.toggle-button {
+    -fx-background-color: transparent;
+    -fx-font-size: 14pt;
+    -fx-padding: 0;
+    -fx-cursor: hand;
+    -fx-text-fill: #555;
+    -fx-opacity: 0.8;
+}
+
+.toggle-button:hover {
+    -fx-opacity: 1.0;
+}
+
+.toggle-button:selected {
+    -fx-background-color: transparent;
+    -fx-opacity: 0.6;
+}

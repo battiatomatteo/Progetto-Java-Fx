@@ -1,0 +1,85 @@
+.root {
+    -fx-font-family: "Segoe UI", sans-serif;
+    -fx-background-color: linear-gradient(to bottom right, #f0f4fa, #ffffff);
+}
+
+/* Titolo principale */
+.title-label {
+    -fx-font-size: 20px;        /* Dimensione visivamente importante ma coerente */
+    -fx-font-weight: bold;      /* Testo marcato */
+    -fx-text-fill: #1f2d3d;     /* Più scuro e professionale */
+    -fx-padding: 10 0 10 0;     /* Margini verticali */
+    /*-fx-color-label-visible: red;*/
+}
+
+/* Etichette generiche */
+.label {
+    -fx-font-size: 13px;
+    -fx-text-fill: #2c3e50;
+    -fx-font-weight: 500;
+}
+
+/* Bottoni generici */
+.button {
+    -fx-background-color: linear-gradient(to bottom, #5c9ded, #4a8bdc);
+    -fx-text-fill: white;
+    -fx-font-size: 13px;
+    -fx-background-radius: 5;
+    -fx-cursor: hand;
+    -fx-padding: 5 15 5 15;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.08), 2, 0, 0, 1);
+}
+
+.button:hover {
+    -fx-background-color: linear-gradient(to bottom, #3c7dc3, #336fb0);
+}
+
+/* Campi di input */
+.text-field, .password-field {
+    -fx-background-color: white;
+    -fx-border-color: #ccd6e0;
+    -fx-border-radius: 3;
+    -fx-padding: 4 8 4 8;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.03), 1, 0, 0, 1);
+}
+
+.text-field:focused, .password-field:focused {
+    -fx-border-color: #5c9ded;
+}
+
+/* Tabella utenti */
+.table-view {
+    -fx-border-color: #dee2e6;
+    -fx-border-radius: 5;
+    -fx-background-radius: 5;
+    -fx-background-color: #ffffff;
+    -fx-table-cell-border-color: #eaecef;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.04), 2, 0, 0, 1);
+}
+
+/* Header della tabella */
+.table-view .column-header-background {
+    -fx-background-color: linear-gradient(to bottom, #e7eff7, #dbe8f1);
+    -fx-border-color: transparent;
+    -fx-background-radius: 5 5 0 0;
+}
+
+.table-view .table-column {
+    -fx-alignment: CENTER-LEFT;
+    -fx-font-weight: 600;
+    -fx-font-size: 13px;
+}
+
+/* Titoli eventuali (non presenti ora ma per estensione) */
+.titled-pane {
+    -fx-font-size: 14px;
+    -fx-text-fill: #2b2b2b;
+    -fx-content-display: top;
+}
+
+/* Sezione grafici, se usati in futuro */
+.chart {
+    -fx-background-color: #ffffff;
+    -fx-border-color: #ccc;
+    -fx-border-radius: 5;
+}

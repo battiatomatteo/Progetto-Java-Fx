@@ -11,9 +11,9 @@ public class ChartDataSetter {
     public static final int ALL = 7;
 
     private final String patientUserName;
-    private boolean seeOnGoing;
-    private boolean seeOnPause;
-    private boolean seeTerminated;
+    private boolean OnGoing;
+    private boolean OnPause;
+    private boolean Terminated;
     private String sqlView;
 
     public ChartDataSetter(String patientUserName, int view) {
@@ -34,52 +34,52 @@ public class ChartDataSetter {
     }
 
     private void ChartDataSetterOnGoing(){
-        this.seeOnGoing = true;
-        this.seeOnPause = false;
-        this.seeTerminated = false;
+        this.OnGoing = true;
+        this.OnPause = false;
+        this.Terminated = false;
         this.sqlView = " stato = " + StatoTerapia.ATTIVA.getStato();
     }
     private void ChartDataSetterOnPause(){
-        this.seeOnGoing = false;
-        this.seeOnPause = true;
-        this.seeTerminated = false;
+        this.OnGoing = false;
+        this.OnPause = true;
+        this.Terminated = false;
         this.sqlView = " stato = " + StatoTerapia.SOSPESA.getStato();
     }
     private void ChartDataSetterTerminated(){
-        this.seeOnGoing = false;
-        this.seeOnPause = false;
-        this.seeTerminated = true;
+        this.OnGoing = false;
+        this.OnPause = false;
+        this.Terminated = true;
         this.sqlView = " stato = " + "\'"+ StatoTerapia.TERMINATA.getStato() + "\'";
     }
     private void ChartDataSetterOnGoingPaused(){
-        this.seeOnGoing = true;
-        this.seeOnPause = true;
-        this.seeTerminated = false;
+        this.OnGoing = true;
+        this.OnPause = true;
+        this.Terminated = false;
         this.sqlView =
                 " stato = " + "\'"+ StatoTerapia.ATTIVA.getStato() + "\'" + " OR " +
                 " stato = " + StatoTerapia.SOSPESA.getStato() ;
 
     }
     private void ChartDataSetterOnGoingTerminated(){
-        this.seeOnGoing = true;
-        this.seeOnPause = false;
-        this.seeTerminated = true;
+        this.OnGoing = true;
+        this.OnPause = false;
+        this.Terminated = true;
         this.sqlView =
                 " stato = " + "\'"+ StatoTerapia.ATTIVA.getStato() + "\'" + " OR " +
                 " stato = " + "\'"+ StatoTerapia.TERMINATA.getStato() + "\'";
     }
     private void ChartDataSetterOnPauseTerminated(){
-        this.seeOnGoing = false;
-        this.seeOnPause = true;
-        this.seeTerminated = true;
+        this.OnGoing = false;
+        this.OnPause = true;
+        this.Terminated = true;
         this.sqlView =
                 " stato = " + "\'"+ StatoTerapia.SOSPESA.getStato() + "\'" + " OR " +
                 " stato = " + "\'"+ StatoTerapia.TERMINATA.getStato() + "\'";
     }
     private void ChartDataSetterAll(){
-        this.seeOnGoing = true;
-        this.seeOnPause = true;
-        this.seeTerminated = true;
+        this.OnGoing = true;
+        this.OnPause = true;
+        this.Terminated = true;
         this.sqlView =
                 " stato = " + "\'"+ StatoTerapia.ATTIVA.getStato() + "\'" + " OR " +
                 " stato = " + "\'"+ StatoTerapia.SOSPESA.getStato() + "\'" + " OR " +
@@ -92,16 +92,16 @@ public class ChartDataSetter {
     public String getSqlView(){
         return sqlView;
     }
-    public boolean isSeeOnGoing() {
-        return seeOnGoing;
+    public boolean isOnGoing() {
+        return OnGoing;
     }
 
-    public boolean isSeeOnPause() {
-        return seeOnPause;
+    public boolean isOnPause() {
+        return OnPause;
     }
 
-    public boolean isSeeTerminated() {
-        return seeTerminated;
+    public boolean isTerminated() {
+        return Terminated;
     }
 
 

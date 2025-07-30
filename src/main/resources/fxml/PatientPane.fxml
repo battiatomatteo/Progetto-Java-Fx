@@ -1,13 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?import javafx.scene.control.*?>
-<?import javafx.scene.chart.*?>
 <?import javafx.scene.layout.*?>
-
-<?import com.sun.javafx.scene.control.IntegerField?>
-<?import com.sun.javafx.scene.control.DoubleField?>
 <?import javafx.collections.FXCollections?>
 <?import java.lang.String?>
-<TitledPane fx:id="patientPane" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml" fx:controller="controllers.PatientPaneController" text="Ricerca paziente">
+<TitledPane fx:id="patientPane" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml" fx:controller="controllers.PatientPaneController"
+            stylesheets="/css/patientPaneStyle.css" text="Ricerca paziente">
     <VBox spacing="10">
         <HBox spacing="10">
             <TextField fx:id="usernameInput" promptText="Username"/>

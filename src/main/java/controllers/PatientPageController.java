@@ -5,6 +5,9 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.time.format.DateTimeFormatter;
+
+import DAO.PatientPageDao;
+import DAO.PatientPaneDao;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -33,12 +36,14 @@ public class PatientPageController {
     @FXML private VBox lineChart;
     private final ObservableList<Pasto> pastiData = FXCollections.observableArrayList();
     @FXML private PatientChartController chartIncludeController;
+    private PatientPageDao dao;
 
     @FXML
     private void initialize() {
         tableView.setEditable(true);
         tableView.setColumnResizePolicy(TableView.UNCONSTRAINED_RESIZE_POLICY);
 
+        dao = new PatientPageDao();
 
         messageStart.setText("Qui puoi inserire le somministrazioni giornaliere pre e post pasto di  " + UIUtils.dataConGiorno()  );
         // Imposta le proprietà dei dati
@@ -171,7 +176,27 @@ public class PatientPageController {
 
         Map<String, Pasto> rilevati = new HashMap<>();
 
-        try (Connection conn = DriverManager.getConnection(url);
+        Map<String, Pasto> sommRilevati = dao.somministrazioneTabella(rilevati);
+
+        // Definisci gli orari attesi
+        Map<String, String> orariPrevisti = new LinkedHashMap<>();  // new LinkedHashMap<>(): simile as HashMap ma mantiene l'ordine di inserimento degli elementi
+        orariPrevisti.put("08:00", "Colazione");
+        orariPrevisti.put("13:00", "Pranzo");
+        orariPrevisti.put("19:30", "Cena");
+
+        // Aggiunge i pasti ordinati (colazione, pranzo, cena)
+        for (Map.Entry<String, String> entry : orariPrevisti.entrySet()) {
+            String orario = entry.getKey();
+            String nome = entry.getValue();
+
+            if (sommRilevati.containsKey(orario)) {
+                pastiData.add(sommRilevati.get(orario));
+            } else {
+                pastiData.add(new Pasto(nome, orario, "", ""));
+            }
+        }
+
+        /*try (Connection conn = DriverManager.getConnection(url);
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
             pstmt.setString(1, UIUtils.dataOggi());
@@ -214,7 +239,7 @@ public class PatientPageController {
         } catch (Exception e) {
             e.printStackTrace();
             UIUtils.showAlert(Alert.AlertType.ERROR, "Errore", "Errore durante il caricamento delle somministrazioni.");
-        }
+        }*/
     }
 
     /*

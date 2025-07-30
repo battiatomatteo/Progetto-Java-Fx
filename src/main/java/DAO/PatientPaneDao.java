@@ -138,4 +138,10 @@ public class PatientPaneDao extends DBConnection{
         }
         return t;
     }
+
+    public static class PatientPageDao extends DBConnection {
+        public PatientPageDao() {
+            super();
+        }
+    }
 }

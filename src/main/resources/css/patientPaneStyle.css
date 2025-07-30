@@ -1,0 +1,100 @@
+.root {
+    -fx-font-family: "Segoe UI", sans-serif;
+    -fx-background-color: linear-gradient(to bottom right, #f0f4fa, #ffffff);
+}
+
+/* TitledPane */
+.titled-pane {
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #2c3e50;
+    -fx-background-color: #e9eff6;
+    -fx-border-color: #cfd8dc;
+    -fx-border-radius: 5;
+    -fx-background-radius: 5;
+    -fx-padding: 10;
+}
+
+/* Label normale */
+.label {
+    -fx-font-size: 13px;
+    -fx-text-fill: #2c3e50;
+    -fx-font-weight: 500;
+}
+
+/* Titolo (se serve) */
+.title-label {
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #1f2d3d;
+    -fx-padding: 10 0 10 0;
+}
+
+/* Pulsanti */
+.button {
+    -fx-background-color: linear-gradient(to bottom, #5c9ded, #4a8bdc);
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-padding: 6 14;
+    -fx-background-radius: 5;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.07), 1, 0, 0, 1);
+}
+
+.button:hover {
+    -fx-background-color: linear-gradient(to bottom, #3c7dc3, #336fb0);
+}
+
+/* TextField e ComboBox */
+.text-field, .combo-box {
+    -fx-background-color: white;
+    -fx-border-color: #ccd6e0;
+    -fx-border-radius: 4;
+    -fx-padding: 5 8;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.03), 1, 0, 0, 1);
+}
+
+.text-field:focused, .combo-box:focused {
+    -fx-border-color: #5c9ded;
+}
+
+/* TableView */
+.table-view {
+    -fx-background-color: #ffffff;
+    -fx-border-color: #ccd6e0;
+    -fx-border-radius: 5;
+    -fx-background-radius: 5;
+    -fx-table-cell-border-color: #e1e8ee;
+    -fx-font-size: 13px;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.04), 2, 0, 0, 1);
+}
+
+.table-view .column-header-background {
+    -fx-background-color: linear-gradient(to bottom, #e7eff7, #dbe8f1);
+    -fx-border-color: transparent;
+    -fx-background-radius: 5 5 0 0;
+}
+
+.table-column {
+    -fx-alignment: CENTER-LEFT;
+}
+
+/* TextArea */
+.text-area {
+    -fx-font-size: 13px;
+    -fx-border-color: #ccc;
+    -fx-border-radius: 5;
+    -fx-background-radius: 5;
+    -fx-background-color: white;
+    -fx-padding: 6;
+}
+
+.text-area:focused {
+    -fx-border-color: #5c9ded;
+}
+
+/* Separator */
+.separator {
+    -fx-background-color: #ccc;
+    -fx-padding: 5 0;
+}

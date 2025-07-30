@@ -5,24 +5,39 @@
     -fx-background-color: #f9f9f9;
 }
 
+.root {
+    -fx-font-family: "Segoe UI", sans-serif;
+    -fx-background-color: linear-gradient(to bottom right, #f0f4fa, #ffffff);
+}
+
+/* Titolo principale */
+.title-label {
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #1f2d3d;
+    -fx-padding: 10 0 10 0;
+}
+
+/* Label normali */
+.label {
+    -fx-font-size: 14px;
+    -fx-text-fill: #2c3e50;
+    -fx-font-weight: 500;
+}
+
 /* Pulsanti */
 .button {
-    -fx-background-color:  #4285f4;
+    -fx-background-color: linear-gradient(to bottom, #4285f4, #357ae8);
     -fx-text-fill: white;
     -fx-font-weight: bold;
     -fx-padding: 8 16;
     -fx-background-radius: 5;
     -fx-cursor: hand;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.08), 2, 0, 0, 1);
 }
 
 .button:hover {
-    -fx-background-color:  #4285f4;
-}
-
-/* Label */
-.label {
-    -fx-font-size: 14px;
-    -fx-text-fill: #333;
+    -fx-background-color: linear-gradient(to bottom, #3367d6, #2a56c6);
 }
 
 /* TableView */
@@ -33,9 +48,9 @@
     -fx-background-color: #ffffff;
     -fx-table-cell-border-color: #ddd;
     -fx-font-size: 13px;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.04), 2, 0, 0, 1);
 }
 
-/* Colonne della tabella */
 .table-column {
     -fx-alignment: CENTER;
 }
@@ -46,6 +61,8 @@
     -fx-border-color: #ccc;
     -fx-border-radius: 5;
     -fx-background-radius: 5;
+    -fx-background-color: white;
+    -fx-padding: 6;
 }
 
 /* Focus per TextArea */
@@ -53,7 +70,7 @@
     -fx-border-color: #4285f4;
 }
 
-/* GridPane spacing (non funziona direttamente via CSS ma utile per margini interni degli elementi) */
+/* GridPane */
 .grid-pane {
     -fx-padding: 10;
 }
