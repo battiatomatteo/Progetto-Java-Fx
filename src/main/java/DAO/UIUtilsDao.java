@@ -52,4 +52,20 @@ public class UIUtilsDao extends DBConnection {
             return null;
         }
     }
+
+    public String getDoctorUser(String username){
+        String sql = "SELECT medico FROM utenti WHERE username = ?";
+        try (PreparedStatement pstmt = conn.prepareStatement(sql)){
+            pstmt.setString(1, username);
+            ResultSet rs = pstmt.executeQuery();
+            if (rs.next()) {
+                return rs.getString("medico");
+            } else {
+                return null;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
 }

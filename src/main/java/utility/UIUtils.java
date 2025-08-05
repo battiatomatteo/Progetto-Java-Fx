@@ -207,4 +207,12 @@ public class UIUtils {
         finestraFiltro.show();
 
     }
+
+    public static String getDoctor(String username){
+        return dao.getDoctorUser(username);
+
+    }
+    public static void printMessage(String message){
+        System.out.println(message);
+    }
 }

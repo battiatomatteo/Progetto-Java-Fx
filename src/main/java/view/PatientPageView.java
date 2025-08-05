@@ -11,7 +11,7 @@ public class PatientPageView extends Application {
     public void start(Stage primaryStage) throws Exception {
         Parent root = FXMLLoader.load(getClass().getResource("/fxml/PatientPage.fxml"));
         primaryStage.setTitle("Patient Page");
-        primaryStage.setScene(new Scene(root, 960, 720));
+        primaryStage.setScene(new Scene(root, 980, 720));
         primaryStage.show();
     }
 

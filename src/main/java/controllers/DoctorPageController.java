@@ -2,6 +2,8 @@ package controllers;
 
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.chart.LineChart;
 import javafx.collections.FXCollections;
@@ -11,6 +13,7 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import models.Terapia;
+import utility.SessionManager;
 import utility.UIUtils;
 import view.LogInView;
 import java.io.IOException;
@@ -98,5 +101,7 @@ public class DoctorPageController {
             notificationBadge.setVisible(false);
         }
     }
+
+
 
 }

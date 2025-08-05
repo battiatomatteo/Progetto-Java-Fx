@@ -4,6 +4,7 @@ import DAO.UIUtilsDao;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
+import utility.SessionManager;
 import utility.UIUtils;
 import view.AdminPageView;
 import view.DoctorPageView;
@@ -51,6 +52,10 @@ public class LogInController {
                 if (tipo_utente == null) {
                     messageLabel.setText("Tipo di utente non trovato.");
                 } else {
+
+                    SessionManager.currentUser = username;
+                    SessionManager.currentRole = tipo_utente;
+
                     if (tipo_utente.equals("paziente")) {
                         new PatientPageView().start(stage);
                     } else if (tipo_utente.equals("medico")) {

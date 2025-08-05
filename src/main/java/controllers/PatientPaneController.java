@@ -3,7 +3,9 @@ package controllers;
 import DAO.PatientPaneDao;
 import enums.StatoTerapia;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.collections.FXCollections;
@@ -16,7 +18,10 @@ import javafx.stage.Stage;
 import javafx.util.StringConverter;
 import models.ChartDataSetter;
 import models.Terapia;
+import utility.SessionManager;
 import utility.UIUtils;
+
+import java.io.IOException;
 import java.sql.*;
 import javafx.scene.shape.Circle;
 
@@ -276,6 +281,37 @@ public class PatientPaneController {
         else infoTextArea.setText(result);
     }
 
+    @FXML
+    private void openChat() throws IOException {
+        // Verifico che l'utente sia loggato
+        if (SessionManager.currentUser == null || SessionManager.currentRole == null) {
+            System.out.println("Errore: utente non loggato o ruolo non definito.");
+            return;
+        }
 
+        // Verifico che il ruolo sia effettivamente "doctor"
+        if (!SessionManager.currentRole.equals("medico")) {
+            System.out.println("Accesso negato: solo i medici possono aprire questa chat.");
+            return;
+        }
+
+        // determinare il paziente con cui il medico vuole chattare
+        // Supponiamo che tu abbia una lista o tabella di pazienti da cui selezionare
+        String selectedPatient = usernameInput.getText(); // TODO: prendo il nome utente selezionato dinamicamente
+
+        // Carica la UI della chat
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/ChatPage.fxml"));
+        Parent root = loader.load();
+
+        // Ottieni il controller della chat e inizializza la conversazione
+        ChatController chatController = loader.getController();
+        chatController.initializeChat(SessionManager.currentUser, selectedPatient);
+
+        // Crea una nuova finestra per la chat
+        Stage stage = new Stage();
+        stage.setTitle("Chat con " + selectedPatient);
+        stage.setScene(new Scene(root, 200, 300));
+        stage.show();
+    }
 
 }
