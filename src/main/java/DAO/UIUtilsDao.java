@@ -1,7 +1,10 @@
 package DAO;
 
+import java.sql.Connection;
+import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.util.ArrayList;
 
 public class UIUtilsDao extends DBConnection {
 
@@ -65,6 +68,22 @@ public class UIUtilsDao extends DBConnection {
             }
         } catch (Exception e) {
             e.printStackTrace();
+            return null;
+        }
+    }
+    public ArrayList<String> getFarmaciPaziente(String username){
+        ArrayList<String> farmaciPaziente = new ArrayList<>();
+        String url = "jdbc:sqlite:miodatabase.db";
+        String sql = "SELECT farmaco FROM terapie WHERE username = ?";
+        try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setString(1, username);
+            ResultSet rs = pstmt.executeQuery();
+            while (rs.next()) {
+                farmaciPaziente.add(rs.getString("farmaco"));
+            }
+            return farmaciPaziente;
+        } catch (Exception ex) {
+            ex.printStackTrace();
             return null;
         }
     }

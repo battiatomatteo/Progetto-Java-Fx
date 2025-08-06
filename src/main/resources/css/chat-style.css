@@ -1,0 +1,46 @@
+.message-user {
+    -fx-background-color: #dcf8c6;
+    -fx-padding: 10 15;
+    -fx-background-radius: 15;
+    -fx-font-size: 14px;
+}
+
+.message-other {
+    -fx-background-color: #ffffff;
+    -fx-padding: 10 15;
+    -fx-background-radius: 15;
+    -fx-font-size: 14px;
+}
+
+.message-container {
+    -fx-padding: 5;
+}
+
+#messageField {
+    -fx-background-color: white;
+    -fx-font-size: 15px;
+    -fx-border-color: rgba(0, 0, 0, 0.82);
+    -fx-border-radius: 3px;
+}
+
+#sendButton {
+    -fx-background-color: #25D366;           /* Verde WhatsApp */
+    -fx-text-fill: white;                    /* Testo bianco */
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-background-radius: 20;               /* Angoli arrotondati */
+    -fx-padding: 8 16;                       /* Spaziatura interna */
+    -fx-cursor: hand;                        /* Cursore a mano */
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 4,0,0,1);
+    -fx-border-color: transparent;
+}
+
+/* Effetto al passaggio del mouse */
+#sendButton:hover {
+    -fx-background-color: #20b85b;           /* Verde leggermente più scuro */
+}
+
+/* Effetto al click */
+#sendButton:pressed {
+    -fx-background-color: #1e9c4f;           /* Ancora più scuro */
+}

@@ -127,7 +127,7 @@ public class PatientPageController {
         // Crea una nuova finestra per la chat
         Stage stage = new Stage();
         stage.setTitle("Chat con " + assignedDoctor);
-        stage.setScene(new Scene(root, 300, 300));
+        stage.setScene(new Scene(root, 400, 350));
         stage.show();
     }
 

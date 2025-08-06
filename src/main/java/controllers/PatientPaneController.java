@@ -35,7 +35,7 @@ public class PatientPaneController {
     @FXML private TableColumn<Terapia, String> farmacoCol, assunzioniCol, quantFarCol, noteCol;
     @FXML private TableColumn<Terapia, Integer > terapiaCol;
     @FXML private TableColumn<Terapia, StatoTerapia> statoCol;
-    @FXML private Button searchButton, addFarmacoButton, updateButton, deleteButton, generaPDF, filtraButton, salvaInfo;
+    @FXML private Button searchButton, addFarmacoButton, updateButton, deleteButton, generaPDF, filtraButton, salvaInfo,chatButton;
     @FXML private VBox chartInclude;
    //private final ObservableList<Terapia> data = FXCollections.observableArrayList();
     @FXML private PatientChartController chartIncludeController;
@@ -130,6 +130,7 @@ public class PatientPaneController {
         caricaInfoUtente(username);
         salvaInfo.setOnAction(e -> salvaModifiche(username));
         chartIncludeController.setData(new ChartDataSetter(username, ChartDataSetter.ALL)); // passo il nome del paziente
+        chatButton.setVisible(true);
     }
 
     private void aggiungiTerapia() {
@@ -310,7 +311,7 @@ public class PatientPaneController {
         // Crea una nuova finestra per la chat
         Stage stage = new Stage();
         stage.setTitle("Chat con " + selectedPatient);
-        stage.setScene(new Scene(root, 200, 300));
+        stage.setScene(new Scene(root, 400, 350));
         stage.show();
     }
 

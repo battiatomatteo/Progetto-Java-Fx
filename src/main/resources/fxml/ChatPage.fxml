@@ -1,18 +1,33 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<VBox xmlns:fx="http://javafx.com/fxml" fx:controller="controllers.ChatController" >
-    <ScrollPane fx:id="chatScrollPane" fitToWidth="true">
-        <VBox fx:id="messageContainer" spacing="5" />
+<VBox xmlns:fx="http://javafx.com/fxml"
+      fx:controller="controllers.ChatController"
+      stylesheets="/css/chat-style.css"
+
+      fx:id="chatRoot"
+>
+
+    <!-- Scroll dei messaggi -->
+    <ScrollPane fx:id="chatScrollPane"
+                fitToWidth="true"
+                VBox.vgrow="ALWAYS"
+                id="chatScrollPane">
+        <VBox fx:id="messageContainer"
+              spacing="5"
+              id="messageArea"/>
     </ScrollPane>
+
+    <!-- Campo di input e bottone invia -->
     <HBox spacing="5">
-        <TextField fx:id="messageField" HBox.hgrow="ALWAYS"/>
-        <Button text="Invia" onAction="#sendMessage"/>
+        <TextField fx:id="messageField"
+                   HBox.hgrow="ALWAYS"
+                   id="messageField"/>
+        <Button fx:id="sendButton"
+                text="Invia"
+                onAction="#sendMessage"
+                id="sendButton"/>
     </HBox>
 </VBox>
-

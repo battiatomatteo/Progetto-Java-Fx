@@ -9,7 +9,7 @@
         <HBox spacing="10">
             <TextField fx:id="usernameInput" promptText="Username"/>
             <Button fx:id="searchButton" text="Cerca"/>
-            <Button text="Chat con paziente" onAction="#openChat"/>
+            <Button fx:id="chatButton" text="Chat con paziente" onAction="#openChat" visible="false"/>
             <Label fx:id="labelUsername"/>
         </HBox>
         <Label fx:id="label"/>

@@ -159,21 +159,7 @@ public class UIUtils {
 
         // ComboBox per Tipo farmaco
         ComboBox<String> tipoFarmacoCombo = new ComboBox<>();
-
-        String url = "jdbc:sqlite:miodatabase.db";
-        String sql = "SELECT farmaco FROM terapie WHERE username = ?";
-        try (Connection conn = DriverManager.getConnection(url);
-             PreparedStatement pstmt = conn.prepareStatement(sql)) {
-            pstmt.setString(1, username);
-            ResultSet rs = pstmt.executeQuery();
-            while (rs.next()) {
-                tipoFarmacoCombo.getItems().add(
-                        rs.getString("farmaco"
-                ));
-            }
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
+        tipoFarmacoCombo.getItems().addAll(dao.getFarmaciPaziente(username));
 
         //tipoFarmacoCombo.getItems().addAll("Tutti", "Antibiotico", "Antidolorifico", "Altro");
 
