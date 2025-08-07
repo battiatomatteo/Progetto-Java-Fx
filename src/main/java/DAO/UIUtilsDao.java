@@ -5,6 +5,7 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class UIUtilsDao extends DBConnection {
 
@@ -73,7 +74,6 @@ public class UIUtilsDao extends DBConnection {
     }
     public ArrayList<String> getFarmaciPaziente(String username){
         ArrayList<String> farmaciPaziente = new ArrayList<>();
-        String url = "jdbc:sqlite:miodatabase.db";
         String sql = "SELECT farmaco FROM terapie WHERE username = ?";
         try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
             pstmt.setString(1, username);

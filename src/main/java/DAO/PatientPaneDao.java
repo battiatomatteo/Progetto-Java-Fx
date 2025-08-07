@@ -3,6 +3,7 @@ package DAO;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.Alert;
+import models.FilterDataSetter;
 import models.Terapia;
 import utility.UIUtils;
 import java.sql.*;
@@ -17,12 +18,12 @@ public class PatientPaneDao extends DBConnection{
         super();
     }
 
-    public ObservableList<Terapia> getTerapieList(String username){
+    public ObservableList<Terapia> getTerapieList(FilterDataSetter filter) {
         TerapieData.clear();
-        String sql = "SELECT ID_terapia, stato, farmaco, count_farmaco, quantità_farmaco, note FROM terapie WHERE username = ?";
+        String sql = "SELECT ID_terapia, stato, farmaco, count_farmaco, quantità_farmaco, note FROM terapie WHERE username = ?" + filter.getSqlView();
         try (//Connection conn = DriverManager.getConnection(url);
              PreparedStatement pstmt = conn.prepareStatement(sql)){
-            pstmt.setString(1, username);
+            pstmt.setString(1, filter.getPatientUserName());
             ResultSet rs = pstmt.executeQuery();
             while (rs.next()) {
                 TerapieData.add(new Terapia(

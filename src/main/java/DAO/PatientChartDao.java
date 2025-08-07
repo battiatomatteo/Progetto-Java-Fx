@@ -1,10 +1,11 @@
 package DAO;
 
+import enums.StatoTerapia;
 import models.ChartDataSetter;
+import models.FilterDataSetter;
 import models.Rilevazioni;
+import utility.UIUtils;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
@@ -15,16 +16,17 @@ public class PatientChartDao extends DBConnection{
         super();
     }
 
-    public HashMap<Integer,String> getTerapiePaziente(ChartDataSetter setter){
+    public HashMap<Integer,String> getTerapiePaziente(FilterDataSetter setter){
         HashMap<Integer,String> rilevati = new HashMap<>();
         String farmaco;
         int idTerapia;
-        String view ='(' + setter.getSqlView() + ')';
-        String sql = "SELECT ID_terapia, farmaco FROM terapie WHERE username = ?  AND "  + view ;
+        String sql = "SELECT ID_terapia, farmaco FROM terapie WHERE username = ? " + setter.getSqlView();
+        UIUtils.printMessage(sql);
         try{
             PreparedStatement pstmt = conn.prepareStatement(sql);
             pstmt.setString(1, setter.getPatientUserName());
             ResultSet rs = pstmt.executeQuery();
+
             while(rs.next()){
                 idTerapia =  rs.getInt("ID_terapia");
                 farmaco = rs.getString("farmaco");
@@ -33,7 +35,6 @@ public class PatientChartDao extends DBConnection{
             return rilevati;
 
         } catch (Exception e) {
-            e.printStackTrace();
             return null;
         }
     }
