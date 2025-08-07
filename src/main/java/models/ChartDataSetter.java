@@ -1,5 +1,6 @@
 package models;
 import enums.StatoTerapia;
+import utility.UIUtils;
 
 public class ChartDataSetter {
     public static final int ON_GOING = 1;
@@ -9,59 +10,71 @@ public class ChartDataSetter {
     public static final int ON_GOING_TERMINATED = 5;
     public static final int ON_PAUSE_TERMINATED = 6;
     public static final int ALL = 7;
+    public static final int DEFAULT = ALL;
+
+    private static final String END = "\' ";
+    private static final String STATO = " stato = \'";
+    private static final String AND = " AND ";
+    private static final String OR = " OR ";
+
 
     private final String patientUserName;
     private final int view;
     private String sqlView;
 
     public ChartDataSetter(String patientUserName, int view) {
-        if(view < 1 || view > 7){
-            throw  new RuntimeException();
+        if(patientUserName == null){
+            throw new NullPointerException("patientUserName is null");
         }
         this.patientUserName = patientUserName;
-        this.view = view;
+        if(view < 1 || view > ALL){
+            this.view = DEFAULT;
+        }
+        else this.view = view;
         switch(view){
             case ON_GOING :ChartDataSetterOnGoing();break;
             case ON_PAUSE :ChartDataSetterOnPause();break;
-            case ON_GOING_PAUSED : ChartDataSetterTerminated(); break;
-            case TERMINATED : ChartDataSetterOnGoingPaused(); break;
+            case ON_GOING_PAUSED : ChartDataSetterOnGoingPaused(); break;
+            case TERMINATED : ChartDataSetterTerminated(); break;
             case ON_GOING_TERMINATED : ChartDataSetterOnGoingTerminated(); break;
             case ON_PAUSE_TERMINATED : ChartDataSetterOnPauseTerminated(); break;
             case ALL : ChartDataSetterAll(); break;
-
+            default: ChartDataSetterDefault(); break;
         }
     }
 
     private void ChartDataSetterOnGoing(){
-        this.sqlView = " stato = " + StatoTerapia.ATTIVA.getStato();
+        this.sqlView = AND + " ( " + STATO + StatoTerapia.ATTIVA.getStato() + END + " ) ";
     }
     private void ChartDataSetterOnPause(){
-        this.sqlView = " stato = " + StatoTerapia.SOSPESA.getStato();
-    }
-    private void ChartDataSetterTerminated(){
-        this.sqlView = " stato = " + "\'"+ StatoTerapia.TERMINATA.getStato() + "\'";
+        this.sqlView = AND + " ( " + STATO + StatoTerapia.SOSPESA.getStato() + END + " ) ";
     }
     private void ChartDataSetterOnGoingPaused(){
         this.sqlView =
-                " stato = " + "\'"+ StatoTerapia.ATTIVA.getStato() + "\'" + " OR " +
-                " stato = " + StatoTerapia.SOSPESA.getStato() ;
+                AND + " ( " + STATO + StatoTerapia.ATTIVA.getStato() + END +
+                 OR + STATO + StatoTerapia.SOSPESA.getStato() + END + " ) ";
 
+    }private void ChartDataSetterTerminated(){
+        this.sqlView = AND + " ( " + STATO + StatoTerapia.TERMINATA.getStato() + END + " ) ";
     }
     private void ChartDataSetterOnGoingTerminated(){
         this.sqlView =
-                " stato = " + "\'"+ StatoTerapia.ATTIVA.getStato() + "\'" + " OR " +
-                " stato = " + "\'"+ StatoTerapia.TERMINATA.getStato() + "\'";
+                AND + " ( " + STATO + StatoTerapia.ATTIVA.getStato() + END +
+                 OR + STATO+ StatoTerapia.TERMINATA.getStato() + END + " ) ";
     }
     private void ChartDataSetterOnPauseTerminated(){
         this.sqlView =
-                " stato = " + "\'"+ StatoTerapia.SOSPESA.getStato() + "\'" + " OR " +
-                " stato = " + "\'"+ StatoTerapia.TERMINATA.getStato() + "\'";
+                AND + " ( " + STATO + StatoTerapia.SOSPESA.getStato() + END +
+                 OR + STATO+ StatoTerapia.TERMINATA.getStato() + END + " ) ";
     }
     private void ChartDataSetterAll(){
         this.sqlView =
-                " stato = " + "\'"+ StatoTerapia.ATTIVA.getStato() + "\'" + " OR " +
-                " stato = " + "\'"+ StatoTerapia.SOSPESA.getStato() + "\'" + " OR " +
-                " stato = " + "\'"+ StatoTerapia.TERMINATA.getStato() + "\'";
+                AND + " ( " + STATO + StatoTerapia.ATTIVA.getStato() + END +
+                 OR + STATO+ StatoTerapia.SOSPESA.getStato() + END +
+                 OR + STATO+ StatoTerapia.TERMINATA.getStato() + END + " ) ";
+    }
+    private void ChartDataSetterDefault(){
+        ChartDataSetterAll();
     }
 
     public String getPatientUserName() {
@@ -72,6 +85,21 @@ public class ChartDataSetter {
     }
     public int getView(){
         return view;
+    }
+    public static int getViewKey(String stato){
+        return switch (stato) {
+            case "ATTIVA" -> ON_GOING;
+            case "SOSPESA" -> ON_PAUSE;
+            case "TERMINATA" -> TERMINATED;
+            default -> 0;
+        };
+    }
+    public static int getViewKey(StatoTerapia stato){
+        return switch (stato) {
+            case ATTIVA -> ON_GOING;
+            case SOSPESA -> ON_PAUSE;
+            case TERMINATA -> TERMINATED;
+        };
     }
 
 }

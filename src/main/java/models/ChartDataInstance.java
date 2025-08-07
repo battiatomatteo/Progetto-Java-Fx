@@ -5,8 +5,6 @@ import javafx.scene.chart.XYChart;
 import java.util.ArrayList;
 
 public class ChartDataInstance {
-    //private  XYChart.Series<String, Number> seriesDataPre;
-    //private  XYChart.Series<String, Number> seriesDataPost;
     private XYChart.Series<String, Number>[] seriesData = new XYChart.Series[2];
     private int idTerapia;
     private String farmaco;
