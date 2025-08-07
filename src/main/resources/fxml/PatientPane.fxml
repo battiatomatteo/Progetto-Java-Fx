@@ -35,7 +35,7 @@
             <TextField fx:id="newNoteInput" promptText="..." GridPane.columnIndex="0" GridPane.rowIndex="3"/>
             <Button fx:id="addFarmacoButton" text="Aggiungi Terapia" GridPane.columnIndex="2" GridPane.rowIndex="3"/>
             <Button fx:id="updateButton" text="Aggiorna Terapia" GridPane.columnIndex="2" GridPane.rowIndex="4"/>
-            <Button fx:id="filtraButton" text="Filtra Terapie" GridPane.columnIndex="0" GridPane.rowIndex="4"/>
+            <Button fx:id="filtraButton" text="Filtra Terapie" GridPane.columnIndex="0" GridPane.rowIndex="4"  visible="false"/>
         </GridPane>
         <TableView fx:id="table" prefHeight="250" prefWidth="500" VBox.vgrow="ALWAYS">
             <columns>
