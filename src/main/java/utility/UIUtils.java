@@ -26,6 +26,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.HashMap;
 
 public class UIUtils {
     private static final UIUtilsDao dao = new UIUtilsDao();
@@ -197,6 +199,9 @@ public class UIUtils {
     public static String getDoctor(String username){
         return dao.getDoctorUser(username);
 
+    }
+    public  static ArrayList<String> getFarmaciPaziente(String username){
+        return dao.getFarmaciPaziente(username);
     }
     public static void printMessage(String message){
         System.out.println(message);
