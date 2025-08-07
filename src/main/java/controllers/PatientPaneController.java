@@ -14,9 +14,11 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.StringConverter;
 import models.ChartDataSetter;
+import models.FilterDataSetter;
 import models.Terapia;
 import utility.SessionManager;
 import utility.UIUtils;
@@ -105,7 +107,7 @@ public class PatientPaneController {
         addFarmacoButton.setOnAction(e -> aggiungiTerapia());
         deleteButton.setOnAction(e -> eliminaTerapia());
         updateButton.setOnAction(e -> updateTerapia());
-        filtraButton.setOnAction(e -> UIUtils.filtraTerapia(usernameInput.getText()));
+        filtraButton.setOnAction(e -> apriFinestraScelta());
         generaPDF.setOnAction(e -> UIUtils.generaPDFReport( (Stage) generaPDF.getScene().getWindow(), usernameInput, chartInclude, table));
     }
     @FXML
@@ -122,15 +124,14 @@ public class PatientPaneController {
         }
         // label che si possono vedere una volta che il paziente inserito viene trovato nel database
         label.setText("Lista delle terapie del paziente :");
-
-        table.setItems(dao.getTerapieList(username));
-        //table.setItems(data);
-
+        FilterDataSetter filter = new FilterDataSetter(username,ChartDataSetter.ALL,FilterDataSetter.ALL);
+        table.setItems(dao.getTerapieList(filter));
         label2.setText("Grafico andamento terapia del paziente :");
         caricaInfoUtente(username);
         salvaInfo.setOnAction(e -> salvaModifiche(username));
-        chartIncludeController.setData(new ChartDataSetter(username, ChartDataSetter.ALL)); // passo il nome del paziente
+        chartIncludeController.setData(filter); // passo il nome del paziente
         chatButton.setVisible(true);
+        filtraButton.setVisible(true);
     }
 
     private void aggiungiTerapia() {
@@ -313,6 +314,42 @@ public class PatientPaneController {
         stage.setTitle("Chat con " + selectedPatient);
         stage.setScene(new Scene(root, 400, 350));
         stage.show();
+    }
+
+
+    private void apriFinestraScelta() {
+        String patientName = usernameInput.getText();
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/SceltaOpzione.fxml"));
+        Parent root = null;
+        try {
+            root = loader.load();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+        SceltaOpzioneController controller = loader.getController();
+        controller.setUsername(patientName);
+        controller.setWindowsData();
+
+        Stage stage = new Stage();
+        stage.initModality(Modality.APPLICATION_MODAL); // Blocco della finestra principale
+        stage.setTitle("Seleziona un'opzione");
+        stage.setScene(new Scene(root));
+        stage.showAndWait(); // Attende la chiusura della finestra
+
+        int stato = controller.getValoreStatoSelezionato();
+        String farmaco = controller.getValoreFarmacoSelezionato();
+        UIUtils.printMessage("valore stato selezionato patient pane   " + stato);
+        UIUtils.printMessage("valore farmaco selezionato patient pane    " + farmaco);
+
+        FilterDataSetter filter = new FilterDataSetter(new ChartDataSetter(patientName, stato), farmaco);
+        updatePaneData(filter);
+    }
+
+    private void updatePaneData(FilterDataSetter filter) {
+        table.setItems(dao.getTerapieList(filter));
+        UIUtils.printMessage("view filter/setter" + filter.getChartDataSetter().getView());
+        chartIncludeController.setData(filter); // passo il nome del paziente
     }
 
 }

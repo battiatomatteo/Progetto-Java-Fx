@@ -21,16 +21,13 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-import models.ChartDataSetter;
-import models.Pasto;
-import models.Rilevazioni;
+import models.*;
 import utility.SessionManager;
 import utility.UIUtils;
 import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
-import models.Day;
 
 
 public class PatientPageController {
@@ -96,7 +93,7 @@ public class PatientPageController {
         logOutButton.setOnAction(e -> UIUtils.LogOutButton((Stage) logOutButton.getScene().getWindow()));
         salvaSintomi.setOnAction(e -> salvaSintomibox(textArea.getText()));
 
-        chartIncludeController.setData(new ChartDataSetter(LogInController.getUsername(), ChartDataSetter.ALL)); // passo il nome del paziente
+        chartIncludeController.setData(new FilterDataSetter(new ChartDataSetter(LogInController.getUsername(), ChartDataSetter.ALL),FilterDataSetter.ALL)); // passo il nome del paziente
     }
 
     @FXML
