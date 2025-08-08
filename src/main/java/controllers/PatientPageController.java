@@ -44,6 +44,10 @@ public class PatientPageController {
     @FXML private PatientChartController chartIncludeController;
     private PatientPageDao dao;
 
+    private static final int PREPASTOMIN = 80;
+    private static final int PREPASTOMAX = 130;
+    private static final int POSTPASTOMAX = 180;
+
     @FXML
     private void initialize() {
         tableView.setEditable(true);
@@ -88,7 +92,7 @@ public class PatientPageController {
         tableView.setItems(pastiData);
 
         nuovaSomministrazioneButton.setOnAction(e -> nuovaSomministrazione());
-        caricaSomministrazioniOdierne();
+        caricaSomministrazioniOdierne(SessionManager.currentUser);
         // Come funziona: Quando clicco sul bottone, prendi la finestra corrente e passala a UIUtils.LogOutButton() per eseguire il logout
         logOutButton.setOnAction(e -> UIUtils.LogOutButton((Stage) logOutButton.getScene().getWindow()));
         salvaSintomi.setOnAction(e -> salvaSintomibox(textArea.getText()));
@@ -146,6 +150,11 @@ public class PatientPageController {
                 continue; // Esiste già, quindi salto
             float pre = p.getPre();
             float post = p.getPost();
+
+            // controllo valori somministrazione
+            if((pre < PREPASTOMIN || pre > PREPASTOMAX || post > POSTPASTOMAX ) && (pre != 0 && post != 0))
+                UIUtils.showAlert(Alert.AlertType.WARNING, "Valori somministrazione", "I valori di questa somministrazione sono fuori dal range : ");
+
             rilevazioneGiorno.addPasto(new Pasto(null,orario,pre,post));
 
             riepilogo.append("🍽 ")
@@ -166,12 +175,11 @@ public class PatientPageController {
     }
 
 
-    private void caricaSomministrazioniOdierne() {
-
+    private void caricaSomministrazioniOdierne(String username) {
         pastiData.clear(); // Pulisce la tabella
 
         Map<String, Pasto> sommRilevati = new HashMap<>();
-        sommRilevati.putAll(dao.somministrazioneTabella());
+        sommRilevati.putAll(dao.somministrazioneTabella(username));
 
         // Definisci gli orari attesi
         Map<String, String> orariPrevisti = new LinkedHashMap<>();  // new LinkedHashMap<>(): simile as HashMap ma mantiene l'ordine di inserimento degli elementi
@@ -277,63 +285,3 @@ public class PatientPageController {
 
 
 
-/*try (Connection conn = DriverManager.getConnection(url)) {
-            try (PreparedStatement insertStmt = conn.prepareStatement(sqlInsert);
-                 PreparedStatement checkStmt = conn.prepareStatement(sqlCheck)) {
-
-                StringBuilder riepilogo = new StringBuilder("Riepilogo somministrazione:\n");
-                boolean almenoUnoInserito = false;
-
-                for (Pasto p : tableView.getItems()) {
-                    String preStr = p.getPre();
-                    String postStr = p.getPost();
-                    String orario = p.getOrario();
-
-                    if (preStr == null || preStr.isEmpty() || postStr == null || postStr.isEmpty() || orario == null || orario.isEmpty())
-                        continue;
-
-                    float pre = Float.parseFloat(preStr);
-                    float post = Float.parseFloat(postStr);
-
-                    if (pre == 0 || post == 0)
-                        continue;
-
-                    // Verifica se esiste già una rilevazione per oggi con questo orario
-                    checkStmt.setString(1, oggi.format(formatter));
-                    checkStmt.setString(2, orario);
-                    ResultSet rs = checkStmt.executeQuery();
-
-                    if (rs.next() && rs.getInt(1) > 0) {
-                        continue; // Esiste già, quindi salto
-                    }
-
-                    // Inserisci solo se non esiste già
-                    insertStmt.setString(1, oggi.format(formatter));
-                    insertStmt.setFloat(2, post);
-                    insertStmt.setString(3, "note...");
-                    insertStmt.setInt(4, 2);
-                    insertStmt.setFloat(5, pre);
-                    insertStmt.setString(6, orario);
-                    insertStmt.executeUpdate();
-
-                    almenoUnoInserito = true;
-
-                    riepilogo.append("🍽 ")
-                            .append(p.getPasto())
-                            .append(" (").append(orario).append("): ")
-                            .append("Pre = ").append(pre).append(", ")
-                            .append("Post = ").append(post).append("\n");
-                }
-
-                if (almenoUnoInserito) {
-                    stampaTabella();
-                    UIUtils.showAlert(Alert.AlertType.INFORMATION, "Somministrazione salvata", riepilogo.toString());
-                } else {
-                    UIUtils.showAlert(Alert.AlertType.WARNING, "Nessun pasto inserito", "Tutti i pasti erano già presenti o non validi (pre/post nulli o 0).");
-                }
-
-            }
-        } catch (Exception e) {
-            UIUtils.showAlert(Alert.AlertType.ERROR, "Errore", "Errore durante il salvataggio: " + e.getMessage());
-            throw new RuntimeException(e);
-        }*/

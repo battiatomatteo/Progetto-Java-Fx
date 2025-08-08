@@ -21,7 +21,7 @@ public class PatientChartDao extends DBConnection{
         String farmaco;
         int idTerapia;
         String sql = "SELECT ID_terapia, farmaco FROM terapie WHERE username = ? " + setter.getSqlView();
-        UIUtils.printMessage(sql);
+        //UIUtils.printMessage(sql);
         try{
             PreparedStatement pstmt = conn.prepareStatement(sql);
             pstmt.setString(1, setter.getPatientUserName());

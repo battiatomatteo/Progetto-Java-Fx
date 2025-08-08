@@ -18,13 +18,33 @@ public class PatientPageDao extends DBConnection{
         super();
     }
 
-    public Map<String, Pasto> somministrazioneTabella(){
-        int idTerapia = 0;
-        String sql = "SELECT * FROM rilevazioni_giornaliere WHERE data_rilevazione == ? AND ID_terapia == ?";
+    private int recuperoId(String username){
+        String sql = "SELECT ID_terapia FROM terapie WHERE username = ? AND stato = 'ATTIVA'";
+        try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setString(1, username);
+            var rs = pstmt.executeQuery();
+            if (rs.next()) {
+                int lastId = rs.getInt("ID_terapia");
+                System.out.println("Ultimo ID: " + lastId);
+                return lastId;
+            }
+            else return 0;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return 0;
+        }
+    }
+
+    public Map<String, Pasto> somministrazioneTabella(String username){
+        int idTerapia = recuperoId(username);
+        String sql = "SELECT * FROM rilevazioni_giornaliere WHERE data_rilevazione = ? AND rilevazioni_giornaliere.ID_terapia = ?";
+        //String sql = "SELECT * FROM rilevazioni_giornaliere INNER JOIN terapie ON (rilevazioni_giornaliere.ID_terapia = terapie.ID_terapia) WHERE data_rilevazione = ? AND rilevazioni_giornaliere.ID_terapia = ? AND username = ?";
         try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
             pstmt.setString(1, UIUtils.dataOggi());
             pstmt.setInt(2, idTerapia);
+
+            UIUtils.printMessage("query rilevazioni " + sql + "   " + pstmt);
             var rs = pstmt.executeQuery();
 
             while (rs.next()) {
