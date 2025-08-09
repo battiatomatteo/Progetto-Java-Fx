@@ -42,6 +42,15 @@
                     <!-- Container per i TitledPane dei pazienti -->
 
                     <VBox fx:id="patientsContainer" spacing="10" />
+                    <Separator />
+                    <GridPane hgap="10" vgap="10">
+                        <Label fx:id="messaggioAll" text="Inserisci qui un messaggio da mandare a tutti i tuoi pazienti :" GridPane.columnIndex="0" GridPane.rowIndex="1" />
+                        <TextArea fx:id="areaMessAll" promptText="Scrivi qui il messaggio da inviare..."
+                                  wrapText="true"
+                                  prefRowCount="2"
+                                  GridPane.columnIndex="0" GridPane.rowIndex="2" />
+                        <Button fx:id="buttonMessAll" text="Invio"  GridPane.columnIndex="0" GridPane.rowIndex="4" />
+                    </GridPane>
                 </VBox>
                 <Separator />
             </AnchorPane>

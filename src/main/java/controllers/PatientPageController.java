@@ -146,15 +146,17 @@ public class PatientPageController {
 
         for (Pasto p : tableView.getItems()){
             String orario = p.getOrario();
-            if (!dao.checkSomministarazione(orario, oggi, formatter))
+            if (!dao.checkSomministarazione(orario, oggi, formatter, SessionManager.currentUser))
                 continue; // Esiste già, quindi salto
             float pre = p.getPre();
             float post = p.getPost();
 
             // controllo valori somministrazione
-            if((pre < PREPASTOMIN || pre > PREPASTOMAX || post > POSTPASTOMAX ) && (pre != 0 && post != 0))
+            if((pre < PREPASTOMIN || pre > PREPASTOMAX || post > POSTPASTOMAX ) && (pre != 0 && post != 0)) {
                 UIUtils.showAlert(Alert.AlertType.WARNING, "Valori somministrazione", "I valori di questa somministrazione sono fuori dal range : ");
-
+                // mess di def. somm
+                dao.messageSomm(autoNotificationContent(pre, post , orario, p.getPasto(), rilevazioneGiorno.getDataString()), UIUtils.getDoctor(SessionManager.currentUser), SessionManager.currentUser);
+            }
             rilevazioneGiorno.addPasto(new Pasto(null,orario,pre,post));
 
             riepilogo.append("🍽 ")
@@ -164,16 +166,18 @@ public class PatientPageController {
                     .append("Post = ").append(post).append("\n");
         }
 
-        if (dao.addSomministrazione(rilevazioneGiorno)) {
+        if (dao.addSomministrazione(rilevazioneGiorno, SessionManager.currentUser)) {
             stampaTabella();
             UIUtils.showAlert(Alert.AlertType.INFORMATION, "Somministrazione salvata", riepilogo.toString());
         } else {
             UIUtils.showAlert(Alert.AlertType.WARNING, "Nessun pasto inserito", "Tutti i pasti erano già presenti o non validi (pre/post nulli o 0).");
         }
-
-
     }
 
+    private String autoNotificationContent(float pre , float post, String orario, String pasto, String data){
+        return "Messaggio somministrazione : oggi " + data + " , " + pasto + " ore "+ orario +" pre : " +
+                pre + " e post "+ post + " i valore/i sono fuori dal range consentito.";
+}
 
     private void caricaSomministrazioniOdierne(String username) {
         pastiData.clear(); // Pulisce la tabella

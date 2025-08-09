@@ -5,7 +5,9 @@ import models.Pasto;
 import utility.UIUtils;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.Timestamp;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.Map;
@@ -72,9 +74,9 @@ public class PatientPageDao extends DBConnection{
     }
 
 
-    public boolean addSomministrazione(Day rilevazioneGiornaliera){
+    public boolean addSomministrazione(Day rilevazioneGiornaliera, String username){
         String sqlInsert = "INSERT INTO rilevazioni_giornaliere (data_rilevazione, rilevazione_post_pasto, note_rilevazione, ID_terapia, rilevazione_pre_pasto, orario) VALUES (?, ?, ?, ?, ?, ?)";
-
+        int idTerapia = recuperoId(username);
         try (PreparedStatement insertStmt = conn.prepareStatement(sqlInsert)){
 
             boolean almenoUnoInserito = false;
@@ -85,7 +87,7 @@ public class PatientPageDao extends DBConnection{
                 insertStmt.setString(1, data);
                 insertStmt.setFloat(2, r.getPost());
                 insertStmt.setString(3, "note...");
-                insertStmt.setInt(4, 2);
+                insertStmt.setInt(4, idTerapia);
                 insertStmt.setFloat(5, r.getPre());
                 insertStmt.setString(6, r.getOrario());
                 insertStmt.executeUpdate();
@@ -101,12 +103,14 @@ public class PatientPageDao extends DBConnection{
         }
     }
 
-    public boolean checkSomministarazione(String orario, LocalDate data, DateTimeFormatter formatter){
-        String sqlCheck = "SELECT COUNT(*) FROM rilevazioni_giornaliere WHERE data_rilevazione = ? AND orario = ?";
+    public boolean checkSomministarazione(String orario, LocalDate data, DateTimeFormatter formatter, String username){
+        int idTerapia = recuperoId(username);
+        String sqlCheck = "SELECT COUNT(*) FROM rilevazioni_giornaliere WHERE data_rilevazione = ? AND orario = ? AND ID_terapia = ?";
         // Verifica se esiste già una rilevazione per oggi con questo orario
         try(PreparedStatement checkStmt = conn.prepareStatement(sqlCheck)){
             checkStmt.setString(1, data.format(formatter));
             checkStmt.setString(2, orario);
+            checkStmt.setInt(3, idTerapia);
             ResultSet rs = checkStmt.executeQuery();
 
             if (rs.next() && rs.getInt(1) > 0){
@@ -118,4 +122,20 @@ public class PatientPageDao extends DBConnection{
             return false;
         }
     }
+
+    public void messageSomm( String content, String receiver, String user){
+        String sql = "INSERT INTO messages (sender, receiver, content, timestamp) VALUES (?, ?, ?, ?)";
+        try(PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setString(1, user);
+            stmt.setString(2, receiver);
+            stmt.setString(3, content);
+            stmt.setTimestamp(4, Timestamp.valueOf(LocalDateTime.now()));
+
+            stmt.executeUpdate();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
 }

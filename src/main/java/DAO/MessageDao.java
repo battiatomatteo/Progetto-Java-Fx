@@ -58,5 +58,9 @@ public class MessageDao extends DBConnection {
 
     }
 
+    public void messageList( ArrayList<Message> list ){
+        list.forEach(this::saveMessage);
+    }
+
 }
 
