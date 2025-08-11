@@ -1,5 +1,6 @@
 package controllers;
 
+import DAO.DoctorPageDao;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -26,17 +27,19 @@ public class DoctorPageController {
     @FXML private Button logOutButton;
     @FXML private LineChart<String, Number> lineChart;
     @FXML private VBox patientsContainer;
-    @FXML private Button addPatientButton, removeLastPatientButton;
-
+    @FXML private Button addPatientButton, removeLastPatientButton, buttonMessAll;
+    @FXML private TextArea areaMessAll;
     @FXML private StackPane notificationButton;
     @FXML private Label bellIcon;
     @FXML private Label notificationBadge;
     @FXML private VBox notificationPanel;
-
+    private DoctorPageDao dao = new DoctorPageDao();
     private int notificheNonLette = 0;
 
-
     private final ObservableList<Terapia> data = FXCollections.observableArrayList();
+
+    public DoctorPageController() {
+    }
 
     @FXML
     private void initialize() {
@@ -65,6 +68,7 @@ public class DoctorPageController {
         notificationButton.setOnMouseClicked(this::toggleNotifiche);
 
         aggiungiPaziente();
+        buttonMessAll.setOnAction(e -> sendAllMess(SessionManager.currentUser));
 
     }
 
@@ -102,6 +106,9 @@ public class DoctorPageController {
         }
     }
 
-
+    private void sendAllMess(String username){
+        System.out.println("sono in sendAllMess in doctor page " +  username + "\n" + areaMessAll.getText());
+        dao.sendAllMess(username, areaMessAll.getText());
+    }
 
 }

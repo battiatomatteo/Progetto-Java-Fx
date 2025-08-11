@@ -19,7 +19,7 @@ public class ChatController {
     @FXML private TextField messageField;
     @FXML private ScrollPane chatScrollPane;
 
-    private MessageDao messageDao = new MessageDao();
+    private final MessageDao messageDao = new MessageDao();
 
     private String currentUser;
     private String chattingWith;
