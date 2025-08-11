@@ -17,7 +17,7 @@ public class AdminPageController {
     @FXML private TextField usernameInput, tipoUtenteInput, medicoInput;
     @FXML private PasswordField passwordInput;
     @FXML private TableView<User> table;
-    @FXML private TableColumn<User, String> usernameCol, tipoUtenteCol, passwordCol, medicoCol;
+    @FXML private TableColumn<User, String> usernameCol, tipoUtenteCol, passwordCol, medicoCol, infoCol;
     private AdminDao dao = new AdminDao();
 
     @FXML
@@ -26,6 +26,7 @@ public class AdminPageController {
         tipoUtenteCol.setCellValueFactory(cellData -> cellData.getValue().tipo_utenteProperty());
         passwordCol.setCellValueFactory(cellData -> cellData.getValue().passwordProperty());
         medicoCol.setCellValueFactory(cellData -> cellData.getValue().medicoProperty());
+        infoCol.setCellValueFactory(cellData -> cellData.getValue().infoPazienteProperty());
         table.setItems(dao.caricaUtentiDao());         // Carica utenti dal database
 
         // Come funziona: Quando clicco sul bottone, prendi la finestra corrente e passala a UIUtils.LogOutButton() per eseguire il logout
@@ -40,7 +41,7 @@ public class AdminPageController {
         String tipoUtente = tipoUtenteInput.getText();
         String password = passwordInput.getText();
         String medico = medicoInput.getText();
-        User user = new User(username, tipoUtente, password, medico);
+        User user = new User(username, tipoUtente, password, medico, ""); // info paziente vengono create dal medico non dall'admin
 
         if (username.isEmpty() || tipoUtente.isEmpty() || password.isEmpty()) {
             UIUtils.showAlert(Alert.AlertType.ERROR, "Errore", "Compila tutti i campi obbligatori!");

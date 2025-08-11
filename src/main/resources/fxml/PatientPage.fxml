@@ -9,8 +9,27 @@
         <GridPane hgap="10" vgap="10">
 
             <Button fx:id="logOutButton" text="        LogOut        " GridPane.columnIndex="2" GridPane.rowIndex="2" />
-            <Button text="Chat con medico" onAction="#openChat" GridPane.columnIndex="2" GridPane.rowIndex="1"/>
 
+
+
+
+
+
+            <!-- StackPane per campanella + badge -->
+            <StackPane fx:id="notificationButton" GridPane.columnIndex="2" GridPane.rowIndex="1">
+               <Button text="Chat con medico" onAction="#openChat"/>
+                <Label fx:id="notificationBadge" text="0"
+                       visible="false"
+                       style="-fx-background-color: red; -fx-text-fill: white; -fx-font-size: 10px; -fx-padding: 2px;"
+                       StackPane.alignment="TOP_RIGHT" />
+            </StackPane>
+
+
+
+
+
+
+            <Label fx:id="infoPaziente" GridPane.columnIndex="1" GridPane.rowIndex="1" />
             <Label fx:id="messageStart" GridPane.columnIndex="1" GridPane.rowIndex="2" GridPane.columnSpan="1"/>
 
             <TableView fx:id="tableView" editable="true"

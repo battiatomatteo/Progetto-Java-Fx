@@ -15,7 +15,7 @@ public class AdminDao extends DBConnection {
     }
 
     public ObservableList<User> caricaUtentiDao(){
-        String sql = "SELECT username, tipo_utente, password, medico FROM utenti";
+        String sql = "SELECT username, tipo_utente, password, medico, informazioni FROM utenti";
         try (PreparedStatement pstmt = conn.prepareStatement(sql);
              ResultSet rs = pstmt.executeQuery()) {
             while (rs.next()) {
@@ -23,7 +23,8 @@ public class AdminDao extends DBConnection {
                         rs.getString("username"),
                         rs.getString("tipo_utente"),
                         rs.getString("password"),
-                        rs.getString("medico")
+                        rs.getString("medico"),
+                        rs.getString("informazioni")
                 ));
             }
             return userData;
@@ -54,12 +55,13 @@ public class AdminDao extends DBConnection {
     }
 
     public User aggiungiUtente(User user){
-        String insertSql = "INSERT INTO utenti(username, tipo_utente, password, medico) VALUES (?, ?, ?, ?)";
+        String insertSql = "INSERT INTO utenti(username, tipo_utente, password, medico, informazioni) VALUES (?, ?, ?, ?)";
         try (PreparedStatement pstmt = conn.prepareStatement(insertSql)) {
             pstmt.setString(1, user.getUsername());
             pstmt.setString(2, user.getTipoUtente());
             pstmt.setString(3, user.getPassword());
             pstmt.setString(4, user.getMedico());
+            pstmt.setString(5, "");
             pstmt.executeUpdate();
             userData.add(user);
             return user;

@@ -3,11 +3,8 @@ package controllers;
 import javafx.fxml.FXML;
 import javafx.scene.chart.LineChart;
 import models.ChartDataInstance;
-import models.ChartDataSetter;
 import java.util.ArrayList;
-import java.util.HashMap;
 import DAO.PatientChartDao;
-import models.FilterDataSetter;
 import models.Rilevazioni;
 
 public class PatientChartController {
@@ -20,27 +17,17 @@ public class PatientChartController {
         dao = new PatientChartDao();
     }
 
-    public void setData(FilterDataSetter setter){
+    public void setData(String username){
         PatientChart.getData().clear();
-        setChartData(setter);
+        setChartData(username);
     }
 
-    private void setChartData(FilterDataSetter setter) {
-        HashMap<Integer,String> chartData;
-        String username = setter.getPatientUserName();
-        chartData = dao.getTerapiePaziente(setter);
-
-        chartData.forEach((idTerapia, farmaco) -> {
-            // Prendi tutte le rilevazioni per questa terapia
-            ArrayList<Rilevazioni> rilevazioni = dao.getSommRilevati(username, idTerapia);
-
-            // Se ci sono rilevazioni (non null e non vuoto) allora aggiungi la serie al grafico
-            if (rilevazioni != null && !rilevazioni.isEmpty()) {
-                ChartDataInstance data = new ChartDataInstance(idTerapia, farmaco, ChartDataInstance.PRE, ChartDataInstance.POST);
-                data.addSeriesData(rilevazioni);  // popola i dati
-                PatientChart.getData().addAll(data.getSeriesDataList());
-            }
-            // altrimenti salta questa terapia e non la aggiunge al grafico
-        });
+    private void setChartData(String username) {
+        ArrayList<Rilevazioni> rilevazioni = dao.getSommRilevati(username);
+        if (rilevazioni != null && !rilevazioni.isEmpty()) {
+            ChartDataInstance data = new ChartDataInstance(ChartDataInstance.PRE, ChartDataInstance.POST);
+            data.addSeriesData(rilevazioni);  // popola i dati
+            PatientChart.getData().addAll(data.getSeriesDataList());
+        }
     }
 }

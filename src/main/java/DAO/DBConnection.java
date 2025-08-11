@@ -6,7 +6,7 @@ import java.sql.SQLException;
 
 
 public class DBConnection {
-    private static final String URL = "jdbc:sqlite:miodatabase.db";
+    private static final String URL = "jdbc:sqlite:miodatabase.db?busy_timeout=5000";
     protected Connection conn;
 
     /*

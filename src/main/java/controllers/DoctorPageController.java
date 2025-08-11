@@ -18,6 +18,7 @@ import utility.SessionManager;
 import utility.UIUtils;
 import view.LogInView;
 import java.io.IOException;
+import java.util.ArrayList;
 
 public class DoctorPageController {
 
@@ -60,9 +61,7 @@ public class DoctorPageController {
             if (count > 0) patientsContainer.getChildren().remove(count - 1);
         });
 
-        // Esempio: Aggiungiamo notifiche iniziali
-        aggiungiNotifica("Terapia urgente per Mario");
-        aggiungiNotifica("Controllo visita Rossi alle 14:00");
+        recuperoNotifiche();
 
         // Clic sulla campanella per mostrare/nascondere
         notificationButton.setOnMouseClicked(this::toggleNotifiche);
@@ -109,6 +108,11 @@ public class DoctorPageController {
     private void sendAllMess(String username){
         System.out.println("sono in sendAllMess in doctor page " +  username + "\n" + areaMessAll.getText());
         dao.sendAllMess(username, areaMessAll.getText());
+    }
+
+    private void recuperoNotifiche(){
+        ArrayList<String> listaNotifiche = dao.recuperoNotifica(SessionManager.currentUser);
+        listaNotifiche.forEach(this::aggiungiNotifica);
     }
 
 }

@@ -11,6 +11,7 @@ import javafx.scene.Scene;
 import javafx.scene.SnapshotParameters;
 import javafx.scene.control.*;
 import javafx.scene.image.WritableImage;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
@@ -206,4 +207,5 @@ public class UIUtils {
     public static void printMessage(String message){
         System.out.println(message);
     }
+
 }

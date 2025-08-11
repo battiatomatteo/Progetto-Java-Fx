@@ -61,7 +61,6 @@ public class PatientPaneDao extends DBConnection{
         return t;
     }
 
-
     public int getMaxId(){
         int nextId = 1;
         String idSql = "SELECT MAX(ID_terapia) FROM terapie";
@@ -89,7 +88,7 @@ public class PatientPaneDao extends DBConnection{
             }
 
         } catch (SQLException e) {
-            UIUtils.showAlert(Alert.AlertType.ERROR, "Errore","Errore nel caricamento delle informazioni utente.");
+            UIUtils.showAlert(Alert.AlertType.ERROR, "Errore caricamento dati", "Si è verificato un errore nel caricamento dei dati del paziente");
             e.printStackTrace();
         }
         return null ;
@@ -138,6 +137,17 @@ public class PatientPaneDao extends DBConnection{
             ex.printStackTrace();
         }
         return t;
+    }
+
+    public void cambioVisualizzato(String doctor, String patient){
+        String update = "UPDATE messages SET visualizzato = true WHERE sender = ? AND receiver = ? AND visualizzato = false ";
+        try(PreparedStatement pstmt = conn.prepareStatement(update)) {
+            pstmt.setString(1, patient);
+            pstmt.setString(2, doctor);
+            pstmt.executeUpdate();
+        } catch (Exception e) {
+            UIUtils.showAlert(Alert.AlertType.ERROR, "Errore sql visual." , "Errore nel cambio o recupero stato visualizzato messaggi .");
+        }
     }
 
 }

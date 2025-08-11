@@ -72,6 +72,7 @@ public class UIUtilsDao extends DBConnection {
             return null;
         }
     }
+
     public ArrayList<String> getFarmaciPaziente(String username){
         ArrayList<String> farmaciPaziente = new ArrayList<>();
         String sql = "SELECT farmaco FROM terapie WHERE username = ?";

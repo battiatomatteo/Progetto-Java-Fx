@@ -24,6 +24,7 @@
             <TableColumn fx:id="tipoUtenteCol" text="Tipo Utente"/>
             <TableColumn fx:id="passwordCol" text="Password"/>
             <TableColumn fx:id="medicoCol" text="Medico"/>
+            <TableColumn fx:id="infoCol" text="Informazioni"/>
         </columns>
     </TableView>
 

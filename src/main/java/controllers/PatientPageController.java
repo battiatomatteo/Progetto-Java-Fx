@@ -7,9 +7,11 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.time.format.DateTimeFormatter;
 
+import DAO.PatientPaneDao;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.input.MouseEvent;
 import javafx.util.converter.FloatStringConverter;
 
 
@@ -25,24 +27,29 @@ import models.*;
 import utility.SessionManager;
 import utility.UIUtils;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
 
 public class PatientPageController {
+    @FXML private Label notificationBadge;
     @FXML private TableView<Pasto> tableView;
     @FXML private TableColumn<Pasto, String> pastoColumn;
     @FXML private TableColumn<Pasto, Float> preColumn;
     @FXML private TableColumn<Pasto, Float> postColumn;
     @FXML private TableColumn<Pasto, String> orarioColumn;
-    @FXML private Label messageStart;
+    @FXML private Label messageStart, infoPaziente;
     @FXML private Button logOutButton, nuovaSomministrazioneButton, salvaSintomi;
     @FXML private TextArea textArea;
     @FXML private VBox lineChart;
     private final ObservableList<Pasto> pastiData = FXCollections.observableArrayList();
     @FXML private PatientChartController chartIncludeController;
     private PatientPageDao dao;
+    private PatientPaneDao dao2;
+
+    private boolean hasNotification = false;
 
     private static final int PREPASTOMIN = 80;
     private static final int PREPASTOMAX = 130;
@@ -54,6 +61,7 @@ public class PatientPageController {
         tableView.setColumnResizePolicy(TableView.UNCONSTRAINED_RESIZE_POLICY);
 
         dao = new PatientPageDao();
+        dao2 = new PatientPaneDao();
 
         messageStart.setText("Qui puoi inserire le somministrazioni giornaliere pre e post pasto di  " + UIUtils.dataConGiorno()  );
         // Imposta le proprietà dei dati
@@ -96,8 +104,10 @@ public class PatientPageController {
         // Come funziona: Quando clicco sul bottone, prendi la finestra corrente e passala a UIUtils.LogOutButton() per eseguire il logout
         logOutButton.setOnAction(e -> UIUtils.LogOutButton((Stage) logOutButton.getScene().getWindow()));
         salvaSintomi.setOnAction(e -> salvaSintomibox(textArea.getText()));
+        caricaInfoPaziente(SessionManager.currentUser);
+        chartIncludeController.setData(LogInController.getUsername()); // passo il nome del paziente
 
-        chartIncludeController.setData(new FilterDataSetter(new ChartDataSetter(LogInController.getUsername(), ChartDataSetter.ALL),FilterDataSetter.ALL)); // passo il nome del paziente
+        recuperoNotifiche();
     }
 
     @FXML
@@ -117,6 +127,8 @@ public class PatientPageController {
         // Determina il medico con cui il paziente deve chattare
         String assignedDoctor = UIUtils.getDoctor(SessionManager.currentUser); // TODO: prendo dinamicamente il medico assegnato
 
+        toggleNotifiche();
+
         // Carica l'interfaccia della chat
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/ChatPage.fxml"));
         Parent root = loader.load();
@@ -130,6 +142,24 @@ public class PatientPageController {
         stage.setTitle("Chat con " + assignedDoctor);
         stage.setScene(new Scene(root, 400, 350));
         stage.show();
+    }
+
+    private void aggiungiNotifica() {
+        notificationBadge.setText(String.valueOf(1));
+        notificationBadge.setVisible(true);
+    }
+
+    private void toggleNotifiche() {
+        if (hasNotification) {
+            // Se l'utente apre la chat, azzeriamo il contatore
+            dao.cambioVisualizzato(UIUtils.getDoctor(SessionManager.currentUser), SessionManager.currentUser);
+            notificationBadge.setVisible(false);
+            hasNotification = false;
+        }
+    }
+    private void recuperoNotifiche(){
+        hasNotification = dao.recuperoNotifica(SessionManager.currentUser);
+        if(hasNotification) aggiungiNotifica();
     }
 
     /*
@@ -285,6 +315,9 @@ public class PatientPageController {
         System.out.println("=============================");
     }
 
+    private void caricaInfoPaziente(String username){
+        infoPaziente.setText(dao2.getInfoUtente(username));
+    }
 }
 
 

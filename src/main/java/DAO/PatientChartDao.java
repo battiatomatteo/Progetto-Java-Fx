@@ -39,18 +39,20 @@ public class PatientChartDao extends DBConnection{
         }
     }
 
-    public ArrayList<Rilevazioni> getSommRilevati(String username, int idTerapia){
+    public ArrayList<Rilevazioni> getSommRilevati(String username){
         ArrayList<Rilevazioni> rilevazioni = new ArrayList<>();
-        String sql = "SELECT data_rilevazione, rilevazione_post_pasto, rilevazione_pre_pasto " +
+        /*String sql = "SELECT data_rilevazione, rilevazione_post_pasto, rilevazione_pre_pasto " +
                 "FROM (rilevazioni_giornaliere INNER JOIN terapie ON rilevazioni_giornaliere.ID_terapia = terapie.ID_terapia )" +
-                "WHERE username = ? AND terapie.ID_terapia = ?";
+                "WHERE username = ? AND terapie.ID_terapia = ?";*/
+        String sql = "SELECT data_rilevazione, rilevazione_post_pasto, rilevazione_pre_pasto, orario " +
+                "FROM rilevazioni_giornaliere WHERE username = ?";
         try{
             PreparedStatement pstmt = conn.prepareStatement(sql);
             pstmt.setString(1, username);
-            pstmt.setInt(2, idTerapia);
             ResultSet rs = pstmt.executeQuery();
             while(rs.next()){
-                String date = rs.getString("data_rilevazione");
+                String date = rs.getString("orario") + " / " +
+                        rs.getString("data_rilevazione");
                 float mensuration_pre = rs.getInt("rilevazione_pre_pasto");
                 float mensuration_post = rs.getInt("rilevazione_post_pasto");
                 Rilevazioni result = new Rilevazioni(date,mensuration_pre,mensuration_post);

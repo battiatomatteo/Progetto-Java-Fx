@@ -124,12 +124,12 @@ public class PatientPaneController {
         }
         // label che si possono vedere una volta che il paziente inserito viene trovato nel database
         label.setText("Lista delle terapie del paziente :");
-        FilterDataSetter filter = new FilterDataSetter(username,ChartDataSetter.ALL,FilterDataSetter.ALL);
+        FilterDataSetter filter = new FilterDataSetter(username,FilterDataSetter.ALL_STATUS_VIEWS,FilterDataSetter.ALL_THERAPY);
         table.setItems(dao.getTerapieList(filter));
         label2.setText("Grafico andamento terapia del paziente :");
         caricaInfoUtente(username);
         salvaInfo.setOnAction(e -> salvaModifiche(username));
-        chartIncludeController.setData(filter); // passo il nome del paziente
+        chartIncludeController.setData(username); // passo il nome del paziente
         chatButton.setVisible(true);
         filtraButton.setVisible(true);
     }
@@ -309,11 +309,14 @@ public class PatientPaneController {
         ChatController chatController = loader.getController();
         chatController.initializeChat(SessionManager.currentUser, selectedPatient);
 
+        dao.cambioVisualizzato(SessionManager.currentUser, usernameInput.getText());
+
         // Crea una nuova finestra per la chat
         Stage stage = new Stage();
         stage.setTitle("Chat con " + selectedPatient);
         stage.setScene(new Scene(root, 400, 350));
         stage.show();
+
     }
 
 
@@ -342,14 +345,13 @@ public class PatientPaneController {
         UIUtils.printMessage("valore stato selezionato patient pane   " + stato);
         UIUtils.printMessage("valore farmaco selezionato patient pane    " + farmaco);
 
-        FilterDataSetter filter = new FilterDataSetter(new ChartDataSetter(patientName, stato), farmaco);
+        FilterDataSetter filter = new FilterDataSetter(patientName, stato, farmaco);
         updatePaneData(filter);
     }
 
     private void updatePaneData(FilterDataSetter filter) {
         table.setItems(dao.getTerapieList(filter));
-        UIUtils.printMessage("view filter/setter" + filter.getChartDataSetter().getView());
-        chartIncludeController.setData(filter); // passo il nome del paziente
+        chartIncludeController.setData(filter.getPatientUserName()); // passo il nome del paziente
     }
 
 }

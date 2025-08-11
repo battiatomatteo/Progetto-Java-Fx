@@ -7,6 +7,7 @@ import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.ComboBox;
 import javafx.stage.Stage;
 import models.ChartDataSetter;
+import models.FilterDataSetter;
 import utility.UIUtils;
 
 import java.awt.*;
@@ -29,9 +30,9 @@ public class SceltaOpzioneController {
         check1.setText(StatoTerapia.ATTIVA.getStato());
         check2.setText(StatoTerapia.SOSPESA.getStato());
         check3.setText(StatoTerapia.TERMINATA.getStato());
-        check1.setUserData(ChartDataSetter.ON_GOING);
-        check2.setUserData(ChartDataSetter.ON_PAUSE);
-        check3.setUserData(ChartDataSetter.TERMINATED);
+        check1.setUserData(FilterDataSetter.ON_GOING_STATUS);
+        check2.setUserData(FilterDataSetter.ON_PAUSE_STATUS);
+        check3.setUserData(FilterDataSetter.TERMINATED_STATUS);
     }
 
     public int getValoreStatoSelezionato() {
@@ -54,9 +55,9 @@ public class SceltaOpzioneController {
     @FXML
     private void confermaScelta(javafx.event.ActionEvent event) {
         valoreStatoSelezionato = 0;
-        if (check1.isSelected()) valoreStatoSelezionato += ChartDataSetter.ON_GOING;
-        if (check2.isSelected()) valoreStatoSelezionato += ChartDataSetter.ON_PAUSE;
-        if (check3.isSelected()) valoreStatoSelezionato += ChartDataSetter.TERMINATED;
+        if (check1.isSelected()) valoreStatoSelezionato += FilterDataSetter.ON_GOING_STATUS;
+        if (check2.isSelected()) valoreStatoSelezionato += FilterDataSetter.ON_PAUSE_STATUS;
+        if (check3.isSelected()) valoreStatoSelezionato += FilterDataSetter.TERMINATED_STATUS;
         valoreFarmacoSelezionato = FarmacoComboBox.getValue();
         // Chiude la finestra
         Stage stage = (Stage) FarmacoComboBox.getScene().getWindow();

@@ -1,6 +1,8 @@
 package DAO;
 
+import javafx.scene.control.Alert;
 import models.Message;
+import models.User;
 import utility.UIUtils;
 
 import java.sql.PreparedStatement;
@@ -51,5 +53,24 @@ public class DoctorPageDao extends DBConnection{
             mess.add(ms);
         });
         return mess;
+    }
+
+    public ArrayList<String> recuperoNotifica(String username){
+        ArrayList<String> mess = new ArrayList<>();
+        String sql = "SELECT sender FROM messages WHERE receiver = ? AND visualizzato = false GROUP BY sender";
+        // Nuovo messaggio da : paziente
+        String notifica = "Nuovo messaggio da : ";
+        try{
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+            pstmt.setString(1, username);
+            ResultSet rs = pstmt.executeQuery() ;
+            while(rs.next()) {
+                mess.add(notifica + rs.getString("sender"));
+            }
+            return mess;
+        } catch (Exception e) {
+            UIUtils.showAlert(Alert.AlertType.ERROR, "Errore recupero notifiche", "Errore nel recupero delle notifiche .");
+            return null;
+        }
     }
 }
