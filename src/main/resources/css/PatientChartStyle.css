@@ -1,0 +1,55 @@
+/* Imposta colore di sfondo */
+.chart {
+    -fx-background-color: #f9f9f9;
+    -fx-padding: 10;
+    -fx-legend-side: bottom;
+}
+
+/* Titoli degli assi */
+.chart-axis {
+    -fx-tick-label-fill: #333333;
+    -fx-tick-label-font-size: 14px;
+}
+
+.chart-axis .axis-label {
+    -fx-text-fill: #222222;
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+}
+
+/* Linee della griglia */
+.chart-plot-background {
+    -fx-background-color: #ffffff;
+}
+
+.chart-horizontal-grid-lines {
+    -fx-stroke: #dddddd;
+}
+
+.chart-vertical-grid-lines {
+    -fx-stroke: #dddddd;
+}
+
+/* Serie della linea */
+.default-color0.chart-series-line {
+    -fx-stroke: #3498db;
+    -fx-stroke-width: 2px;
+}
+
+.default-color0.chart-line-symbol {
+    -fx-background-color: #ffffff, #3498db;
+    -fx-background-radius: 4px;
+    -fx-padding: 4px;
+}
+
+/* Altre serie con colori diversi */
+.default-color1.chart-series-line {
+    -fx-stroke: #e67e22;
+    -fx-stroke-width: 2px;
+}
+
+.default-color1.chart-line-symbol {
+    -fx-background-color: #ffffff, #e67e22;
+    -fx-background-radius: 4px;
+    -fx-padding: 4px;
+}

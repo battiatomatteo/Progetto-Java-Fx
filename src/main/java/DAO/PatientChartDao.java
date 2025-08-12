@@ -1,7 +1,6 @@
 package DAO;
 
-import enums.StatoTerapia;
-import models.ChartDataSetter;
+import models.ChartFilter;
 import models.FilterDataSetter;
 import models.Rilevazioni;
 import utility.UIUtils;
@@ -15,7 +14,7 @@ public class PatientChartDao extends DBConnection{
     public PatientChartDao() {
         super();
     }
-
+/*
     public HashMap<Integer,String> getTerapiePaziente(FilterDataSetter setter){
         HashMap<Integer,String> rilevati = new HashMap<>();
         String farmaco;
@@ -37,28 +36,53 @@ public class PatientChartDao extends DBConnection{
         } catch (Exception e) {
             return null;
         }
-    }
+    }*/
 
-    public ArrayList<Rilevazioni> getSommRilevati(String username){
+    public ArrayList<Rilevazioni> getSommRilevati(String username, ChartFilter filter) {
         ArrayList<Rilevazioni> rilevazioni = new ArrayList<>();
         /*String sql = "SELECT data_rilevazione, rilevazione_post_pasto, rilevazione_pre_pasto " +
                 "FROM (rilevazioni_giornaliere INNER JOIN terapie ON rilevazioni_giornaliere.ID_terapia = terapie.ID_terapia )" +
                 "WHERE username = ? AND terapie.ID_terapia = ?";*/
         String sql = "SELECT data_rilevazione, rilevazione_post_pasto, rilevazione_pre_pasto, orario " +
-                "FROM rilevazioni_giornaliere WHERE username = ?";
+                "FROM rilevazioni_giornaliere WHERE username = ? " + filter.getSqlView();
+        UIUtils.printMessage("query " + sql);
         try{
             PreparedStatement pstmt = conn.prepareStatement(sql);
             pstmt.setString(1, username);
+            UIUtils.printMessage(pstmt.toString());
             ResultSet rs = pstmt.executeQuery();
             while(rs.next()){
-                String date = rs.getString("orario") + " / " +
+                String date =rs.getString("orario") + '/' +
                         rs.getString("data_rilevazione");
+                UIUtils.printMessage(date);
                 float mensuration_pre = rs.getInt("rilevazione_pre_pasto");
                 float mensuration_post = rs.getInt("rilevazione_post_pasto");
                 Rilevazioni result = new Rilevazioni(date,mensuration_pre,mensuration_post);
                 rilevazioni.add(result);
             }
+            UIUtils.printMessage(rilevazioni.toString());
             return rilevazioni;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public ArrayList<String> getDateRilevazioni(String username) {
+        ArrayList<String> date = new ArrayList<>();
+        /*String sql = "SELECT data_rilevazione, rilevazione_post_pasto, rilevazione_pre_pasto " +
+                "FROM (rilevazioni_giornaliere INNER JOIN terapie ON rilevazioni_giornaliere.ID_terapia = terapie.ID_terapia )" +
+                "WHERE username = ? AND terapie.ID_terapia = ?";*/
+        String sql = "SELECT data_rilevazione FROM rilevazioni_giornaliere WHERE username = ? GROUP BY data_rilevazione";
+        try{
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+            pstmt.setString(1, username);
+            ResultSet rs = pstmt.executeQuery();
+            while(rs.next()){
+                String data = rs.getString("data_rilevazione");
+                date.add(data);
+            }
+            return date;
         } catch (Exception e) {
             e.printStackTrace();
             return null;

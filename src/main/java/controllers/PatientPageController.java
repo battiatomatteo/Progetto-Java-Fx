@@ -5,9 +5,11 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 
 import DAO.PatientPaneDao;
+import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -27,10 +29,7 @@ import models.*;
 import utility.SessionManager;
 import utility.UIUtils;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.Map;
+import java.util.*;
 
 
 public class PatientPageController {
@@ -105,9 +104,12 @@ public class PatientPageController {
         logOutButton.setOnAction(e -> UIUtils.LogOutButton((Stage) logOutButton.getScene().getWindow()));
         salvaSintomi.setOnAction(e -> salvaSintomibox(textArea.getText()));
         caricaInfoPaziente(SessionManager.currentUser);
-        chartIncludeController.setData(LogInController.getUsername()); // passo il nome del paziente
+        UIUtils.printMessage("inizializzazione grafico paziente");
+        chartIncludeController.setData(LogInController.getUsername(), new ChartFilter(ChartFilter.NO_START_DATE, ChartFilter.NO_END_DATE,ChartFilter.NO_ID ) ); // passo il nome del paziente
 
         recuperoNotifiche();
+
+        Platform.runLater(() -> checkSommOdierne());
     }
 
     @FXML
@@ -157,6 +159,7 @@ public class PatientPageController {
             hasNotification = false;
         }
     }
+
     private void recuperoNotifiche(){
         hasNotification = dao.recuperoNotifica(SessionManager.currentUser);
         if(hasNotification) aggiungiNotifica();
@@ -207,7 +210,7 @@ public class PatientPageController {
     private String autoNotificationContent(float pre , float post, String orario, String pasto, String data){
         return "Messaggio somministrazione : oggi " + data + " , " + pasto + " ore "+ orario +" pre : " +
                 pre + " e post "+ post + " i valore/i sono fuori dal range consentito.";
-}
+    }
 
     private void caricaSomministrazioniOdierne(String username) {
         pastiData.clear(); // Pulisce la tabella
@@ -318,6 +321,48 @@ public class PatientPageController {
     private void caricaInfoPaziente(String username){
         infoPaziente.setText(dao2.getInfoUtente(username));
     }
+
+
+    /*
+     * controllo se l'utente non ha inserito una o più somministrazioni oggi
+     */
+    private void checkSommOdierne() {
+        LocalTime ora = LocalTime.now();
+
+        int oraAttuale = ora.getHour(); // restituisce solo l'ora (0-23)
+
+        System.out.println("Ora intera: " + oraAttuale);
+
+        final String[] s = {""};
+        tableView.getItems().forEach((Pasto p) -> {
+            if (!controllo(p , oraAttuale)){
+                System.out.println(" sono nell'if in check");
+                s[0] += s[0] + "\n  - " + p.getPasto();
+                System.out.println(" messaggio attuale " + s[0]);
+            }
+        });
+        if(! s[0].isEmpty()) {
+            // warning all'utente
+            UIUtils.showAlert(Alert.AlertType.WARNING, "Attenzione", "Mancano le rilevazioni delle ore precedenti \n"+ s[0]);
+            // messaggio al medico
+        }
+        // String sql = SELECT data_rilevazione ,  count(data_rilevazione) FROM rilevazioni_giornaliere WHERE username = ? GROUP BY data_rilevazione;
+    }
+
+    private boolean controllo(Pasto pasto, int oraAttuale) {
+        LocalTime time = LocalTime.parse(pasto.getOrario(),DateTimeFormatter.ofPattern("HH:mm") );
+        int oraInt = time.getHour();
+        System.out.println("valori pasti: " + pasto.getPre()+ " e " + pasto.getPost());
+        System.out.println("oraInt < oraAttuale: " + oraInt + "<" + oraAttuale);
+        if((pasto.getPre() == 0 || pasto.getPost() == 0) && (oraInt < oraAttuale)) {
+            System.out.println("controllo non passato per" + pasto.getPasto());
+            return false;
+        }else{
+            System.out.println("controllo passato per" + pasto.getPasto());
+            return true ;
+        }
+    }
+
 }
 
 

@@ -2,27 +2,31 @@ package models;
 
 import javafx.scene.chart.XYChart;
 
+import java.sql.Array;
 import java.util.ArrayList;
 
 public class ChartDataInstance {
-    private XYChart.Series<String, Number>[] seriesData = new XYChart.Series[2];
-    public static final int PRE = 1;
-    public static final int POST = 2;
-    private static final String PRE_TEXT = "Rilevazioni pre pasto";
-    private static final String POST_TEXT = "Rilevazioni post dei pasti";
+    private final XYChart.Series<String, Number>[] seriesData = new XYChart.Series[MAX_ID];
+    public static final int MAX_ID = 2;
+    public static final int PRE = 0;
+    public static final int POST = 1;
+    public static final String PRE_TEXT = "Rilevazioni pre pasto";
+    public static final String POST_TEXT = "Rilevazioni post pasto";
+    public static final String ALL_TEXT = "tutte le rilevazioni";
+    public static final String[] TEXT_LIST = {PRE_TEXT,POST_TEXT,ALL_TEXT};
 
     public ChartDataInstance(String seriesName1 , String seriesName2) {
-        ChartDataInstance();
+        ChartDataInstanceInit();
         seriesData[0].setName(seriesName1);
         seriesData[1].setName(seriesName2);
     }
 
-    public ChartDataInstance(int textId1, int textId2) {
-        ChartDataInstance();
-        setSeriesNameByTextId(seriesData[0], textId1);
-        setSeriesNameByTextId(seriesData[1], textId2);
+    public ChartDataInstance() {
+        ChartDataInstanceInit();
+        setSeriesNameByTextId(seriesData[0], PRE);
+        setSeriesNameByTextId(seriesData[1], POST);
     }
-    private void ChartDataInstance(){
+    private void ChartDataInstanceInit(){
         seriesData[0] = new XYChart.Series<String, Number>();
         seriesData[1] = new XYChart.Series<String, Number>();
     }
@@ -36,12 +40,16 @@ public class ChartDataInstance {
         series.setName(name);
     }
 
-    public XYChart.Series<String, Number> getSeriesDataPre() {
-        return seriesData[0];
-    }
-
-    public XYChart.Series<String, Number> getSeriesDataPost() {
-        return seriesData[1];
+    public XYChart.Series<String, Number> getSeriesById(int seriesId) {
+        switch (seriesId) {
+            case PRE -> {
+                return seriesData[PRE];
+            }
+            case POST -> {
+                return  seriesData[POST];
+            }
+            default -> throw new RuntimeException("id serie non valido");
+        }
     }
 
     public ArrayList<XYChart.Series<String, Number>> getSeriesDataList() {
@@ -52,9 +60,9 @@ public class ChartDataInstance {
     }
 
     public void addSeriesData(ArrayList<Rilevazioni> rilevazioni) {
-       for (Rilevazioni r : rilevazioni) {
-           addDataEntry(r);
-       }
+        for (Rilevazioni r : rilevazioni) {
+            addDataEntry(r);
+        }
     }
 
     public void addSeriesData(Rilevazioni rilevazioni){
@@ -72,4 +80,5 @@ public class ChartDataInstance {
     private void newChartItem(XYChart.Series<String, Number> series, String param1, float param2 ) {
         series.getData().add(new XYChart.Data<>(param1, param2));
     }
+
 }

@@ -6,7 +6,7 @@
 <?import javafx.scene.layout.VBox?>
 
 <VBox xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.PatientChartController">
-    <LineChart fx:id="PatientChart" prefWidth="800" prefHeight="600">
+    <LineChart fx:id="PatientChart" prefWidth="800" prefHeight="600" stylesheets="/css/PatientChartStyle.css" >
         <xAxis>
             <CategoryAxis fx:id="xAxis" label="Giorno/ora"/>
         </xAxis>

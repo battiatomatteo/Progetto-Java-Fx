@@ -4,12 +4,10 @@ import DAO.PatientPaneDao;
 import enums.StatoTerapia;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.geometry.Insets;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
@@ -17,14 +15,13 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.StringConverter;
-import models.ChartDataSetter;
+import models.ChartFilter;
 import models.FilterDataSetter;
 import models.Terapia;
 import utility.SessionManager;
 import utility.UIUtils;
 
 import java.io.IOException;
-import java.sql.*;
 import javafx.scene.shape.Circle;
 
 
@@ -39,7 +36,7 @@ public class PatientPaneController {
     @FXML private TableColumn<Terapia, StatoTerapia> statoCol;
     @FXML private Button searchButton, addFarmacoButton, updateButton, deleteButton, generaPDF, filtraButton, salvaInfo,chatButton;
     @FXML private VBox chartInclude;
-   //private final ObservableList<Terapia> data = FXCollections.observableArrayList();
+    //private final ObservableList<Terapia> data = FXCollections.observableArrayList();
     @FXML private PatientChartController chartIncludeController;
     @FXML private TextArea infoTextArea;
     private PatientPaneDao dao;
@@ -57,9 +54,9 @@ public class PatientPaneController {
 
         statoComboBox.setItems(FXCollections.observableArrayList(StatoTerapia.values()));
         /*
-        * assicura che il ComboBox mostri valori leggibili (e non OK, ATTESA, ERRORE tutti in maiuscolo)
-        * e che non si verifichi più il ClassCastException
-        */
+         * assicura che il ComboBox mostri valori leggibili (e non OK, ATTESA, ERRORE tutti in maiuscolo)
+         * e che non si verifichi più il ClassCastException
+         */
         statoComboBox.setConverter(new StringConverter<StatoTerapia>() {
             @Override
             public String toString(StatoTerapia stato) {
@@ -129,7 +126,8 @@ public class PatientPaneController {
         label2.setText("Grafico andamento terapia del paziente :");
         caricaInfoUtente(username);
         salvaInfo.setOnAction(e -> salvaModifiche(username));
-        chartIncludeController.setData(username); // passo il nome del paziente
+        UIUtils.printMessage("inizializzazione in cerca");
+        chartIncludeController.setData(username, new ChartFilter(ChartFilter.NO_START_DATE, ChartFilter.NO_END_DATE,ChartFilter.NO_ID )); // passo il nome del paziente
         chatButton.setVisible(true);
         filtraButton.setVisible(true);
     }
@@ -342,16 +340,23 @@ public class PatientPaneController {
 
         int stato = controller.getValoreStatoSelezionato();
         String farmaco = controller.getValoreFarmacoSelezionato();
+        String dataInizio = controller.getDataInizio();
+        String dataFine = controller.getDataFine();
+        int seriesID = controller.getValoreSerieSelezionato();
         UIUtils.printMessage("valore stato selezionato patient pane   " + stato);
-        UIUtils.printMessage("valore farmaco selezionato patient pane    " + farmaco);
+        UIUtils.printMessage("valore farmaco selezionato patient pane   " + farmaco);
+        UIUtils.printMessage("valore dataIn selezionato patient pane   " + dataInizio);
+        UIUtils.printMessage("valore dataFi selezionato patient pane   " + dataFine);
 
         FilterDataSetter filter = new FilterDataSetter(patientName, stato, farmaco);
-        updatePaneData(filter);
+        ChartFilter chartFilter = new ChartFilter(dataInizio, dataFine,seriesID );
+        updatePaneData(filter,chartFilter);
     }
 
-    private void updatePaneData(FilterDataSetter filter) {
+    private void updatePaneData(FilterDataSetter filter, ChartFilter chartFilter) {
+        UIUtils.printMessage("updatePaneData");
         table.setItems(dao.getTerapieList(filter));
-        chartIncludeController.setData(filter.getPatientUserName()); // passo il nome del paziente
+        chartIncludeController.setData(filter.getPatientUserName(), chartFilter); // passo il nome del paziente
     }
 
 }

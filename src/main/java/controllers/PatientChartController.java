@@ -5,6 +5,7 @@ import javafx.scene.chart.LineChart;
 import models.ChartDataInstance;
 import java.util.ArrayList;
 import DAO.PatientChartDao;
+import models.ChartFilter;
 import models.Rilevazioni;
 
 public class PatientChartController {
@@ -17,17 +18,30 @@ public class PatientChartController {
         dao = new PatientChartDao();
     }
 
-    public void setData(String username){
+    public void setData(String username , ChartFilter filter){
         PatientChart.getData().clear();
-        setChartData(username);
+        setChartData(username, filter);
     }
 
-    private void setChartData(String username) {
-        ArrayList<Rilevazioni> rilevazioni = dao.getSommRilevati(username);
+    private void setChartData(String username, ChartFilter filter) {
+        ArrayList<Rilevazioni> rilevazioni = dao.getSommRilevati(username, filter);
         if (rilevazioni != null && !rilevazioni.isEmpty()) {
-            ChartDataInstance data = new ChartDataInstance(ChartDataInstance.PRE, ChartDataInstance.POST);
+            ChartDataInstance data = new ChartDataInstance();
             data.addSeriesData(rilevazioni);  // popola i dati
-            PatientChart.getData().addAll(data.getSeriesDataList());
+            switch (filter.getSeriesID()){
+                case ChartDataInstance.PRE:{
+                    PatientChart.getData().add(data.getSeriesById(ChartDataInstance.PRE));
+                    return;
+                }
+                case ChartDataInstance.POST:{
+                    PatientChart.getData().add(data.getSeriesById(ChartDataInstance.POST));
+                    return;
+                }
+                case ChartDataInstance.MAX_ID:{
+                    PatientChart.getData().addAll(data.getSeriesDataList());
+                }
+            }
+
         }
     }
 }

@@ -51,8 +51,4 @@
     -fx-alignment: CENTER-LEFT;
 }
 
-.chart {
-    -fx-background-color: #ffffff;
-    -fx-border-color: #ccc;
-    -fx-border-radius: 5;
-}
+

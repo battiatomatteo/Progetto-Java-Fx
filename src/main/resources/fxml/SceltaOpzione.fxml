@@ -15,6 +15,9 @@
     <CheckBox fx:id="check3" />
     <Label text="Farmaco"/>
     <ComboBox fx:id="FarmacoComboBox"/>
+    <ComboBox fx:id="DataInizioComboBox"/>
+    <ComboBox fx:id="DataFineComboBox"/>
+    <ComboBox fx:id="SerieComboBox"/>
     <Button text="Conferma" onAction="#confermaScelta"/>
 </VBox>
 
