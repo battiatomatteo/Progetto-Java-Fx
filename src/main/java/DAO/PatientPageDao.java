@@ -1,6 +1,7 @@
 package DAO;
 
 import javafx.scene.control.Alert;
+import models.ChartFilter;
 import models.Pasto;
 import utility.UIUtils;
 import java.sql.PreparedStatement;
@@ -123,7 +124,7 @@ public class PatientPageDao extends DBConnection{
         }
     }
 
-    public void messageSomm( String content, String receiver, String user){
+    public void messageSomm(String content, String receiver, String user){
         String sql = "INSERT INTO messages (sender, receiver, content, timestamp) VALUES (?, ?, ?, ?)";
         try(PreparedStatement stmt = conn.prepareStatement(sql)) {
 
@@ -150,6 +151,7 @@ public class PatientPageDao extends DBConnection{
             return false;
         }
     }
+
     public void cambioVisualizzato(String doctor, String patient) {
         String update = "UPDATE messages SET visualizzato = true WHERE sender = ? AND receiver = ? AND visualizzato = false ";
         try (PreparedStatement pstmt = conn.prepareStatement(update)) {
@@ -160,4 +162,57 @@ public class PatientPageDao extends DBConnection{
             UIUtils.showAlert(Alert.AlertType.ERROR, "Errore sql visual.", "Errore nel cambio o recupero stato visualizzato messaggi .");
         }
     }
+
+    /*
+    * data1Trovata: diventa true se nel DB troviamo data1.
+    * data2Trovata: diventa true se troviamo data2.
+    * */
+    public boolean messageSommDim(String data2, String data1, ChartFilter filter, String user) {
+        String sql = "SELECT data_rilevazione ,  count(data_rilevazione) FROM rilevazioni_giornaliere WHERE username = ? " + filter.getSqlView() + " GROUP BY data_rilevazione";
+
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, user);
+            try (ResultSet rs = stmt.executeQuery()) {
+                int count = 0 ;
+                while (rs.next()) {
+                    String dataRilevazione = rs.getString("data_rilevazione");
+                    System.out.println("dataRilevazione " + dataRilevazione);
+
+                    if(dataRilevazione != null) count ++;
+                }
+                if(count != 0)
+                    return false ;
+                else
+                    return true;
+            }
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public boolean messDuplicato(String content, String receiver, String user) {
+        UIUtils.printMessage("entro nella funzione");
+        String sql = "SELECT content ,  count(content) FROM messages WHERE sender = ? AND receiver = ? AND content = ? GROUP BY content ";
+        try(PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setString(1, user);
+            stmt.setString(2, receiver);
+            stmt.setString(3, content);
+            try (ResultSet rs = stmt.executeQuery()) {
+                // mettere if(rs.next())   return true  perchè basta che ne trova uno
+                while(rs.next()) {
+                    String contentDb = rs.getString("content");
+                    System.out.println(contentDb);
+                    if(contentDb.equals(content)){
+                        return true;
+                    }
+                }
+            }
+            return false;
+        } catch (Exception e) {
+            UIUtils.showAlert(Alert.AlertType.ERROR, "Errore", "Errore nel cercare il messaggio da confrontare .");
+            return false;
+        }
+    }
+
 }

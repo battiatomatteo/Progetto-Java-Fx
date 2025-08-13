@@ -54,13 +54,11 @@ public class PatientChartDao extends DBConnection{
             while(rs.next()){
                 String date =rs.getString("orario") + '/' +
                         rs.getString("data_rilevazione");
-                UIUtils.printMessage(date);
                 float mensuration_pre = rs.getInt("rilevazione_pre_pasto");
                 float mensuration_post = rs.getInt("rilevazione_post_pasto");
                 Rilevazioni result = new Rilevazioni(date,mensuration_pre,mensuration_post);
                 rilevazioni.add(result);
             }
-            UIUtils.printMessage(rilevazioni.toString());
             return rilevazioni;
         } catch (Exception e) {
             e.printStackTrace();

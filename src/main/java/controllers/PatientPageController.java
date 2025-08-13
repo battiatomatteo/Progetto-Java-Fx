@@ -234,7 +234,6 @@ public class PatientPageController {
             } else {
                 // caso in cui non ho somministrazioni in questo giorno: sommRilevati != null
                 pastiData.add(new Pasto(nome, orario, 0, 0));
-                System.out.println("sommRilevati == null");
             }
         }
     }
@@ -331,34 +330,59 @@ public class PatientPageController {
 
         int oraAttuale = ora.getHour(); // restituisce solo l'ora (0-23)
 
-        System.out.println("Ora intera: " + oraAttuale);
+        // System.out.println("Ora intera: " + oraAttuale);
 
         final String[] s = {""};
         tableView.getItems().forEach((Pasto p) -> {
+            //UIUtils.printMessage("--foreach controllo" + p + "\n valore di s " + s[0]);
             if (!controllo(p , oraAttuale)){
-                System.out.println(" sono nell'if in check");
-                s[0] += s[0] + "\n  - " + p.getPasto();
-                System.out.println(" messaggio attuale " + s[0]);
+                // System.out.println(" sono nell'if in check");
+                s[0] +="\n  - " + p.getPasto();
+                // System.out.println(" messaggio attuale " + s[0]);
             }
         });
         if(! s[0].isEmpty()) {
             // warning all'utente
             UIUtils.showAlert(Alert.AlertType.WARNING, "Attenzione", "Mancano le rilevazioni delle ore precedenti \n"+ s[0]);
             // messaggio al medico
+            // data2 è la data di oggi e data1 è la data di 3 giorni prima di data2 , controllo se data1 è nel db
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+            LocalDate oggi = LocalDate.now(); // Ottieni la data corrente
+            String data2 = oggi.format(formatter); // Converte la data in stringa formattata
+
+            // 1. Converte la stringa in LocalDate
+            LocalDate data = LocalDate.parse(data2, formatter);
+
+            // 2. Sottrae 3 giorni
+            LocalDate nuovaData = data.minusDays(3);
+
+            // 3. Converte di nuovo in stringa
+            String data1 = nuovaData.format(formatter);
+
+            ChartFilter filter = new ChartFilter(data1, data2, ChartFilter.NO_ID);
+            if(dao.messageSommDim(data1, data2 , filter, SessionManager.currentUser)) {
+                // content mess al dottore
+                String content = "Mancano delle somministrazioni da parte di " + SessionManager.currentUser+ " da almeno 3 giorni . Oggi è il : " + data2;
+                // invio mess al dottore
+                if(! dao.messDuplicato(content, UIUtils.getDoctor(SessionManager.currentUser), SessionManager.currentUser)) {
+                    dao.messageSomm(content, UIUtils.getDoctor(SessionManager.currentUser), SessionManager.currentUser);
+                }
+            }
+            else
+                System.out.println("Non bisogna mandare un mess al dottore");
         }
-        // String sql = SELECT data_rilevazione ,  count(data_rilevazione) FROM rilevazioni_giornaliere WHERE username = ? GROUP BY data_rilevazione;
     }
 
     private boolean controllo(Pasto pasto, int oraAttuale) {
         LocalTime time = LocalTime.parse(pasto.getOrario(),DateTimeFormatter.ofPattern("HH:mm") );
         int oraInt = time.getHour();
-        System.out.println("valori pasti: " + pasto.getPre()+ " e " + pasto.getPost());
-        System.out.println("oraInt < oraAttuale: " + oraInt + "<" + oraAttuale);
+        // System.out.println("valori pasti: " + pasto.getPre()+ " e " + pasto.getPost());
+        // System.out.println("oraInt < oraAttuale: " + oraInt + "<" + oraAttuale);
         if((pasto.getPre() == 0 || pasto.getPost() == 0) && (oraInt < oraAttuale)) {
-            System.out.println("controllo non passato per" + pasto.getPasto());
+            // System.out.println("controllo non passato per" + pasto.getPasto());
             return false;
         }else{
-            System.out.println("controllo passato per" + pasto.getPasto());
+            // System.out.println("controllo passato per" + pasto.getPasto());
             return true ;
         }
     }
