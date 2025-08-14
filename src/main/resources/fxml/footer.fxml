@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+
+<HBox xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml"
+      alignment="CENTER"
+      spacing="10"
+      styleClass="footer"
+      prefHeight="40"
+      maxWidth="Infinity"
+      VBox.vgrow="NEVER">
+
+    <Label text="© 2025 Matteo Health System" styleClass="footer-text"/>
+    <Label text="|" />
+    <Label text="Privacy" styleClass="footer-link"/>
+    <Label text="|" />
+    <Label text="Contatti" styleClass="footer-link"/>
+</HBox>

@@ -1,0 +1,12 @@
+
+
+.footer-text {
+    -fx-text-fill: #666;
+    -fx-font-size: 12px;
+}
+
+.footer-link {
+    -fx-text-fill: #00796b;
+    -fx-font-size: 12px;
+    -fx-underline: true;
+}

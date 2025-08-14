@@ -4,12 +4,13 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.text.*?>
-<ScrollPane fx:id="mainScrollPane" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml" fx:controller="controllers.DoctorPageController" fitToWidth="true" stylesheets="/css/doctor-page.css" >
-    <content>
-        <HBox xmlns:fx="http://javafx.com/fxml" spacing="0">
+<ScrollPane fx:id="mainScrollPane" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml"
+            fx:controller="controllers.DoctorPageController" fitToWidth="true" stylesheets="/css/doctor-page.css" >
+    <VBox>
+        <HBox  spacing="0">
 
             <!-- Parte principale -->
-            <AnchorPane fx:id="mainContent" HBox.hgrow="ALWAYS" style="-fx-background-color: #f9f9f9;">
+            <AnchorPane fx:id="mainContent" HBox.hgrow="ALWAYS" >
                 <!-- Barra superiore -->
                 <HBox alignment="CENTER_RIGHT" spacing="10" AnchorPane.topAnchor="10" AnchorPane.rightAnchor="10">
                     <Button fx:id="logOutButton" text="Logout" GridPane.columnIndex="60" GridPane.rowIndex="0" />
@@ -41,7 +42,7 @@
                     </HBox>
                     <!-- Container per i TitledPane dei pazienti -->
 
-                    <VBox fx:id="patientsContainer" spacing="10" />
+                    <VBox fx:id="patientsContainer" spacing="10"  />
                     <Separator />
                     <GridPane hgap="10" vgap="10">
                         <Label fx:id="messaggioAll" text="Inserisci qui un messaggio da mandare a tutti i tuoi pazienti :" GridPane.columnIndex="0" GridPane.rowIndex="1" />
@@ -51,20 +52,30 @@
                                   GridPane.columnIndex="0" GridPane.rowIndex="2" />
                         <Button fx:id="buttonMessAll" text="Invio"  GridPane.columnIndex="0" GridPane.rowIndex="4" />
                     </GridPane>
+
+
+
                 </VBox>
-                <Separator />
+
+
             </AnchorPane>
 
             <!-- Barra laterale notifiche -->
-            <VBox fx:id="notificationPanel"
-                  visible="false" managed="false"
-                  prefWidth="250" minWidth="200"
-                  spacing="8"
-                  style="-fx-background-color: white; -fx-border-color: #ccc; -fx-padding: 10;">
-                <Label text="Notifiche" style="-fx-font-size: 14; -fx-font-weight: bold;" />
-                <!-- Notifiche saranno aggiunte qui -->
-            </VBox>
+            <ScrollPane fitToWidth="true" hbarPolicy="NEVER" vbarPolicy="AS_NEEDED"
+                        style="-fx-background-color:  transparent; -fx-border-color: transparent;">
+                <VBox fx:id="notificationPanel"
+                      visible="false" managed="false"
+                      prefWidth="250" minWidth="200"
+                      spacing="8"
+                      style="-fx-background-color: white; -fx-border-color: #ccc; -fx-padding: 10;">
+                    <Label text="Notifiche" style="-fx-font-size: 14; -fx-font-weight: bold;"/>
+                </VBox>
+            </ScrollPane>
+
+
 
         </HBox>
-    </content>
+        <Region prefHeight="50" style="-fx-background-color: transparent;"/>
+        <fx:include source="footer.fxml"   />
+    </VBox>
 </ScrollPane>
