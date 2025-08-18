@@ -5,7 +5,7 @@
 <?import javafx.geometry.Insets?>
 <ScrollPane fx:controller="controllers.PatientPageController"
             xmlns:fx="http://javafx.com/fxml" stylesheets="/css/patient-page.css">
-    <content>
+
         <GridPane hgap="10" vgap="10">
 
             <Button fx:id="logOutButton" text="        LogOut        " GridPane.columnIndex="2" GridPane.rowIndex="2" />
@@ -53,6 +53,7 @@
             <Button text="Salva sintomi" fx:id="salvaSintomi"  GridPane.columnIndex="1" GridPane.rowIndex="9" />
             <fx:include source="PatientChart.fxml" fx:id="chartInclude" GridPane.columnIndex="1" GridPane.rowIndex="10"/>
             <!--<fx:include source="PatientChart.fxml" fx:id="lineChart" GridPane.columnIndex="1" GridPane.rowIndex="10" />-->
+
+            <!--<fx:include source="footer.fxml" GridPane.columnIndex="1" GridPane.rowIndex="11"  />-->
         </GridPane>
-    </content>
 </ScrollPane>

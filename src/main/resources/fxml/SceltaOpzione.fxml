@@ -1,23 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<VBox spacing="10" xmlns="http://javafx.com/javafx"
-      xmlns:fx="http://javafx.com/fxml"
-      fx:controller="controllers.SceltaOpzioneController">
-    <Label text="Stato Terapia"/>
-    <CheckBox fx:id="check1" />
-    <CheckBox fx:id="check2" />
-    <CheckBox fx:id="check3" />
-    <Label text="Farmaco"/>
-    <ComboBox fx:id="FarmacoComboBox"/>
-    <ComboBox fx:id="DataInizioComboBox"/>
-    <ComboBox fx:id="DataFineComboBox"/>
-    <ComboBox fx:id="SerieComboBox"/>
-    <Button text="Conferma" onAction="#confermaScelta"/>
-</VBox>
+<GridPane xmlns="http://javafx.com/javafx"
+          xmlns:fx="http://javafx.com/fxml"
+          fx:controller="controllers.SceltaOpzioneController"
+          alignment="CENTER" hgap="10" vgap="10" stylesheets="/css/SceltaOpzionale-Style.css">
+    <VBox >
+        <Label text="Filtra per una ricerca più dettagliata : " />
+        <Label text="Stato Terapia"/>
+        <CheckBox fx:id="check1" />
+        <CheckBox fx:id="check2" />
+        <CheckBox fx:id="check3" />
+        <Label text="Farmaco"/>
+        <ComboBox fx:id="FarmacoComboBox"/>
+        <Label text="Selezionare il range di date che si desidera osservare :" />
+        <ComboBox fx:id="DataInizioComboBox" promptText="Data inizio"/>
+        <ComboBox fx:id="DataFineComboBox" promptText="Data fine"/>
+        <Label text="Seleziona quale somministrazione si desidera osservare :" />
+        <ComboBox fx:id="SerieComboBox" promptText="pre/post/tutte"/>
+        <Region prefHeight="10" style="-fx-background-color: transparent;"/>
+        <Button text="Conferma" onAction="#confermaScelta"/>
+    </VBox>
 
+</GridPane>

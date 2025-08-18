@@ -1,5 +1,6 @@
 package utility;
 
+import DAO.PatientPaneDao;
 import DAO.UIUtilsDao;
 import com.lowagie.text.*;
 import com.lowagie.text.pdf.PdfPTable;
@@ -11,7 +12,6 @@ import javafx.scene.Scene;
 import javafx.scene.SnapshotParameters;
 import javafx.scene.control.*;
 import javafx.scene.image.WritableImage;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
@@ -21,17 +21,13 @@ import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileOutputStream;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.HashMap;
 
 public class UIUtils {
     private static final UIUtilsDao dao = new UIUtilsDao();
+    private static final PatientPaneDao daoP = new PatientPaneDao();
 
     //  mostra l'Alert
     public static void showAlert(Alert.AlertType t, String title, String txt) {
@@ -104,6 +100,7 @@ public class UIUtils {
             titolo.setAlignment(Element.ALIGN_CENTER);
             document.add(titolo);
             document.add(new Paragraph("Nome: " + nomePaziente));
+            document.add(new Paragraph("Informazioni del paziente :\n" + daoP.getInfoUtente(nomePaziente)));
             document.add(Chunk.NEWLINE);
 
             // 3. Tabella PDF

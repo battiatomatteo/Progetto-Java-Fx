@@ -1,0 +1,49 @@
+/* stile.css */
+
+/* Imposta il layout di base */
+.root {
+    -fx-font-family: "Segoe UI", sans-serif;
+    -fx-background-color: #f5f5f5;
+    -fx-padding: 20;
+}
+
+/* Label */
+.label {
+    -fx-font-size: 14px;
+    -fx-text-fill: #333333;
+    -fx-padding: 5 0 3 0;
+}
+
+/* CheckBox */
+.check-box {
+    -fx-font-size: 13px;
+    -fx-text-fill: #444;
+    -fx-padding: 2 0 2 15;
+}
+
+/* ComboBox */
+.combo-box {
+    -fx-pref-width: 200;
+    -fx-background-color: #ffffff;
+    -fx-border-color: #cccccc;
+    -fx-border-radius: 5;
+    -fx-background-radius: 5;
+}
+
+/* Pulsante */
+.button {
+    -fx-background-color: linear-gradient(#4CAF50, #2E7D32);
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-background-radius: 8;
+    -fx-padding: 8 20 8 20;
+    -fx-cursor: hand;
+}
+
+.button:hover {
+    -fx-background-color: linear-gradient(#66BB6A, #388E3C);
+}
+
+.button:pressed {
+    -fx-background-color: #1B5E20;
+}

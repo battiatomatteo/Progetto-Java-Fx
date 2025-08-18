@@ -335,7 +335,7 @@ public class PatientPaneController {
         Stage stage = new Stage();
         stage.initModality(Modality.APPLICATION_MODAL); // Blocco della finestra principale
         stage.setTitle("Seleziona un'opzione");
-        stage.setScene(new Scene(root));
+        stage.setScene(new Scene(root, 400, 400));
         stage.showAndWait(); // Attende la chiusura della finestra
 
         int stato = controller.getValoreStatoSelezionato();
