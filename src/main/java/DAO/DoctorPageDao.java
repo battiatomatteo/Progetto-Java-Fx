@@ -2,27 +2,22 @@ package DAO;
 
 import javafx.scene.control.Alert;
 import models.Message;
-import models.User;
 import utility.UIUtils;
-
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 
-public class DoctorPageDao extends DBConnection{
+public class DoctorPageDao {
     private MessageDao msDao = new MessageDao();
-
-    public DoctorPageDao(){
-        super();
-    }
 
     public ArrayList<String> getAllDoctorPatients(String doctor){
         ArrayList<String> list = new ArrayList<>();
         String sql = "SELECT username FROM utenti WHERE medico = ?";
         UIUtils.printMessage("sto cercando i pazienti di  " +  doctor);
-        try {
-            PreparedStatement pstmt = conn.prepareStatement(sql);
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
             pstmt.setString(1, doctor);
             ResultSet rs = pstmt.executeQuery();
             while (rs.next()) {
@@ -36,7 +31,6 @@ public class DoctorPageDao extends DBConnection{
             return null;
         }
     }
-
 
     public void sendAllMess(String username, String content){
         System.out.println("sono in sendAllMess in dao");
@@ -58,10 +52,10 @@ public class DoctorPageDao extends DBConnection{
     public ArrayList<String> recuperoNotifica(String username){
         ArrayList<String> mess = new ArrayList<>();
         String sql = "SELECT sender FROM messages WHERE receiver = ? AND visualizzato = false GROUP BY sender";
-        // Nuovo messaggio da : paziente
+        // Nuovo messaggio da: paziente
         String notifica = "Nuovo messaggio da : ";
-        try{
-            PreparedStatement pstmt = conn.prepareStatement(sql);
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)){
             pstmt.setString(1, username);
             ResultSet rs = pstmt.executeQuery() ;
             while(rs.next()) {

@@ -9,19 +9,13 @@ import utility.UIUtils;
 import java.sql.*;
 
 
-public class PatientPaneDao extends DBConnection{
+public class PatientPaneDao{
     private ObservableList<Terapia> TerapieData = FXCollections.observableArrayList();
-
-    // utilizza il costuttore della classe padre DBConnection
-    // che si occupa di effettuare una connessione con il database usato nel progetto
-    public PatientPaneDao() {
-        super();
-    }
 
     public ObservableList<Terapia> getTerapieList(FilterDataSetter filter) {
         TerapieData.clear();
         String sql = "SELECT ID_terapia, stato, farmaco, count_farmaco, quantità_farmaco, note FROM terapie WHERE username = ?" + filter.getSqlView();
-        try (//Connection conn = DriverManager.getConnection(url);
+        try (Connection conn = DBConnection.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql)){
             pstmt.setString(1, filter.getPatientUserName());
             ResultSet rs = pstmt.executeQuery();
@@ -45,8 +39,9 @@ public class PatientPaneDao extends DBConnection{
         int maxId = getMaxId();
         Terapia t = new Terapia(maxId, stato, farmaco, assunzioni, quantita, note);
 
-        String insertSql = "INSERT INTO terapie (ID_terapia, username, farmaco, count_farmaco, quantità_farmaco, note, stato) VALUES (?, ?, ?, ?, ?, ?, ?)";
-        try (PreparedStatement pstmt = conn.prepareStatement(insertSql)) {
+        String sql = "INSERT INTO terapie (ID_terapia, username, farmaco, count_farmaco, quantità_farmaco, note, stato) VALUES (?, ?, ?, ?, ?, ?, ?)";
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)){
             pstmt.setInt(1,maxId);
             pstmt.setString(2, username);
             pstmt.setString(3, farmaco);
@@ -63,9 +58,10 @@ public class PatientPaneDao extends DBConnection{
 
     public int getMaxId(){
         int nextId = 1;
-        String idSql = "SELECT MAX(ID_terapia) FROM terapie";
-        try (PreparedStatement pstmt = conn.prepareStatement(idSql);
-             ResultSet rs = pstmt.executeQuery()) {
+        String sql = "SELECT MAX(ID_terapia) FROM terapie";
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)){
+             ResultSet rs = pstmt.executeQuery();
             if (rs.next()) {
                 nextId = rs.getInt(1) + 1;
             }
@@ -78,7 +74,8 @@ public class PatientPaneDao extends DBConnection{
     public String getInfoUtente(String username) {
         String sql = "SELECT informazioni FROM utenti WHERE username = ?";
 
-        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+        try(Connection conn = DBConnection.getConnection();
+            PreparedStatement stmt = conn.prepareStatement(sql)){
 
             stmt.setString(1, username);
             ResultSet rs = stmt.executeQuery();
@@ -96,9 +93,10 @@ public class PatientPaneDao extends DBConnection{
 
     public void updateInfoUtente(String username, String nuoveNote) {
 
-        String updateSql = "UPDATE utenti SET informazioni = ? WHERE username = ?";
+        String sql = "UPDATE utenti SET informazioni = ? WHERE username = ?";
 
-        try (PreparedStatement pstmt = conn.prepareStatement(updateSql)) {
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)){
             pstmt.setString(1, nuoveNote);
             pstmt.setString(2, username);
             pstmt.executeUpdate();
@@ -112,7 +110,8 @@ public class PatientPaneDao extends DBConnection{
 
     public void removeTerapia(int idTerapia){
         String sql = "DELETE FROM terapie WHERE id_terapia = ?";
-        try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
             pstmt.setInt(1, idTerapia);
             pstmt.executeUpdate();
         } catch (Exception ex) {
@@ -125,7 +124,8 @@ public class PatientPaneDao extends DBConnection{
         Terapia t = new Terapia(idTerapia, stato, farmaco, assunzioni, quantita, note);
 
         String sql = "UPDATE terapie SET farmaco = ?, count_farmaco = ?, quantità_farmaco = ?, note = ?, stato= ?  WHERE id_terapia = ?";
-        try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
             pstmt.setString( 1, farmaco);
             pstmt.setString(2, assunzioni);
             pstmt.setString(3, quantita);
@@ -140,8 +140,9 @@ public class PatientPaneDao extends DBConnection{
     }
 
     public void cambioVisualizzato(String doctor, String patient){
-        String update = "UPDATE messages SET visualizzato = true WHERE sender = ? AND receiver = ? AND visualizzato = false ";
-        try(PreparedStatement pstmt = conn.prepareStatement(update)) {
+        String sql = "UPDATE messages SET visualizzato = true WHERE sender = ? AND receiver = ? AND visualizzato = false ";
+        try(Connection conn = DBConnection.getConnection();
+            PreparedStatement pstmt = conn.prepareStatement(sql)) {
             pstmt.setString(1, patient);
             pstmt.setString(2, doctor);
             pstmt.executeUpdate();

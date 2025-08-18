@@ -2,22 +2,26 @@ package DAO;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.scene.control.Alert;
+import models.Terapia;
 import models.User;
+import utility.UIUtils;
+
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
-public class AdminDao extends DBConnection {
+public class AdminDao {
     private final ObservableList<User> userData = FXCollections.observableArrayList();
     // utilizza il costuttore della classe padre DBConnection
     // che si occupa di effettuare una connessione con il database usato nel progetto
-    public AdminDao() {
-        super();
-    }
+
 
     public ObservableList<User> caricaUtentiDao(){
         String sql = "SELECT username, tipo_utente, password, medico, informazioni FROM utenti";
-        try (PreparedStatement pstmt = conn.prepareStatement(sql);
-             ResultSet rs = pstmt.executeQuery()) {
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)){
+             ResultSet rs = pstmt.executeQuery() ;
             while (rs.next()) {
                 userData.add(new User(
                         rs.getString("username"),
@@ -35,8 +39,9 @@ public class AdminDao extends DBConnection {
     }
 
     public User eliminaUtenteDao(User selectedUser){
-        String deleteSql = "DELETE FROM utenti WHERE username = ?";
-        try (PreparedStatement pstmt = conn.prepareStatement(deleteSql)) {
+        String sql = "DELETE FROM utenti WHERE username = ?";
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
             pstmt.setString(1, selectedUser.getUsername());
             pstmt.executeUpdate();
             userData.remove(selectedUser);
@@ -55,13 +60,20 @@ public class AdminDao extends DBConnection {
     }
 
     public User aggiungiUtente(User user){
-        String insertSql = "INSERT INTO utenti(username, tipo_utente, password, medico, informazioni) VALUES (?, ?, ?, ?)";
-        try (PreparedStatement pstmt = conn.prepareStatement(insertSql)) {
+        System.out.println("user ");
+        String sql = "INSERT INTO utenti(username, tipo_utente, password, medico, informazioni) VALUES (?, ?, ?, ?, ?)";
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
             pstmt.setString(1, user.getUsername());
             pstmt.setString(2, user.getTipoUtente());
             pstmt.setString(3, user.getPassword());
-            pstmt.setString(4, user.getMedico());
-            pstmt.setString(5, "");
+            if(user.getTipoUtente().equals("medico") || user.getTipoUtente().equals("admin")) {
+                pstmt.setString(4, "NULL");
+            }
+            else {
+                pstmt.setString(4, user.getMedico());
+            }
+            pstmt.setString(5, "informazioni...");
             pstmt.executeUpdate();
             userData.add(user);
             return user;
@@ -70,5 +82,23 @@ public class AdminDao extends DBConnection {
             ex.printStackTrace();
             return null;
         }
+    }
+    public User aggiornaUtente(String username, String tipoUtente, String password, String medico){
+        User user = new User(username, tipoUtente, password, medico, "");
+
+        String sql = "UPDATE utenti SET username = ?, tipo_utente = ?, password = ?, medico = ? WHERE username = ?";
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setString( 1, username);
+            pstmt.setString(2, tipoUtente);
+            pstmt.setString(3, password);
+            pstmt.setString(4, medico);
+            pstmt.setString(5, username);
+            pstmt.executeUpdate();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            UIUtils.showAlert(Alert.AlertType.ERROR, "Errore", "Non è stato possibile aggiornare  l'utente");
+        }
+        return user;
     }
 }

@@ -36,10 +36,12 @@
     <Label text="Username:" GridPane.columnIndex="0" GridPane.rowIndex="2"/>
     <TextField fx:id="usernameInput" promptText="Username" GridPane.columnIndex="0" GridPane.rowIndex="3"/>
     <Label text="Tipo utente:" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
-    <TextField fx:id="tipoUtenteInput" promptText="Tipo utente" GridPane.columnIndex="1" GridPane.rowIndex="3"/>
+    <ComboBox promptText="Tipo utente" fx:id="tipoUtenteInput" GridPane.columnIndex="1" GridPane.rowIndex="3"/>
+    <!--<TextField fx:id="tipoUtenteInput" promptText="Tipo utente" GridPane.columnIndex="1" GridPane.rowIndex="3"/>-->
     <Label text="Password:" GridPane.columnIndex="3" GridPane.rowIndex="2"/>
     <PasswordField fx:id="passwordInput" promptText="Password" GridPane.columnIndex="3" GridPane.rowIndex="3"/>
     <Label text="Medico (opzionale):" GridPane.columnIndex="0" GridPane.rowIndex="4"/>
     <TextField fx:id="medicoInput" promptText="Medico (opzionale)" GridPane.columnIndex="0" GridPane.rowIndex="5"/>
     <Button fx:id="addButton" text="Aggiungi" GridPane.columnIndex="1" GridPane.rowIndex="5"/>
+    <Button fx:id="updateButton" text="Aggiorna" GridPane.columnIndex="3" GridPane.rowIndex="5"/>
 </GridPane>
