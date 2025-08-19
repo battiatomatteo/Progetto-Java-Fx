@@ -229,7 +229,6 @@ public class PatientPaneController {
                             resetCampi();
                             return;
                         }
-
                     }
                     if(quantita.isEmpty()){
                         quantita = selected.getQuantita();

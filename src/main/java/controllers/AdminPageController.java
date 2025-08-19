@@ -31,10 +31,7 @@ public class AdminPageController {
 
         tipoUtenteInput.getItems().addAll("medico", "paziente", "admin");
 
-        String username = usernameInput.getText();
-        String tipoUtente = tipoUtenteInput.getValue();
-        String password = passwordInput.getText();
-        String medico = medicoInput.getText();
+
 
         //Ogni volta che cambia la selezione della comboBox, il listener controlla il nuovo valore (newVal)
         tipoUtenteInput.valueProperty().addListener((obs, oldVal, newVal) -> {
@@ -46,23 +43,27 @@ public class AdminPageController {
             }
         });
 
-
         // Come funziona: Quando clicco sul bottone, prendi la finestra corrente e passala a UIUtils.LogOutButton() per eseguire il logout
         logoutButton.setOnAction(e -> UIUtils.LogOutButton((Stage) logoutButton.getScene().getWindow()));
 
-        addButton.setOnAction(e -> addUser(username, tipoUtente, password, medico));
+        addButton.setOnAction(e -> addUser());
         cancelButton.setOnAction(e -> deleteUser());
-        updateButton.setOnAction(e -> updateUser(username, tipoUtente, password, medico));
+        updateButton.setOnAction(e -> updateUser());
     }
 
-    private void addUser(String username, String tipoUtente, String password, String medico) {
+    private void addUser() {
+        String username = controlloUser(usernameInput.getText());
+        String tipoUtente = tipoUtenteInput.getValue();
+        String password = controlloPass(passwordInput.getText());
+        String medico = medicoInput.getText();
+
         if(tipoUtente.equals("admin") || tipoUtente.equals("medico")){
             medico = "NULL";
         }
         User user = new User(username, tipoUtente, password, medico, "informazioni..."); // info paziente vengono create dal medico non dall'admin
 
-        if (username.isEmpty() || tipoUtente.isEmpty() || password.isEmpty()) {
-            UIUtils.showAlert(Alert.AlertType.ERROR, "Errore", "Compila tutti i campi obbligatori!");
+        if (username.isEmpty() || password.isEmpty()) {
+            UIUtils.showAlert(Alert.AlertType.ERROR, "Errore", "Compila correttamente tutti i campi obbligatori!");
             return;
         }
         // Controlla se l'utente esiste già
@@ -76,6 +77,7 @@ public class AdminPageController {
 
         // Inserisci nel database
         dao.aggiungiUtente(user);
+        //table.getItems().add(user);
         // svuoto i campi
         usernameInput.clear();
         tipoUtenteInput.cancelEdit();
@@ -83,6 +85,25 @@ public class AdminPageController {
         medicoInput.clear();
         UIUtils.showAlert(Alert.AlertType.INFORMATION, "Utente aggiunto", "Nuovo utente inserito con successo!");
 
+    }
+
+    private String controlloUser(String username){
+        if (!UIUtils.controlloParolaStringa(username)) {
+            UIUtils.showAlert(Alert.AlertType.ERROR, "Errore !", "Il valore username non è valido , riprova .");
+            usernameInput.clear();
+            return "";
+        }
+        return username;
+    }
+
+    private String controlloPass(String password){
+        if (!UIUtils.controlloPassword(password)) {
+            UIUtils.showAlert(Alert.AlertType.ERROR, "Errore !", "Il valore della password non è valido ( deve avere almeno " +
+                    " 8 caratteri di cui una maiuscola , un numero ed un simbolo , riprova .");
+            passwordInput.clear();
+            return "";
+        }
+        return password;
     }
 
     private void deleteUser() {
@@ -100,11 +121,19 @@ public class AdminPageController {
         }
     }
 
-    private void updateUser(String username, String tipoUtente, String password, String medico) {
+    private void updateUser() {
+
+        String username = usernameInput.getText();
+        String tipoUtente = tipoUtenteInput.getValue();
+        String password = passwordInput.getText();
+        String medico = medicoInput.getText();
+
+        String oldUsername = null;
+
         User selected = table.getSelectionModel().getSelectedItem();
         // User user = new User(username, tipoUtente, password, medico, "informazioni..."); // info paziente vengono create dal medico non dall'admin
 
-        if(username.isEmpty() && tipoUtente.isEmpty() && password.isEmpty()){
+        if(username.isEmpty() && tipoUtente == null && password.isEmpty() ){
             UIUtils.showAlert(Alert.AlertType.WARNING, "Campi mancanti", "Compila almeno un campo per modificare");
             return;
         }
@@ -116,22 +145,31 @@ public class AdminPageController {
                 confirm.setHeaderText(null);
                 confirm.setContentText("Vuoi davvero modificare questo utente?");
                 if (confirm.showAndWait().orElse(ButtonType.CANCEL) == ButtonType.OK) {
-                    if(username.isEmpty())
+                    if(username.isEmpty()) {
                         username = selected.getUsername();
-                    if(tipoUtente.isEmpty())
+                    }
+                    else{
+                        oldUsername = selected.getUsername();
+
+                    }
+                    if(tipoUtente == null)
                         tipoUtente = selected.getTipoUtente();
                     if(password.isEmpty())
                         password = selected.getPassword();
 
                     table.getItems().remove(selected);
 
-                    table.getItems().add(dao.aggiornaUtente(username, tipoUtente, password, medico));
+                    dao.aggiornaUtente(username, tipoUtente, password, medico, selected.getInfoPaziente() , oldUsername);
                     UIUtils.showAlert(Alert.AlertType.INFORMATION, "Utente aggiornato", " Utente aggiornato con successo!");
+                    // svuoto i campi
+                    usernameInput.clear();
+                    tipoUtenteInput.cancelEdit();
+                    passwordInput.clear();
+                    medicoInput.clear();
                 }
             }
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
-
     }
 }

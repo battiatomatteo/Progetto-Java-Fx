@@ -10,11 +10,6 @@
 
             <Button fx:id="logOutButton" text="        LogOut        " GridPane.columnIndex="2" GridPane.rowIndex="2" />
 
-
-
-
-
-
             <!-- StackPane per campanella + badge -->
             <StackPane fx:id="notificationButton" GridPane.columnIndex="2" GridPane.rowIndex="1">
                <Button text="Chat con medico" onAction="#openChat"/>
@@ -23,10 +18,6 @@
                        style="-fx-background-color: red; -fx-text-fill: white; -fx-font-size: 10px; -fx-padding: 2px;"
                        StackPane.alignment="TOP_RIGHT" />
             </StackPane>
-
-
-
-
 
 
             <Label fx:id="infoPaziente" GridPane.columnIndex="1" GridPane.rowIndex="1" />
@@ -50,7 +41,13 @@
             <Label text="Inserire qui eventuali sintomi :" GridPane.columnIndex="1" GridPane.rowIndex="6" />
 
             <TextArea fx:id="textArea" promptText="Scrivi qualcosa qui..." wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="7" />
-            <Button text="Salva sintomi" fx:id="salvaSintomi"  GridPane.columnIndex="1" GridPane.rowIndex="9" />
+            <HBox GridPane.columnIndex="1" GridPane.rowIndex="9" spacing="10" >
+                <Button text="Salva sintomi" fx:id="salvaSintomi"   />
+                <Button text="Ricarica grafico" fx:id="ricaricaGrafico"  />
+                <Button text="Settimana prec." fx:id="settimanaPrec"  />
+                <Button text="Settimana succ." fx:id="settimanaSucc"  />
+            </HBox>
+
             <fx:include source="PatientChart.fxml" fx:id="chartInclude" GridPane.columnIndex="1" GridPane.rowIndex="10"/>
             <!--<fx:include source="PatientChart.fxml" fx:id="lineChart" GridPane.columnIndex="1" GridPane.rowIndex="10" />-->
 

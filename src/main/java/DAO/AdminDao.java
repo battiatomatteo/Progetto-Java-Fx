@@ -83,22 +83,36 @@ public class AdminDao {
             return null;
         }
     }
-    public User aggiornaUtente(String username, String tipoUtente, String password, String medico){
-        User user = new User(username, tipoUtente, password, medico, "");
-
-        String sql = "UPDATE utenti SET username = ?, tipo_utente = ?, password = ?, medico = ? WHERE username = ?";
-        try (Connection conn = DBConnection.getConnection();
-             PreparedStatement pstmt = conn.prepareStatement(sql)) {
-            pstmt.setString( 1, username);
-            pstmt.setString(2, tipoUtente);
-            pstmt.setString(3, password);
-            pstmt.setString(4, medico);
-            pstmt.setString(5, username);
-            pstmt.executeUpdate();
-        } catch (Exception ex) {
-            ex.printStackTrace();
-            UIUtils.showAlert(Alert.AlertType.ERROR, "Errore", "Non è stato possibile aggiornare  l'utente");
+    public void aggiornaUtente(String username, String tipoUtente, String password, String medico, String info, String oldUsername){
+        if(tipoUtente.equals("admin") || tipoUtente.equals("medico")){
+            medico = "NULL";
         }
-        return user;
+
+        User user = new User(username, tipoUtente, password, medico, info);
+        System.out.println("Tipo utente in aggiornaUtente Dao : " + tipoUtente);
+
+        if(oldUsername != null){
+            User oldUser = new User(oldUsername, tipoUtente, password, medico, info);
+            eliminaUtenteDao(oldUser);
+            aggiungiUtente(user);
+        }
+        else {
+            userData.add(user);
+
+            String sql = "UPDATE utenti SET  tipo_utente = ?, password = ?, medico = ?, informazioni = ? WHERE username = ?";
+            try (Connection conn = DBConnection.getConnection();
+                 PreparedStatement pstmt = conn.prepareStatement(sql)) {
+                pstmt.setString(1, tipoUtente);
+                pstmt.setString(2, password);
+                pstmt.setString(3, medico);
+                pstmt.setString(4, info);
+                pstmt.setString(5, username);
+                pstmt.executeUpdate();
+
+            } catch (Exception ex) {
+                ex.printStackTrace();
+                UIUtils.showAlert(Alert.AlertType.ERROR, "Errore", "Non è stato possibile aggiornare  l'utente");
+            }
+        }
     }
 }

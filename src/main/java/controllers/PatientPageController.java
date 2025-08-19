@@ -5,6 +5,8 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 
@@ -29,7 +31,10 @@ import models.*;
 import utility.SessionManager;
 import utility.UIUtils;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatterBuilder;
 import java.util.*;
+import java.time.DayOfWeek;
+import java.time.temporal.TemporalAdjusters;
 
 
 public class PatientPageController {
@@ -40,7 +45,7 @@ public class PatientPageController {
     @FXML private TableColumn<Pasto, Float> postColumn;
     @FXML private TableColumn<Pasto, String> orarioColumn;
     @FXML private Label messageStart, infoPaziente;
-    @FXML private Button logOutButton, nuovaSomministrazioneButton, salvaSintomi;
+    @FXML private Button logOutButton, nuovaSomministrazioneButton, salvaSintomi, ricaricaGrafico, settimanaSucc, settimanaPrec;
     @FXML private TextArea textArea;
     @FXML private VBox lineChart;
     private final ObservableList<Pasto> pastiData = FXCollections.observableArrayList();
@@ -48,11 +53,16 @@ public class PatientPageController {
     private PatientPageDao dao;
     private PatientPaneDao dao2;
 
+
     private boolean hasNotification = false;
 
     private static final int PREPASTOMIN = 80;
     private static final int PREPASTOMAX = 130;
     private static final int POSTPASTOMAX = 180;
+    public static final String DATE_FORMAT = "yyyy-MM-dd";
+    private static final DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern(DATE_FORMAT);
+
+    private LocalDate dataAttuale = LocalDate.now().with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY));
 
     @FXML
     private void initialize() {
@@ -99,18 +109,54 @@ public class PatientPageController {
         tableView.setItems(pastiData);
 
         nuovaSomministrazioneButton.setOnAction(e -> nuovaSomministrazione());
+        ricaricaGrafico.setOnAction(e -> ricaricaDatiGrafico());
+        settimanaPrec.setOnAction(e -> datiSettimanaPrecedente());
+        settimanaSucc.setOnAction(e -> datiSettimanaSuccessiva());
         caricaSomministrazioniOdierne(SessionManager.currentUser);
         // Come funziona: Quando clicco sul bottone, prendi la finestra corrente e passala a UIUtils.LogOutButton() per eseguire il logout
         logOutButton.setOnAction(e -> UIUtils.LogOutButton((Stage) logOutButton.getScene().getWindow()));
         salvaSintomi.setOnAction(e -> salvaSintomibox(textArea.getText()));
         caricaInfoPaziente(SessionManager.currentUser);
         UIUtils.printMessage("inizializzazione grafico paziente");
-        chartIncludeController.setData(LogInController.getUsername(), new ChartFilter(ChartFilter.NO_START_DATE, ChartFilter.NO_END_DATE,ChartFilter.NO_ID ) ); // passo il nome del paziente
+        ricaricaDatiGrafico();
 
         recuperoNotifiche();
 
         Platform.runLater(() -> checkSommOdierne());
     }
+    private void ricaricaDatiGrafico(){
+        UIUtils.printMessage(" intervallo " + dayToString(dataAttuale) + "    " + fineSettimana());
+        chartIncludeController.setData(LogInController.getUsername(), new ChartFilter(dayToString(dataAttuale), fineSettimana(),ChartFilter.NO_ID ));
+    }
+
+    private void datiSettimanaPrecedente() {
+        dataAttuale = dataAttuale.minusWeeks(1);
+        ChartFilter filter =  new ChartFilter(dayToString(dataAttuale), fineSettimana(),ChartFilter.NO_ID );
+        UIUtils.printMessage(" intervallo " + dayToString(dataAttuale) + "    " + fineSettimana());
+        chartIncludeController.setData(LogInController.getUsername(), filter );
+    }
+
+    private void datiSettimanaSuccessiva() {
+        dataAttuale = dataAttuale.plusWeeks(1);
+        ChartFilter filter =  new ChartFilter(dayToString(dataAttuale), fineSettimana(),ChartFilter.NO_ID );
+        UIUtils.printMessage(" intervallo " + dayToString(dataAttuale) + "    " + fineSettimana());
+        chartIncludeController.setData(LogInController.getUsername(), filter );
+    }
+
+    private String fineSettimana(){
+        LocalDate fineSettimana =  dataAttuale.plusDays(6);
+        return dayToString(fineSettimana);
+    }
+    
+    private String fineMese(){
+        LocalDate fineMese = dataAttuale.with(TemporalAdjusters.lastDayOfMonth());
+        return dayToString(fineMese);
+    }
+
+    private String dayToString(LocalDate day){
+        return day.format(dateFormat);
+    }
+
 
     @FXML
     private void openChat() throws IOException {

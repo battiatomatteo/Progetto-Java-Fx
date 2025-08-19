@@ -205,4 +205,13 @@ public class UIUtils {
         System.out.println(message);
     }
 
+
+    public static boolean controlloParolaStringa(String input) {
+        return input != null && input.matches("^[A-Za-z]+$");
+    }
+
+    public static boolean controlloPassword(String password) {
+        return password != null && password.matches("^(?=.*[A-Z])(?=.*[0-9])(?=.*[^A-Za-z0-9]).{8,}$");
+    }
+
 }
