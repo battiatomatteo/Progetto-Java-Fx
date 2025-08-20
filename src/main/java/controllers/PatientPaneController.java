@@ -11,6 +11,7 @@ import javafx.collections.FXCollections;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -151,6 +152,13 @@ public class PatientPaneController {
             UIUtils.showAlert(Alert.AlertType.WARNING, "Campi mancanti", "Compila tutti i campi obbligatori!");
             return;
         }
+        if(UIUtils.controlloParolaStringa(username) ||
+                UIUtils.controlloParolaStringa(farmaco) ||
+                UIUtils.controlloFloat(assunzioni) ||
+                UIUtils.controlloFloat(quantita)){
+            UIUtils.showAlert(Alert.AlertType.WARNING, "Campi Errati", "Compilare correttamente i campi inseriti");
+            return;
+        }
 
         Alert riepilogo = new Alert(Alert.AlertType.CONFIRMATION);
         riepilogo.setTitle("Conferma inserimento terapia");
@@ -221,10 +229,7 @@ public class PatientPaneController {
                         assunzioni = selected.getAssunzioni();
                     }
                     else {
-                        try {
-                            int n = Integer.parseInt(assunzioni);
-                        }
-                        catch ( NumberFormatException e) {
+                        if(!UIUtils.controlloFloat(assunzioni)){
                             UIUtils.showAlert(Alert.AlertType.ERROR, "Errore inserimento", "Hai inserito una lettera o simbolo al posto di un numero");
                             resetCampi();
                             return;
@@ -233,10 +238,7 @@ public class PatientPaneController {
                     if(quantita.isEmpty()){
                         quantita = selected.getQuantita();
                     }else {
-                        try {
-                            double n = Double.parseDouble(quantita);
-                        }
-                        catch ( NumberFormatException e) {
+                        if(!UIUtils.controlloFloat(quantita)){
                             UIUtils.showAlert(Alert.AlertType.ERROR, "Errore inserimento", "Hai inserito una lettera o simbolo al posto di un numero");
                             resetCampi();
                             return;
@@ -311,6 +313,7 @@ public class PatientPaneController {
         // Crea una nuova finestra per la chat
         Stage stage = new Stage();
         stage.setTitle("Chat con " + selectedPatient);
+        stage.getIcons().add(new Image(getClass().getResourceAsStream("/img/icona_dottore.jpg")));
         stage.setScene(new Scene(root, 400, 350));
         stage.show();
 

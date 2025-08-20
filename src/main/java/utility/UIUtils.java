@@ -146,54 +146,6 @@ public class UIUtils {
         }
     }
 
-    public static void filtraTerapia(String username){
-
-        // Nuovo Stage (finestra)
-        Stage finestraFiltro = new Stage();
-        finestraFiltro.setTitle("Filtri Ricerca");
-
-        // ComboBox per Stato terapia
-        ComboBox<String> statoCombo = new ComboBox<>();
-        statoCombo.getItems().addAll("Tutti", "Attiva", "Sospesa", "Terminata");
-        statoCombo.setValue("Tutti");
-
-        // ComboBox per Tipo farmaco
-        ComboBox<String> tipoFarmacoCombo = new ComboBox<>();
-        tipoFarmacoCombo.getItems().addAll(dao.getFarmaciPaziente(username));
-
-        //tipoFarmacoCombo.getItems().addAll("Tutti", "Antibiotico", "Antidolorifico", "Altro");
-
-        tipoFarmacoCombo.setValue("Tutti");
-
-        // Pulsante per filtrare
-        Button filtraBtn = new Button("Applica Filtri");
-        filtraBtn.setOnAction(e -> {
-            String stato = statoCombo.getValue();
-            String tipoFarmaco = tipoFarmacoCombo.getValue();
-
-            // TODO: Chiama qui il tuo metodo di filtro reale
-            System.out.println("Filtro applicato:");
-            System.out.println(" - Stato: " + stato);
-            System.out.println(" - Tipo farmaco: " + tipoFarmaco);
-
-            finestraFiltro.close(); // chiudi la finestra dopo il filtro (opzionale)
-        });
-
-        // Layout finestra
-        VBox layout = new VBox(10);
-        layout.setPadding(new Insets(20));
-        layout.getChildren().addAll(
-                new Label("Stato Terapia:"), statoCombo,
-                new Label("Tipo Farmaco:"), tipoFarmacoCombo,
-                filtraBtn
-        );
-
-        Scene scena = new Scene(layout, 300, 200);
-        finestraFiltro.setScene(scena);
-        finestraFiltro.show();
-
-    }
-
     public static String getDoctor(String username){
         return dao.getDoctorUser(username);
 
@@ -212,6 +164,15 @@ public class UIUtils {
 
     public static boolean controlloPassword(String password) {
         return password != null && password.matches("^(?=.*[A-Z])(?=.*[0-9])(?=.*[^A-Za-z0-9]).{8,}$");
+    }
+    public static boolean controlloFloat(String number){
+        try {
+            int n = Integer.parseInt(number);
+            return true;
+        }
+        catch ( NumberFormatException e) {
+            return false;
+        }
     }
 
 }

@@ -1,46 +1,59 @@
+/* Messaggi utente */
 .message-user {
-    -fx-background-color: #dcf8c6;
+    -fx-background-color: linear-gradient(to bottom right, #4A90E2, #357ABD); /* blu elegante */
+    -fx-text-fill: white;
     -fx-padding: 10 15;
     -fx-background-radius: 15;
     -fx-font-size: 14px;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.15), 3, 0, 0, 1);
 }
 
+/* Messaggi altri */
 .message-other {
-    -fx-background-color: #ffffff;
+    -fx-background-color: linear-gradient(to bottom right, #f9fafc, #e6ebf1);
+    -fx-text-fill: #333333;
     -fx-padding: 10 15;
     -fx-background-radius: 15;
     -fx-font-size: 14px;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 2, 0, 0, 1);
 }
 
+/* Contenitore dei messaggi */
 .message-container {
-    -fx-padding: 5;
+    -fx-padding: 10;
+    -fx-background-color: transparent; /* grigio chiaro */
 }
 
+/* Campo input */
 #messageField {
-    -fx-background-color: white;
+    -fx-background-color: #ffffff;
     -fx-font-size: 15px;
-    -fx-border-color: rgba(0, 0, 0, 0.82);
-    -fx-border-radius: 3px;
+    -fx-border-color: #d0d7de;
+    -fx-background-radius: 6px;
+    -fx-padding: 8;
 }
 
+/* Pulsante invio */
 #sendButton {
-    -fx-background-color: #25D366;           /* Verde WhatsApp */
-    -fx-text-fill: white;                    /* Testo bianco */
+    -fx-background-color: #4A90E2;   /* blu professionale */
+    -fx-text-fill: white;
     -fx-font-size: 14px;
     -fx-font-weight: bold;
-    -fx-background-radius: 20;               /* Angoli arrotondati */
-    -fx-padding: 8 16;                       /* Spaziatura interna */
-    -fx-cursor: hand;                        /* Cursore a mano */
-    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 4,0,0,1);
+    -fx-background-radius: 0;
+    -fx-padding: 8 16;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 4, 0, 0, 1);
     -fx-border-color: transparent;
+    -fx-transition: 0.3s;
+    -fx-border-radius: 0;
 }
 
-/* Effetto al passaggio del mouse */
+/* Hover effetto */
 #sendButton:hover {
-    -fx-background-color: #20b85b;           /* Verde leggermente più scuro */
+    -fx-background-color: #357ABD; /* blu più scuro */
 }
 
-/* Effetto al click */
+/* Pressed effetto */
 #sendButton:pressed {
-    -fx-background-color: #1e9c4f;           /* Ancora più scuro */
+    -fx-background-color: #2C5F9E; /* ancora più scuro */
 }

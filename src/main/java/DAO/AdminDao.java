@@ -60,7 +60,10 @@ public class AdminDao {
     }
 
     public User aggiungiUtente(User user){
-        System.out.println("user ");
+        if(!controlloMedico(user.getMedico())) {
+            UIUtils.showAlert(Alert.AlertType.ERROR, "Errore :", "Il medico da lei inserito non esiste");
+            return null;
+        }
         String sql = "INSERT INTO utenti(username, tipo_utente, password, medico, informazioni) VALUES (?, ?, ?, ?, ?)";
         try (Connection conn = DBConnection.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
@@ -76,6 +79,8 @@ public class AdminDao {
             pstmt.setString(5, "informazioni...");
             pstmt.executeUpdate();
             userData.add(user);
+
+            UIUtils.showAlert(Alert.AlertType.INFORMATION, "Utente aggiunto", "Nuovo utente inserito con successo!");
             return user;
 
         } catch (Exception ex) {
@@ -84,8 +89,14 @@ public class AdminDao {
         }
     }
     public void aggiornaUtente(String username, String tipoUtente, String password, String medico, String info, String oldUsername){
+
         if(tipoUtente.equals("admin") || tipoUtente.equals("medico")){
             medico = "NULL";
+        }else {
+            if(!controlloMedico(medico)) {
+                UIUtils.showAlert(Alert.AlertType.ERROR, "Errore :", "Il medico da lei inserito non esiste");
+                return;
+            }
         }
 
         User user = new User(username, tipoUtente, password, medico, info);
@@ -109,10 +120,25 @@ public class AdminDao {
                 pstmt.setString(5, username);
                 pstmt.executeUpdate();
 
+                UIUtils.showAlert(Alert.AlertType.INFORMATION, "Utente aggiornato", "Utente aggiornato con successo!");
             } catch (Exception ex) {
                 ex.printStackTrace();
                 UIUtils.showAlert(Alert.AlertType.ERROR, "Errore", "Non è stato possibile aggiornare  l'utente");
             }
+        }
+    }
+
+    // ritorno true se esiste
+    private boolean controlloMedico(String medico){
+        String sql = "SELECT username FROM utenti WHERE username = ? AND tipo_utente = ?" ;
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)){
+            pstmt.setString(1, medico);
+            pstmt.setString(2, "medico");
+            ResultSet rs = pstmt.executeQuery();
+            return rs.next();
+        } catch (Exception e) {
+            return false;
         }
     }
 }

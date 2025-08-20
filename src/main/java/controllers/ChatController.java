@@ -4,6 +4,7 @@ import DAO.MessageDao;
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
@@ -32,7 +33,7 @@ public class ChatController {
 
     @FXML
     public void initialize() {   // Auto-Aggiornamento della Chat
-        Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(30), e -> loadMessages()));
+        Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(10), e -> loadMessages()));
         timeline.setCycleCount(Animation.INDEFINITE);
         timeline.play();
     }
@@ -63,6 +64,8 @@ public class ChatController {
             messageDao.saveMessage(msg);
             messageField.clear();
             loadMessages();
+            // autoscroll in fondo
+            Platform.runLater(() -> chatScrollPane.setVvalue(1.0));
         } catch (Exception e) {
             e.printStackTrace();
         }

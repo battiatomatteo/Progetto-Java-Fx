@@ -204,4 +204,68 @@ public class PatientPageDao {
         }
     }
 
+    public boolean cercoSintomiOggi(LocalDate oggi, DateTimeFormatter formatter, String nuovaNota, String username) {
+        String sql = "SELECT ID_rilevazioni FROM rilevazioni_giornaliere WHERE data_rilevazione = ? AND username = ? ORDER BY ID_rilevazioni DESC LIMIT 1";
+        try (Connection conn = DBConnection.getConnection();
+            PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, oggi.format(formatter));
+            stmt.setString(2, username);
+            ResultSet rsOggi = stmt.executeQuery();
+            if (rsOggi.next()) {
+                // Somministrazione trovata per oggi → aggiorna la più recente
+                int id = rsOggi.getInt("ID_rilevazioni");
+                String update = "UPDATE rilevazioni_giornaliere SET note_rilevazione = ? WHERE ID_rilevazioni = ? ";
+                try (PreparedStatement updateStmt = conn.prepareStatement(update)) {
+                    updateStmt.setString(1, nuovaNota);
+                    updateStmt.setInt(2, id);
+                    updateStmt.executeUpdate();
+                    UIUtils.showAlert(Alert.AlertType.INFORMATION, "Nota salvata", "Nota salvata sulla somministrazione odierna.");
+                    return true;
+                } catch (Exception e) {
+                    UIUtils.showAlert(Alert.AlertType.ERROR , "Errore 1.1", "Errore salvataggio sintomi .");
+                    return false;
+                }
+            }
+            else return false; // Nessuna somministrazione trovata per oggi
+        }catch (Exception e) {
+            UIUtils.showAlert(Alert.AlertType.ERROR, "Errore 1", "Si è verificato un errore durante il salvataggio della nota.");
+            return false; // Nessuna somministrazione trovata per oggi
+        }
+    }
+
+    public void cercoSintomiGiorniPrecedenti(String nuovaNota, String username) {
+        String queryUltima = "SELECT ID_rilevazioni, note_rilevazione, data_rilevazione, username FROM rilevazioni_giornaliere WHERE username = ? ORDER BY data_rilevazione DESC, ID_rilevazioni DESC LIMIT 1";
+        try (Connection conn = DBConnection.getConnection();
+            PreparedStatement pstmtUltima = conn.prepareStatement(queryUltima)) {
+            pstmtUltima.setString(1, username);
+            ResultSet rsUltima = pstmtUltima.executeQuery();
+            if (rsUltima.next()) {
+                String note = rsUltima.getString("note_rilevazione");
+                int id = rsUltima.getInt("ID_rilevazioni");
+                String dataUltima = rsUltima.getString("data_rilevazione");
+
+                if ("note...".equalsIgnoreCase(note)) {
+                    // Aggiorno la nota
+                    String update = "UPDATE rilevazioni_giornaliere SET note_rilevazione = ? WHERE ID_rilevazioni = ?";
+                    try (PreparedStatement updateStmt = conn.prepareStatement(update)) {
+                        updateStmt.setString(1, nuovaNota);
+                        updateStmt.setInt(2, id);
+                        updateStmt.executeUpdate();
+                        UIUtils.showAlert(Alert.AlertType.INFORMATION, "Nota salvata", "Nota salvata nella somministrazione più recente del " + dataUltima);
+                    } catch (Exception e) {
+                        UIUtils.showAlert(Alert.AlertType.ERROR , "Errore 2.1", "Errore salvataggio sintomi .");
+                    }
+                } else {
+                    // Nota già presente → mostro alert
+                    UIUtils.showAlert(Alert.AlertType.WARNING, "Nota non salvata", "Hai già scritto una nota nella somministrazione più recente. Contatta il medico o attendi una nuova somministrazione.");
+                }
+            } else {
+                UIUtils.showAlert(Alert.AlertType.WARNING, "Nessuna rilevazione", "Non è presente alcuna somministrazione su cui salvare la nota.");
+            }
+        }catch (Exception e) {
+            e.printStackTrace();
+            UIUtils.showAlert(Alert.AlertType.ERROR, "Errore 2", "Si è verificato un errore durante il salvataggio della nota.");
+        }
+    }
+
 }

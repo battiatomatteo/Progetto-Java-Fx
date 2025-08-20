@@ -14,6 +14,8 @@
     <ScrollPane fx:id="chatScrollPane"
                 fitToWidth="true"
                 VBox.vgrow="ALWAYS"
+                hbarPolicy="NEVER"
+                vbarPolicy="NEVER"
                 id="chatScrollPane">
         <VBox fx:id="messageContainer"
               spacing="5"
@@ -21,7 +23,7 @@
     </ScrollPane>
 
     <!-- Campo di input e bottone invia -->
-    <HBox spacing="5">
+    <HBox spacing="0">
         <TextField fx:id="messageField"
                    HBox.hgrow="ALWAYS"
                    id="messageField"/>

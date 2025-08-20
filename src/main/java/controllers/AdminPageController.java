@@ -83,7 +83,6 @@ public class AdminPageController {
         tipoUtenteInput.cancelEdit();
         passwordInput.clear();
         medicoInput.clear();
-        UIUtils.showAlert(Alert.AlertType.INFORMATION, "Utente aggiunto", "Nuovo utente inserito con successo!");
 
     }
 
@@ -133,7 +132,7 @@ public class AdminPageController {
         User selected = table.getSelectionModel().getSelectedItem();
         // User user = new User(username, tipoUtente, password, medico, "informazioni..."); // info paziente vengono create dal medico non dall'admin
 
-        if(username.isEmpty() && tipoUtente == null && password.isEmpty() ){
+        if(username.isEmpty() && tipoUtente == null && password.isEmpty() && medico.isEmpty() ){
             UIUtils.showAlert(Alert.AlertType.WARNING, "Campi mancanti", "Compila almeno un campo per modificare");
             return;
         }
@@ -149,18 +148,30 @@ public class AdminPageController {
                         username = selected.getUsername();
                     }
                     else{
-                        oldUsername = selected.getUsername();
-
+                        if(!controlloUser(username).isEmpty())
+                            oldUsername = selected.getUsername();
+                        else{
+                            //UIUtils.showAlert(Alert.AlertType.ERROR, "Errore", "Errore inserimento nuovo username.");
+                            return;
+                        }
                     }
                     if(tipoUtente == null)
                         tipoUtente = selected.getTipoUtente();
-                    if(password.isEmpty())
+                    if(password.isEmpty()) {
                         password = selected.getPassword();
+                    }
+                    else {
+                        if(controlloPass(password).isEmpty()){
+                            //UIUtils.showAlert(Alert.AlertType.ERROR, "Errore", "Errore inserimento nuova password.");
+                            return;
+                        }
+                    }
+                    if(medico.isEmpty())
+                        medico = selected.getMedico();
 
                     table.getItems().remove(selected);
 
                     dao.aggiornaUtente(username, tipoUtente, password, medico, selected.getInfoPaziente() , oldUsername);
-                    UIUtils.showAlert(Alert.AlertType.INFORMATION, "Utente aggiornato", " Utente aggiornato con successo!");
                     // svuoto i campi
                     usernameInput.clear();
                     tipoUtenteInput.cancelEdit();
