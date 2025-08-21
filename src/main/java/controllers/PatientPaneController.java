@@ -21,7 +21,6 @@ import models.FilterDataSetter;
 import models.Terapia;
 import utility.SessionManager;
 import utility.UIUtils;
-
 import java.io.IOException;
 import javafx.scene.shape.Circle;
 
@@ -37,7 +36,6 @@ public class PatientPaneController {
     @FXML private TableColumn<Terapia, StatoTerapia> statoCol;
     @FXML private Button searchButton, addFarmacoButton, updateButton, deleteButton, generaPDF, filtraButton, salvaInfo,chatButton;
     @FXML private VBox chartInclude;
-    //private final ObservableList<Terapia> data = FXCollections.observableArrayList();
     @FXML private PatientChartController chartIncludeController;
     @FXML private TextArea infoTextArea;
     private PatientPaneDao dao;
@@ -51,7 +49,6 @@ public class PatientPaneController {
         quantFarCol.setCellValueFactory(cell -> cell.getValue().quantitaProperty());
         noteCol.setCellValueFactory(cell -> cell.getValue().noteProperty());
         dao = new PatientPaneDao();
-        //table.setItems(data);
 
         statoComboBox.setItems(FXCollections.observableArrayList(StatoTerapia.values()));
         /*
@@ -139,7 +136,6 @@ public class PatientPaneController {
         String assunzioni = newAssunzioniInput.getText();
         String quantita = newQuantitaInput.getText();
         String note = newNoteInput.getText();
-        //String stato = statoComboBox.getValue().toString();
 
         StatoTerapia statoEnum = statoComboBox.getValue();  // ComboBox<StatoTerapia>
         if (statoEnum == null) {
@@ -204,7 +200,6 @@ public class PatientPaneController {
         Terapia selected = table.getSelectionModel().getSelectedItem();
         // ottengo valore del ComboBox (se presente), altrimenti prendo lo stato esistente
         StatoTerapia statoEnum = statoComboBox.getValue();
-        //String stato = (statoEnum != null) ? statoEnum.name() : selected.getStatoEnum().name();
 
         if(farmaco.isEmpty() && assunzioni.isEmpty() && quantita.isEmpty() && note.isEmpty() && statoEnum == null){
             UIUtils.showAlert(Alert.AlertType.WARNING, "Campi mancanti", "Compila almeno un campo per modificare");
@@ -212,7 +207,6 @@ public class PatientPaneController {
         }
         String stato = statoEnum.name();
         try{
-            //Terapia selected = table.getSelectionModel().getSelectedItem();  // spostata a riga 306
             if (selected != null) {
                 Alert confirm = new Alert(Alert.AlertType.CONFIRMATION);
                 confirm.setTitle("Conferma modifiche");

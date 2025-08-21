@@ -9,8 +9,17 @@
     -fx-font-weight: bold;      /* Testo marcato */
     -fx-text-fill: #1f2d3d;     /* Più scuro e professionale */
     -fx-padding: 10 0 10 0;     /* Margini verticali */
-    /*-fx-color-label-visible: red;*/
 }
+
+.table-cell {
+    -fx-alignment: top-left; /* allinea il testo in alto a sinistra */
+    -fx-padding: 6px;        /* margine interno */
+}
+
+.wrapped-text {
+    -fx-fill: -fx-text-inner-color; /* usa il colore del testo standard */
+}
+
 
 /* Etichette generiche */
 .label {

@@ -3,12 +3,10 @@ package controllers;
 import DAO.AdminDao;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import models.User;
 import utility.UIUtils;
-import java.sql.*;
 
 public class AdminPageController {
 
@@ -49,6 +47,19 @@ public class AdminPageController {
         addButton.setOnAction(e -> addUser());
         cancelButton.setOnAction(e -> deleteUser());
         updateButton.setOnAction(e -> updateUser());
+
+        // Colonna con testo multilinea (wrapping)
+        infoCol.setCellFactory(tc -> {
+            TableCell<User, String> cell = new TableCell<>();
+            Text text = new Text();
+            text.wrappingWidthProperty().bind(infoCol.widthProperty().subtract(10)); // margine interno
+            text.getStyleClass().add("wrapped-text"); // stile CSS o
+            cell.setGraphic(text);
+            cell.setPrefHeight(Control.USE_COMPUTED_SIZE); // permette il resize dinamico
+            text.textProperty().bind(cell.itemProperty());
+            return cell;
+        });
+
     }
 
     private void addUser() {

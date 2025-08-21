@@ -45,14 +45,11 @@ public class MessageDao {
                         rs.getTimestamp("timestamp").toLocalDateTime()
                 ));
             }
-
             return messages;
-
 
         }catch (Exception e) {
             throw new RuntimeException(e);
         }
-
     }
 
     public void messageList(ArrayList<Message> list ){

@@ -4,7 +4,6 @@ import javafx.scene.control.Alert;
 import models.ChartFilter;
 import models.Pasto;
 import utility.UIUtils;
-
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -19,11 +18,9 @@ import models.Day;
 public class PatientPageDao {
     private Map<String, Pasto> rilevati = new HashMap<>();
 
-
     public Map<String, Pasto> somministrazioneTabella(String username){
-        //int idTerapia = recuperoId(username);
+
         String sql = "SELECT * FROM rilevazioni_giornaliere WHERE data_rilevazione = ? AND rilevazioni_giornaliere.username = ?";
-        //String sql = "SELECT * FROM rilevazioni_giornaliere INNER JOIN terapie ON (rilevazioni_giornaliere.ID_terapia = terapie.ID_terapia) WHERE data_rilevazione = ? AND rilevazioni_giornaliere.ID_terapia = ? AND username = ?";
         try(Connection conn = DBConnection.getConnection();
             PreparedStatement pstmt = conn.prepareStatement(sql)){
 
@@ -57,10 +54,9 @@ public class PatientPageDao {
         }
     }
 
-
     public boolean addSomministrazione(Day rilevazioneGiornaliera, String username){
         String sql = "INSERT INTO rilevazioni_giornaliere (data_rilevazione, rilevazione_post_pasto, note_rilevazione, username, rilevazione_pre_pasto, orario) VALUES (?, ?, ?, ?, ?, ?)";
-       // int idTerapia = recuperoId(username);
+
         try(Connection conn = DBConnection.getConnection();
             PreparedStatement insertStmt = conn.prepareStatement(sql)){
 
@@ -89,7 +85,7 @@ public class PatientPageDao {
     }
 
     public boolean checkSomministarazione(String orario, LocalDate data, DateTimeFormatter formatter, String username){
-        //int idTerapia = recuperoId(username);
+
         String sql = "SELECT COUNT(*) FROM rilevazioni_giornaliere WHERE data_rilevazione = ? AND orario = ? AND username = ?";
         // Verifica se esiste già una rilevazione per oggi con questo orario
         try(Connection conn = DBConnection.getConnection();

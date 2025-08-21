@@ -1,13 +1,8 @@
 package controllers;
 
 import java.io.IOException;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
-
 import DAO.PatientPaneDao;
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
@@ -15,8 +10,6 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.util.converter.FloatStringConverter;
-
-
 import DAO.PatientPageDao;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -47,10 +40,7 @@ public class PatientPageController {
     @FXML private PatientChartController chartIncludeController;
     private PatientPageDao dao;
     private PatientPaneDao dao2;
-
-
     private boolean hasNotification = false;
-
     private static final int PREPASTOMIN = 80;
     private static final int PREPASTOMAX = 130;
     private static final int POSTPASTOMAX = 180;
@@ -122,6 +112,7 @@ public class PatientPageController {
 
         Platform.runLater(() -> checkSommOdierne());
     }
+
     private void ricaricaDatiGrafico(){
         String fine = fineSettimana();
         String oggi = dayToString(dataAttuale);
@@ -268,11 +259,6 @@ public class PatientPageController {
 
     private void caricaSomministrazioniOdierne(String username) {
         pastiData.clear(); // Pulisce la tabella
-        // correzione di intellij
-    /*
-        Map<String, Pasto> sommRilevati = new HashMap<>();
-        sommRilevati.putAll(dao.somministrazioneTabella(username));*/
-
         Map<String, Pasto> sommRilevati = new HashMap<>(dao.somministrazioneTabella(username));
 
         // Definisci gli orari attesi
@@ -286,12 +272,9 @@ public class PatientPageController {
             String orario = entry.getKey();
             String nome = entry.getValue();
 
-            // correzione di intellij
-            //if (sommRilevati != null && sommRilevati.containsKey(orario)) {
             if (sommRilevati.containsKey(orario)) {
                 pastiData.add(sommRilevati.get(orario));
             } else {
-                // caso in cui non ho somministrazioni in questo giorno: sommRilevati != null
                 pastiData.add(new Pasto(nome, orario, 0, 0));
             }
         }
@@ -312,7 +295,6 @@ public class PatientPageController {
             dao.cercoSintomiGiorniPrecedenti(nuovaNota, SessionManager.currentUser);  // 2. Nessuna somministrazione oggi → cerco l’ultima disponibile
         }
     }
-
 
     private void stampaTabella() {
         System.out.println("===== CONTENUTO TABELLA =====");
@@ -335,19 +317,12 @@ public class PatientPageController {
      */
     private void checkSommOdierne() {
         LocalTime ora = LocalTime.now();
-
         int oraAttuale = ora.getHour(); // restituisce solo l'ora (0-23)
-
-        // System.out.println("Ora intera: " + oraAttuale);
 
         final String[] s = {""};
         tableView.getItems().forEach((Pasto p) -> {
-            //UIUtils.printMessage("--foreach controllo" + p + "\n valore di s " + s[0]);
-            // if (!controllo(p , oraAttuale)){
             if (controllo(p , oraAttuale)){
-                // System.out.println(" sono nell'if in check");
                 s[0] +="\n  - " + p.getPasto();
-                // System.out.println(" messaggio attuale " + s[0]);
             }
         });
         if(! s[0].isEmpty()) {

@@ -1,19 +1,11 @@
 package DAO;
 
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
-import java.util.HashMap;
 
 public class UIUtilsDao {
-
-    // utilizza il costuttore della classe padre DBConnection
-    // che si occupa di effettuare una connessione con il database usato nel progetto
-    /*public UIUtilsDao() {
-        super();
-    }*/
 
     public boolean authenticateLogin(String username, String password) {
         String sql = "SELECT * FROM utenti WHERE username = ? AND password = ?";

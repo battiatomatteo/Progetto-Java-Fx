@@ -1,6 +1,6 @@
 package models;
+
 import enums.StatoTerapia;
-import utility.UIUtils;
 
 public class ChartDataSetter {
     public static final int ON_GOING = 1;

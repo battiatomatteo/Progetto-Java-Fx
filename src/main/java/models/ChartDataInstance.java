@@ -2,7 +2,6 @@ package models;
 
 import javafx.scene.chart.XYChart;
 
-import java.sql.Array;
 import java.util.ArrayList;
 
 public class ChartDataInstance {

@@ -11,9 +11,9 @@
       maxWidth="Infinity"
       VBox.vgrow="NEVER">
 
-    <Label text="© 2025 Matteo Health System" styleClass="footer-text"/>
+    <Label text="© 2025 Matteo Battiato e Lorenzo Beghini " styleClass="footer-text"/>
     <Label text="|" />
-    <Label text="Privacy" styleClass="footer-link"/>
+    <Label text="Progetto Ingegneria" styleClass="footer-link"/>
     <Label text="|" />
-    <Label text="Contatti" styleClass="footer-link"/>
+    <Label text="Univr" styleClass="footer-link"/>
 </HBox>

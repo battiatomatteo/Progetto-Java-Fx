@@ -38,7 +38,6 @@ public class ChatController {
         timeline.play();
     }
 
-
     private void loadMessages() {
         messageContainer.getChildren().clear();
         try {
@@ -51,7 +50,6 @@ public class ChatController {
             e.printStackTrace();
         }
     }
-
 
     @FXML
     private void sendMessage() {
@@ -91,6 +89,5 @@ public class ChatController {
 
         messageContainer.getChildren().add(messageBox);
     }
-
 
 }

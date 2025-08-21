@@ -31,6 +31,5 @@ public class Message {
         return timestamp;
     }
 
-    // Getter e Setter
 }
 

@@ -75,6 +75,10 @@
     -fx-padding: 10;
 }
 
+.table-row-cell {
+    -fx-cell-size: 30px; /* cambia 30px con l'altezza che preferisci */
+}
+
 /* Stile per l'HBox */
 #HboxBottoniGrafico {
     -fx-alignment: center; /* Allinea tutto al centro */

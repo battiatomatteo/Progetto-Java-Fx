@@ -3,18 +3,12 @@ package controllers;
 import DAO.PatientChartDao;
 import enums.StatoTerapia;
 import javafx.fxml.FXML;
-import javafx.scene.chart.XYChart;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.stage.Stage;
 import models.ChartDataInstance;
-import models.ChartFilter;
 import models.FilterDataSetter;
-import models.Rilevazioni;
 import utility.UIUtils;
-
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.HashMap;
 

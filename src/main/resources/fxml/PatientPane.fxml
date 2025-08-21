@@ -44,7 +44,7 @@
                 <TableColumn fx:id="farmacoCol" text="Farmaco" minWidth="150"/>
                 <TableColumn fx:id="assunzioniCol" text="Assunzioni" minWidth="120"/>
                 <TableColumn fx:id="quantFarCol" text="Quantità" minWidth="120"/>
-                <TableColumn fx:id="noteCol" text="Note" minWidth="230"/>
+                <TableColumn fx:id="noteCol" text="Note" minWidth="290"/>
             </columns>
         </TableView>
         <Button fx:id="deleteButton" text="Elimina Terapia"/>

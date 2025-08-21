@@ -3,8 +3,6 @@ package controllers;
 import DAO.DoctorPageDao;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.chart.LineChart;
 import javafx.collections.FXCollections;
@@ -16,22 +14,15 @@ import javafx.stage.Stage;
 import models.Terapia;
 import utility.SessionManager;
 import utility.UIUtils;
-import view.LogInView;
 import java.io.IOException;
 import java.util.ArrayList;
 
 public class DoctorPageController {
-
-
-    @FXML private TableView<Terapia> table;
-    @FXML private TableColumn<Terapia, String> terapiaCol, farmacoCol, assunzioniCol, quantFarCol, noteCol;
     @FXML private Button logOutButton;
-    @FXML private LineChart<String, Number> lineChart;
     @FXML private VBox patientsContainer;
     @FXML private Button addPatientButton, removeLastPatientButton, buttonMessAll;
     @FXML private TextArea areaMessAll;
     @FXML private StackPane notificationButton;
-    @FXML private Label bellIcon;
     @FXML private Label notificationBadge;
     @FXML private VBox notificationPanel;
     private DoctorPageDao dao = new DoctorPageDao();

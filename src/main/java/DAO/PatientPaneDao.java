@@ -8,7 +8,6 @@ import models.Terapia;
 import utility.UIUtils;
 import java.sql.*;
 
-
 public class PatientPaneDao{
     private ObservableList<Terapia> TerapieData = FXCollections.observableArrayList();
 

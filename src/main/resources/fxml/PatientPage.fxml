@@ -5,52 +5,58 @@
 <?import javafx.geometry.Insets?>
 <ScrollPane fx:controller="controllers.PatientPageController" hbarPolicy="NEVER"
             vbarPolicy="NEVER" xmlns:fx="http://javafx.com/fxml" stylesheets="/css/patient-page.css">
+    <VBox>
 
-    <GridPane hgap="10" vgap="10">
+        <HBox>
+            <GridPane hgap="10" vgap="10">
 
-        <Button fx:id="logOutButton" text="        LogOut        " GridPane.columnIndex="2" GridPane.rowIndex="2" />
+                <Button fx:id="logOutButton" text="        LogOut        " GridPane.columnIndex="2" GridPane.rowIndex="2" />
 
-        <!-- StackPane per campanella + badge -->
-        <StackPane fx:id="notificationButton" GridPane.columnIndex="2" GridPane.rowIndex="1">
-            <Button text="Chat con medico" onAction="#openChat"/>
-            <Label fx:id="notificationBadge" text="0"
-                   visible="false"
-                   style="-fx-background-color: red; -fx-text-fill: white; -fx-font-size: 10px; -fx-padding: 2px;"
-                   StackPane.alignment="TOP_RIGHT" />
-        </StackPane>
-
-
-        <Label fx:id="infoPaziente" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-        <Label fx:id="messageStart" GridPane.columnIndex="1" GridPane.rowIndex="2" GridPane.columnSpan="1"/>
-
-        <TableView fx:id="tableView" editable="true"
-                   minWidth="440" maxWidth="440" prefWidth="440"
-                   minHeight="120" maxHeight="120" prefHeight="120"
-                   GridPane.columnIndex="1" GridPane.rowIndex="3">
-            <columns>
-                <TableColumn fx:id="pastoColumn" text="Pasto" minWidth="110" maxWidth="110" prefWidth="110"/>
-                <TableColumn fx:id="orarioColumn" text="Orario" minWidth="110" maxWidth="110" prefWidth="110"/>
-                <TableColumn fx:id="preColumn" text="Pre Pasto" minWidth="110" maxWidth="110" prefWidth="110"/>
-                <TableColumn fx:id="postColumn" text="Post Pasto" minWidth="110" maxWidth="110" prefWidth="110"/>
-            </columns>
-        </TableView>
+                <!-- StackPane per campanella + badge -->
+                <StackPane fx:id="notificationButton" GridPane.columnIndex="2" GridPane.rowIndex="1">
+                    <Button text="Chat con medico" onAction="#openChat"/>
+                    <Label fx:id="notificationBadge" text="0"
+                           visible="false"
+                           style="-fx-background-color: red; -fx-text-fill: white; -fx-font-size: 10px; -fx-padding: 2px;"
+                           StackPane.alignment="TOP_RIGHT" />
+                </StackPane>
 
 
-        <Button fx:id="nuovaSomministrazioneButton" text="Salva somministrazione" GridPane.columnIndex="1" GridPane.rowIndex="4"/>
+                <Label fx:id="infoPaziente" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                <Label fx:id="messageStart" GridPane.columnIndex="1" GridPane.rowIndex="2" GridPane.columnSpan="1"/>
 
-        <Label text="Inserire qui eventuali sintomi :" GridPane.columnIndex="1" GridPane.rowIndex="6" />
+                <TableView fx:id="tableView" editable="true"
+                           minWidth="450" maxWidth="450" prefWidth="450"
+                           minHeight="125" maxHeight="125" prefHeight="125"
+                           GridPane.columnIndex="1" GridPane.rowIndex="3">
+                    <columns >
+                        <TableColumn fx:id="pastoColumn" text="Pasto" minWidth="110" maxWidth="110" prefWidth="110"/>
+                        <TableColumn fx:id="orarioColumn" text="Orario" minWidth="110" maxWidth="110" prefWidth="110"/>
+                        <TableColumn fx:id="preColumn" text="Pre Pasto" minWidth="110" maxWidth="110" prefWidth="110"/>
+                        <TableColumn fx:id="postColumn" text="Post Pasto" minWidth="110" maxWidth="110" prefWidth="110"/>
+                    </columns>
+                </TableView>
 
-        <TextArea fx:id="textArea" promptText="Scrivi qualcosa qui..." wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="7" />
-        <Button text="Salva sintomi" fx:id="salvaSintomi"  GridPane.columnIndex="1" GridPane.rowIndex="9" />
-        <Separator GridPane.columnIndex="1" GridPane.rowIndex="10" />
-        <HBox fx:id="HboxBottoniGrafico" GridPane.columnIndex="1" GridPane.rowIndex="11" spacing="10" >
-            <Button text="Mese prec." fx:id="mesePrec"  />
-            <Button text="Settimana prec." fx:id="settimanaPrec"  />
-            <Label text=" INTERVALLO DATA INIZIO  -  DATA FINE "  fx:id="IntevalloLabel" />
-            <Button text="Settimana succ." fx:id="settimanaSucc"  />
-            <Button text="Mese succ." fx:id="meseSucc"  />
+
+                <Button fx:id="nuovaSomministrazioneButton" text="Salva somministrazione" GridPane.columnIndex="1" GridPane.rowIndex="4"/>
+
+                <Label text="Inserire qui eventuali sintomi :" GridPane.columnIndex="1" GridPane.rowIndex="6" />
+
+                <TextArea fx:id="textArea" promptText="Scrivi qualcosa qui..." wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="7" />
+                <Button text="Salva sintomi" fx:id="salvaSintomi"  GridPane.columnIndex="1" GridPane.rowIndex="9" />
+                <Separator GridPane.columnIndex="1" GridPane.rowIndex="10" />
+                <HBox fx:id="HboxBottoniGrafico" GridPane.columnIndex="1" GridPane.rowIndex="11" spacing="10" >
+                    <Button text="Mese prec." fx:id="mesePrec"  />
+                    <Button text="Settimana prec." fx:id="settimanaPrec"  />
+                    <Label text=" INTERVALLO DATA INIZIO  -  DATA FINE "  fx:id="IntevalloLabel" />
+                    <Button text="Settimana succ." fx:id="settimanaSucc"  />
+                    <Button text="Mese succ." fx:id="meseSucc"  />
+                </HBox>
+
+                <fx:include source="PatientChart.fxml" fx:id="chartInclude" GridPane.columnIndex="1" GridPane.rowIndex="12"/>
+            </GridPane>
         </HBox>
-
-        <fx:include source="PatientChart.fxml" fx:id="chartInclude" GridPane.columnIndex="1" GridPane.rowIndex="12"/>
-    </GridPane>
+        <Region prefHeight="50" style="-fx-background-color: transparent;"/>
+        <fx:include source="footer.fxml"   />
+    </VBox>
 </ScrollPane>

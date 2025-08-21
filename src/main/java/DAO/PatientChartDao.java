@@ -37,9 +37,6 @@ public class PatientChartDao {
 
     public ArrayList<String> getDateRilevazioni(String username) {
         ArrayList<String> date = new ArrayList<>();
-        /*String sql = "SELECT data_rilevazione, rilevazione_post_pasto, rilevazione_pre_pasto " +
-                "FROM (rilevazioni_giornaliere INNER JOIN terapie ON rilevazioni_giornaliere.ID_terapia = terapie.ID_terapia )" +
-                "WHERE username = ? AND terapie.ID_terapia = ?";*/
         String sql = "SELECT data_rilevazione FROM rilevazioni_giornaliere WHERE username = ? GROUP BY data_rilevazione";
         try (Connection conn = DBConnection.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql)){
@@ -55,6 +52,5 @@ public class PatientChartDao {
             return null;
         }
     }
-
 
 }

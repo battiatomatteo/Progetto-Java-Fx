@@ -7,8 +7,6 @@ import com.lowagie.text.pdf.PdfPTable;
 import com.lowagie.text.pdf.PdfWriter;
 import enums.GiorniSettimana;
 import javafx.embed.swing.SwingFXUtils;
-import javafx.geometry.Insets;
-import javafx.scene.Scene;
 import javafx.scene.SnapshotParameters;
 import javafx.scene.control.*;
 import javafx.scene.image.WritableImage;
@@ -49,8 +47,6 @@ public class UIUtils {
 
     public static void LogOutButton(Stage stage){
         try {
-            //Stage stage = (Stage) logOutButton.getScene().getWindow();
-            // JFXPanel logOutButton = new JFXPanel();
             stage.close();
             new LogInView().start(new Stage());
         } catch (Exception e) {
@@ -86,7 +82,7 @@ public class UIUtils {
 
             File selectedFile = fileChooser.showSaveDialog(stage);
             if (selectedFile == null) {
-                return; // utente ha annullato
+                return; // l'utente ha annullato
             }
 
             // 1. Crea documento
@@ -150,13 +146,14 @@ public class UIUtils {
         return dao.getDoctorUser(username);
 
     }
+
     public  static ArrayList<String> getFarmaciPaziente(String username){
         return dao.getFarmaciPaziente(username);
     }
+
     public static void printMessage(String message){
         System.out.println(message);
     }
-
 
     public static boolean controlloParolaStringa(String input) {
         return input != null && input.matches("^[A-Za-z]+$");
@@ -165,6 +162,7 @@ public class UIUtils {
     public static boolean controlloPassword(String password) {
         return password != null && password.matches("^(?=.*[A-Z])(?=.*[0-9])(?=.*[^A-Za-z0-9]).{8,}$");
     }
+
     public static boolean controlloFloat(String number){
         try {
             int n = Integer.parseInt(number);

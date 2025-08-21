@@ -3,7 +3,6 @@ package DAO;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.Alert;
-import models.Terapia;
 import models.User;
 import utility.UIUtils;
 
@@ -13,9 +12,6 @@ import java.sql.ResultSet;
 
 public class AdminDao {
     private final ObservableList<User> userData = FXCollections.observableArrayList();
-    // utilizza il costuttore della classe padre DBConnection
-    // che si occupa di effettuare una connessione con il database usato nel progetto
-
 
     public ObservableList<User> caricaUtentiDao(){
         String sql = "SELECT username, tipo_utente, password, medico, informazioni FROM utenti";
@@ -88,6 +84,7 @@ public class AdminDao {
             return null;
         }
     }
+
     public void aggiornaUtente(String username, String tipoUtente, String password, String medico, String info, String oldUsername){
 
         if(tipoUtente.equals("admin") || tipoUtente.equals("medico")){
