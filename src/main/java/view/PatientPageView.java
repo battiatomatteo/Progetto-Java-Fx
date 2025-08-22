@@ -6,7 +6,16 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
+/**
+ * Classe view di PatientPane
+ * @PAckege view
+ * @see <a href="../resources/fxml/PatientPage.fxml">PatientPage.fxml</a>
+ */
 public class PatientPageView extends Application {
+    /**
+     * @param primaryStage
+     * @throws Exception
+     */
     @Override
     public void start(Stage primaryStage) throws Exception {
         Parent root = FXMLLoader.load(getClass().getResource("/fxml/PatientPage.fxml"));
@@ -15,6 +24,9 @@ public class PatientPageView extends Application {
         primaryStage.show();
     }
 
+    /**
+     * @param args
+     */
     public static void main(String[] args) {
         launch(args);
     }

@@ -8,7 +8,13 @@ import DAO.PatientChartDao;
 import models.ChartFilter;
 import models.Rilevazioni;
 
+/**
+ * Classe che gestisce il grafico per visualizzare le rilevazione di un paziente
+ * @packege controllers
+* @see <a href="../resources/fxml/PatientChartr.fxml">PatientChartr.fxml</a>
+ */
 public class PatientChartController {
+    // Attributi della classe
     @FXML private LineChart<String, Number> PatientChart;  // Il grafico a linee
     private PatientChartDao dao;
 
@@ -18,11 +24,23 @@ public class PatientChartController {
         dao = new PatientChartDao();
     }
 
+    /**
+     * Questo metodo si occupa di aggiornare il grafico svuotandolo e caricando i nuovi dati
+     * @param username Username del paziente
+     * @param filter Filtro applicato al grafico
+     * @see ChartFilter
+     */
     public void setData(String username , ChartFilter filter){
         PatientChart.getData().clear();
         setChartData(username, filter);
     }
 
+    /**
+     * Questo metodo si occupa di caricare i nuovi dati
+     * @param username Username del paziente
+     * @param filter Filtro applicato al grafico
+     * @see ChartFilter
+     */
     private void setChartData(String username, ChartFilter filter) {
         ArrayList<Rilevazioni> rilevazioni = dao.getSommRilevati(username, filter);
         if (rilevazioni != null && !rilevazioni.isEmpty()) {

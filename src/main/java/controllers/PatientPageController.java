@@ -25,7 +25,11 @@ import java.util.*;
 import java.time.DayOfWeek;
 import java.time.temporal.TemporalAdjusters;
 
-
+/**
+ * Controller della pagina del paziente.
+ * @packege controllers
+ * @see <a href="../resources/fxml/PatientPage.fxml">PatientPage.fxml</a>
+ */
 public class PatientPageController {
     @FXML private Label notificationBadge;
     @FXML private TableView<Pasto> tableView;
@@ -49,6 +53,12 @@ public class PatientPageController {
 
     private LocalDate dataAttuale = LocalDate.now().with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY));
 
+    /**
+     * Questo metodo ha lo scopo di inizializzare.
+     * @see utility.UIUtils
+     * @see DAO.PatientPaneDao
+     * @see DAO.PatientPageDao
+     */
     @FXML
     private void initialize() {
         tableView.setEditable(true);
@@ -105,22 +115,25 @@ public class PatientPageController {
         logOutButton.setOnAction(e -> UIUtils.LogOutButton((Stage) logOutButton.getScene().getWindow()));
         salvaSintomi.setOnAction(e -> salvaSintomibox(textArea.getText()));
         caricaInfoPaziente(SessionManager.currentUser);
-        UIUtils.printMessage("inizializzazione grafico paziente");
-        ricaricaDatiGrafico();
 
+        ricaricaDatiGrafico();
         recuperoNotifiche();
 
         Platform.runLater(() -> checkSommOdierne());
     }
 
+    /**
+     * Questo metodo ha lo scopo di ricaricare il grafico con i dati attuali
+     */
     private void ricaricaDatiGrafico(){
         String fine = fineSettimana();
         String oggi = dayToString(dataAttuale);
         IntevalloLabel.setText(intervalloLabelText(oggi, fine));
         ChartFilter filter = new ChartFilter(oggi, fine,ChartFilter.NO_ID );
-        chartIncludeController.setData(LogInController.getUsername(), filter );
+        chartIncludeController.setData(SessionManager.currentUser, filter );
     }
 
+    // questi metodi quando vengono richiamati modificano la data visualizzata e ricaricano il grafico
     private void datiSettimanaPrecedente() {
         dataAttuale = dataAttuale.minusWeeks(1);
         ricaricaDatiGrafico();
@@ -154,7 +167,14 @@ public class PatientPageController {
         return startDay + " - " + endDay;
     }
 
-
+    /**
+     * Questo metodo ha lo scopo di aprire la finestra della chat tra paziente e medico.
+     * @throws IOException
+     * @see utility.SessionManager
+     * @see utility.UIUtils
+     * @see <a href="../resources/fxml/ChatPage.fxml">ChatPage.fxml</a>
+     * @see <a href="../resources/img/icona_dottore.jpg">icona_dottore.jpg</a>
+     */
     @FXML
     private void openChat() throws IOException {
         // Verifico che l'utente sia loggato
@@ -190,11 +210,18 @@ public class PatientPageController {
         stage.show();
     }
 
+    /**
+     * Questo metodo ha lo scopo di aggiungere una notifica, nel caso ce ne fosse almeno una.
+     */
     private void aggiungiNotifica() {
         notificationBadge.setText(String.valueOf(1));
         notificationBadge.setVisible(true);
     }
 
+    /**
+     * Questo metodo ha lo scopo di mostrare il numero di notifiche al paziente.
+     * @see DAO.PatientPageDao
+     */
     private void toggleNotifiche() {
         if (hasNotification) {
             // Se l'utente apre la chat, azzeriamo il contatore
@@ -204,22 +231,28 @@ public class PatientPageController {
         }
     }
 
+    /**
+     * Questo metodo ha lo scopo di recuperare le notifich.
+     * @see DAO.PatientPageDao
+     */
     private void recuperoNotifiche(){
         hasNotification = dao.recuperoNotifica(SessionManager.currentUser);
         if(hasNotification) aggiungiNotifica();
     }
 
-    /*
-     * Cosa fa nuovaSomministrazione() :
-     * Controlla per ogni pasto se esiste già un record con quella data e orario, Se esiste: non lo reinserisce.
+    /**
+     * Questo metodo ha lo scopo di creare una nuova somministrazione.
+     * Controlla per ogni pasto se esiste già un record con quella data e orario, se esiste: non lo inserisco.
      * Se non esiste e pre/post sono validi, lo inserisce.
      * Mostra un riepilogo solo dei pasti inseriti.
-     * */
+     * @see DAO.DoctorPageDao
+     * @see utility.UIUtils
+     */
     private void nuovaSomministrazione() {
         LocalDate oggi = LocalDate.now();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         StringBuilder riepilogo = new StringBuilder("Riepilogo somministrazione:\n");
-        Day rilevazioneGiorno = new Day(oggi);
+        Day rilevazioneGiorno = new Day();
 
         for (Pasto p : tableView.getItems()){
             String orario = p.getOrario();
@@ -252,11 +285,25 @@ public class PatientPageController {
         }
     }
 
+    /**
+     * Questo metodo ha lo scopo di creare il messaggio da mandare al medico nel caso in cui l'utente inserisce dei valori fuori dal renge consentito.
+     * @param pre    somministrazione pre pasto
+     * @param post   somministrazione post pasto
+     * @param orario orario somministrazione
+     * @param pasto  pasto somministrazione
+     * @param data   data somministrazione
+     * @return stringa - messaggio da inviare al medico
+     */
     private String autoNotificationContent(float pre , float post, String orario, String pasto, String data){
         return "Messaggio somministrazione : oggi " + data + " , " + pasto + " ore "+ orario +" pre : " +
                 pre + " e post "+ post + " i valore/i sono fuori dal range consentito.";
     }
 
+    /**
+     * Questo metodo ha lo scopo di caricare le somministrazioni odierne.
+     * @param username
+     * @see DAO.PatientPageDao
+     */
     private void caricaSomministrazioniOdierne(String username) {
         pastiData.clear(); // Pulisce la tabella
         Map<String, Pasto> sommRilevati = new HashMap<>(dao.somministrazioneTabella(username));
@@ -280,12 +327,14 @@ public class PatientPageController {
         }
     }
 
-    /*
-     * Cosa fa salvaSintomibox(String nuovaNota) :
+    /**
+     * Questo metodo ha lo scopo di salvare i sintomi inseriti dall'utente:
      * salvo la nota nell'ultima somministrazione inserita nel giorno, nel caso in cui non si ha nessuna somministrazione oggi
      * controllo se l'ultima somministrazione del giorno precedente ha una nota != "note..." , se true la sovrascrivo,
-     * se false mando un alert dicendo di contattare il medico o di aspettare di inserire una somministrazione
-     * */
+     * se false mando un alert dicendo di contattare il medico o di aspettare di inserire una somministrazione.
+     * @param nuovaNota  sintomi inseriti dal paziente
+     * @see DAO.PatientPageDao
+     */
     private void salvaSintomibox(String nuovaNota){
         // salvo nel database (in "note_rivelazione") ciò che l'utente scrive nel box sintomi che poi verrà mostrato al medico
         LocalDate oggi = LocalDate.now();
@@ -296,6 +345,9 @@ public class PatientPageController {
         }
     }
 
+    /**
+     * Questo metodo ha lo scopo di mostrare a video il contenuto della tabella inserito dall'utente.
+     */
     private void stampaTabella() {
         System.out.println("===== CONTENUTO TABELLA =====");
         for (Pasto p : tableView.getItems()) {
@@ -308,12 +360,21 @@ public class PatientPageController {
         System.out.println("=============================");
     }
 
+    /**
+     * Questo metodo ha lo scopo di caricare le informazioni del paziente
+     * @param username
+     * @see DAO.PatientPaneDao
+     */
     private void caricaInfoPaziente(String username){
         infoPaziente.setText(dao2.getInfoUtente(username));
     }
 
-    /*
-     * controllo se l'utente non ha inserito una o più somministrazioni oggi
+    /**
+     * Questo metodo ha lo scopo di controllare se l'utente non ha inserito una o più somministrazioni oggi.
+     * Nel caso in cui l'utente non inserisce delle somministrazioni da almeno 3 giorni mando un messaggio al dottore.
+     * Viene lanciato un ALert nel caso mancassero o si è in ritardo nell'inserimento delle somministrazioni delle ore precedenti.
+     * @see DAO.PatientPageDao
+     * @see utility.UIUtils
      */
     private void checkSommOdierne() {
         LocalTime ora = LocalTime.now();
@@ -329,7 +390,7 @@ public class PatientPageController {
             // warning all'utente
             UIUtils.showAlert(Alert.AlertType.WARNING, "Attenzione", "Mancano le rilevazioni delle ore precedenti \n"+ s[0]);
             // messaggio al medico
-            // data2 è la data di oggi e data1 è la data di 3 giorni prima di data2 , controllo se data1 è nel db
+            // data2 è la data di oggi e data1 è la data di 3 giorni prima di data2, controllo se data1 è nel db
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
             LocalDate oggi = LocalDate.now(); // Ottieni la data corrente
             String data2 = oggi.format(formatter); // Converte la data in stringa formattata
@@ -352,11 +413,15 @@ public class PatientPageController {
                     dao.messageSomm(content, UIUtils.getDoctor(SessionManager.currentUser), SessionManager.currentUser);
                 }
             }
-            else
-                System.out.println("Non bisogna mandare un mess al dottore");
         }
     }
 
+    /**
+     * Questo metodo ha lo scopo di controllare se l'utente è in ritardo con la rilevazione.
+     * @param pasto      pasto somministrazione
+     * @param oraAttuale ora attuale
+     * @return valore booleano che indica l'esito della valutazione
+     */
     private boolean controllo(Pasto pasto, int oraAttuale) {
         LocalTime time = LocalTime.parse(pasto.getOrario(),DateTimeFormatter.ofPattern("HH:mm") );
         int oraInt = time.getHour();

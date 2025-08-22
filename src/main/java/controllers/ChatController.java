@@ -14,23 +14,34 @@ import models.Message;
 import java.time.LocalDateTime;
 import java.util.List;
 
+/**
+ * Controller della finestra chat.
+ * @packege controllers
+ * @see <a href="../resources/fxml/ChatPage.fxml">ChatPage.fxml</a>
+ */
 public class ChatController {
 
     @FXML private VBox messageContainer;
     @FXML private TextField messageField;
     @FXML private ScrollPane chatScrollPane;
-
     private final MessageDao messageDao = new MessageDao();
-
     private String currentUser;
     private String chattingWith;
 
+    /**
+     * Questo metodo ha lo scopo di inizializzare.
+     * @param currentUser  utente loggato
+     * @param chattingWith utente con cui sto parlando
+     */
     public void initializeChat(String currentUser, String chattingWith) {
         this.currentUser = currentUser;
         this.chattingWith = chattingWith;
         loadMessages();
     }
 
+    /**
+     * Questo metodo ha lo scopo di auto.aggiornare la chat ogni 10 secondi
+     */
     @FXML
     public void initialize() {   // Auto-Aggiornamento della Chat
         Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(10), e -> loadMessages()));
@@ -38,6 +49,11 @@ public class ChatController {
         timeline.play();
     }
 
+    /**
+     * Questo metodo ha lo scopo di caricare i messaggi.
+     * @see DAO.MessageDao
+     * @see models.Message
+     */
     private void loadMessages() {
         messageContainer.getChildren().clear();
         try {
@@ -51,6 +67,11 @@ public class ChatController {
         }
     }
 
+    /**
+     * Questo metodo ha lo scopo di inviare il messaggio.
+     * @see DAO.MessageDao
+     * @see models.Message
+     */
     @FXML
     private void sendMessage() {
         String content = messageField.getText();
@@ -69,6 +90,11 @@ public class ChatController {
         }
     }
 
+    /**
+     * Questo metodo ha lo scopo di aggiungere il messaggio alla chat
+     * @param sender  chi sta inviando il messaggio
+     * @param content  contenuto messaggio
+     */
     private void addMessageToView(String sender, String content) {
         Label messageLabel = new Label(content);
         messageLabel.setWrapText(true);

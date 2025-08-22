@@ -8,6 +8,11 @@ import javafx.stage.Stage;
 import models.User;
 import utility.UIUtils;
 
+/**
+ * Controller della pagina Admin.
+ * @packege controllers
+ * @see <a href="../resources/fxml/AdminPage.fxml">AdminPage.fxml</a>
+ */
 public class AdminPageController {
 
     @FXML private Button logoutButton, addButton, cancelButton, updateButton;
@@ -18,6 +23,10 @@ public class AdminPageController {
     @FXML private TableColumn<User, String> usernameCol, tipoUtenteCol, passwordCol, medicoCol, infoCol;
     private AdminDao dao = new AdminDao();
 
+    /**
+     * Questo metodo ha lo scopo di inizializzare.
+     * @see utility.UIUtils
+     */
     @FXML
     private void initialize() {
         usernameCol.setCellValueFactory(cellData -> cellData.getValue().usernameProperty());
@@ -62,6 +71,16 @@ public class AdminPageController {
 
     }
 
+    /**
+     * Questo metodo ha lo scopo aggiungere un nuovo utente nel database.
+     * Prende i valori inseriti da tastiera dall'admin come username, tipo utente, password e se il nuovo utente è un paziente anche il medico,
+     * in caso contrario nella colonna medico verrà visualizzato NULL.
+     * Verranno visualizzati errori, degli alert, nel caso l'utente che si desidera creare utilizza un username già esistente o quando non si
+     * compilano i campi obbligatori.
+     * Il nuovo utente verrà inserito anche nella tabella utenti presente nella pagina.
+     * @see utility.UIUtils
+     * @see DAO.AdminDao
+     */
     private void addUser() {
         String username = controlloUser(usernameInput.getText());
         String tipoUtente = tipoUtenteInput.getValue();
@@ -97,6 +116,13 @@ public class AdminPageController {
 
     }
 
+    /**
+     * Questo metodo ha lo scopo di controllare che l'username inserito sia valido.
+     * Utilizza il metodo controlloParolaStringa() che si trova nella classe UIUtils, nel caso il valore non fosse valido lancia un Alert di errore.
+     * @see utility.UIUtils
+     * @param username
+     * @return stringa - username o ""
+     */
     private String controlloUser(String username){
         if (!UIUtils.controlloParolaStringa(username)) {
             UIUtils.showAlert(Alert.AlertType.ERROR, "Errore !", "Il valore username non è valido , riprova .");
@@ -106,6 +132,13 @@ public class AdminPageController {
         return username;
     }
 
+    /**
+     * Questo metodo ha lo scopo di controllare che la password inserita sia valida.
+     * Utilizza il metodo controlloPassword() che si trova nella classe UIUtils, nel caso il valore non fosse valido lancia un Alert di errore.
+     * @see utility.UIUtils
+     * @param password   password utente
+     * @return stringa - password o ""
+     */
     private String controlloPass(String password){
         if (!UIUtils.controlloPassword(password)) {
             UIUtils.showAlert(Alert.AlertType.ERROR, "Errore !", "Il valore della password non è valido ( deve avere almeno " +
@@ -116,6 +149,10 @@ public class AdminPageController {
         return password;
     }
 
+    /**
+     * Questo metodo ha lo scopo di eliminare un utente esistente.
+     * @see DAO.AdminDao
+     */
     private void deleteUser() {
         User selectedUser = table.getSelectionModel().getSelectedItem();
         if (selectedUser != null) {
@@ -131,6 +168,11 @@ public class AdminPageController {
         }
     }
 
+    /**
+     * Questo metodo ha lo scopo di aggiornare un utente, controlla che ci sia al meno un campo obbligatorio inserito,
+     * in caso contrario lancia un Alert.
+     * @see DAO.AdminDao
+     */
     private void updateUser() {
 
         String username = usernameInput.getText();
@@ -162,7 +204,6 @@ public class AdminPageController {
                         if(!controlloUser(username).isEmpty())
                             oldUsername = selected.getUsername();
                         else{
-                            //UIUtils.showAlert(Alert.AlertType.ERROR, "Errore", "Errore inserimento nuovo username.");
                             return;
                         }
                     }
@@ -173,7 +214,6 @@ public class AdminPageController {
                     }
                     else {
                         if(controlloPass(password).isEmpty()){
-                            //UIUtils.showAlert(Alert.AlertType.ERROR, "Errore", "Errore inserimento nuova password.");
                             return;
                         }
                     }

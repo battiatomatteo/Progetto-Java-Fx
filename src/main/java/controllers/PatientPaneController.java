@@ -24,12 +24,16 @@ import utility.UIUtils;
 import java.io.IOException;
 import javafx.scene.shape.Circle;
 
-
+/**
+ * Controller del panello del paziente.
+ * @packege controllers
+ * @see <a href="../resources/fxml/PatientPane.fxml">PatientPane.fxml</a>
+ */
 public class PatientPaneController {
 
     @FXML private ComboBox<StatoTerapia> statoComboBox;
     @FXML private TextField usernameInput, newFarmacoInput, newAssunzioniInput, newQuantitaInput, newNoteInput;
-    @FXML private Label labelUsername, label, label2;
+    @FXML private Label  label, label2;
     @FXML private TableView<Terapia> table;
     @FXML private TableColumn<Terapia, String> farmacoCol, assunzioniCol, quantFarCol, noteCol;
     @FXML private TableColumn<Terapia, Integer > terapiaCol;
@@ -40,6 +44,10 @@ public class PatientPaneController {
     @FXML private TextArea infoTextArea;
     private PatientPaneDao dao;
 
+    /**
+     * Questo metodo ha lo scopo di inizializzare.
+     * @see utility.UIUtils
+     */
     @FXML
     private void initialize() {
         terapiaCol.setCellValueFactory(cell -> cell.getValue().idTerapiaProperty().asObject());
@@ -105,6 +113,13 @@ public class PatientPaneController {
         filtraButton.setOnAction(e -> apriFinestraScelta());
         generaPDF.setOnAction(e -> UIUtils.generaPDFReport( (Stage) generaPDF.getScene().getWindow(), usernameInput, chartInclude, table));
     }
+
+    /**
+     * Metodo che ha lo scopo di cercare le terapie presenti nel database del paziente cercato dal dottore.
+     * Vengono lanciati degli Alert quando si presentano degli errori nella ricerca del paziente nel database
+     * @see utility.UIUtils
+     * @see DAO.PatientPaneDao
+     */
     @FXML
     private void searchTerapie() {
         String username = usernameInput.getText();
@@ -130,6 +145,11 @@ public class PatientPaneController {
         filtraButton.setVisible(true);
     }
 
+    /**
+     * Questo metodo ha lo scopo di aggiungere una terapia al paziente, inserita dal medico.
+     * @see utility.UIUtils
+     * @see DAO.PatientPaneDao
+     */
     private void aggiungiTerapia() {
         String username = usernameInput.getText();
         String farmaco = newFarmacoInput.getText();
@@ -175,6 +195,11 @@ public class PatientPaneController {
         resetCampi();
     }
 
+    /**
+     * Questo metodo ha lo scopo di eliminare una terapia al paziente, selezionata dalla tabella dal medico.
+     * @see utility.UIUtils
+     * @see DAO.PatientPaneDao
+     */
     private void eliminaTerapia() {
         Terapia selected = table.getSelectionModel().getSelectedItem();
         if (selected != null) {
@@ -192,6 +217,11 @@ public class PatientPaneController {
         }
     }
 
+    /**
+     * Questo metodo ha lo scopo di aggiornare una terapia del paziente, selezionata dalla tabella dal medico.
+     * @see utility.UIUtils
+     * @see DAO.PatientPaneDao
+     */
     public void updateTerapia(){
         String farmaco = newFarmacoInput.getText();
         String assunzioni = newAssunzioniInput.getText();
@@ -256,6 +286,9 @@ public class PatientPaneController {
         }
     }
 
+    /**
+     * Questo metodo ha lo scopo di resettare i capi.
+     */
     public void resetCampi(){
         newFarmacoInput.clear();
         newNoteInput.clear();
@@ -263,11 +296,21 @@ public class PatientPaneController {
         newQuantitaInput.clear();
     }
 
+    /**
+     * Questo metodo ha il compito di salvare le modifiche che si trovano nel box delle informazioni del paziente
+     * @param username
+     * @see DAO.PatientPaneDao
+     */
     private void salvaModifiche(String username){
         String nuoveNote = infoTextArea.getText();
         dao.updateInfoUtente(username, nuoveNote);
     }
 
+    /**
+     * Questo metodo ha il compito di caricare nel box le informazioni del paziente cercato.
+     * @param username
+     * @see DAO.PatientPaneDao
+     */
     public void caricaInfoUtente(String username){
         String result = dao.getInfoUtente(username);
         if(result == null){
@@ -276,6 +319,14 @@ public class PatientPaneController {
         else infoTextArea.setText(result);
     }
 
+    /**
+     * Questo metodo ha lo scopo di aprire la finestra della chat tra paziente e medico.
+     * @throws IOException
+     * @see utility.SessionManager
+     * @see utility.UIUtils
+     * @see <a href="../resources/fxml/ChatPage.fxml">ChatPage.fxml</a>
+     * @see <a href="../resources/img/icona_dottore.jpg">icona_dottore.jpg</a>
+     */
     @FXML
     private void openChat() throws IOException {
         // Verifico che l'utente sia loggato
@@ -313,7 +364,11 @@ public class PatientPaneController {
 
     }
 
-
+    /**
+     * Questo metodo ha lo scopo di aprire la finestra per filtrare le ricerche nel pannello del paziente.
+     * @see <a href="../resources/fxml/SceltaOpzione.fxml">SceltaOpzione.fxml</a>
+     * @see SceltaOpzioneController
+     */
     private void apriFinestraScelta() {
         String patientName = usernameInput.getText();
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/SceltaOpzione.fxml"));
@@ -349,6 +404,12 @@ public class PatientPaneController {
         updatePaneData(filter,chartFilter);
     }
 
+    /**
+     * Questo metodo ha lo scopo di aggiornare il panello paziente in base all'utente cercato dal medico
+     * @param filter    filtro per la tabella
+     * @param chartFilter     filtro per il grafico
+     * @see DAO.PatientPaneDao
+     */
     private void updatePaneData(FilterDataSetter filter, ChartFilter chartFilter) {
         UIUtils.printMessage("updatePaneData");
         table.setItems(dao.getTerapieList(filter));

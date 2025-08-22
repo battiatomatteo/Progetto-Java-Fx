@@ -1,5 +1,9 @@
 package enums;
 
+/**
+ * Enum giorni settimana
+ * @packege enums
+ */
 public enum GiorniSettimana {
     Lunedi,
     Martedi,

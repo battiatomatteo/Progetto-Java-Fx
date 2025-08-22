@@ -6,7 +6,16 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
+/**
+ * Classe view di LogIn
+ * @PAckege view
+ * @see <a href="../resources/fxml/AdminPage.fxml">AdminPage.fxml</a>
+ */
 public class AdminPageView extends Application {
+    /**
+     * @param primaryStage
+     * @throws Exception
+     */
     @Override
     public void start(Stage primaryStage) throws Exception {
         Parent root = FXMLLoader.load(getClass().getResource("/fxml/AdminPage.fxml"));
@@ -15,6 +24,9 @@ public class AdminPageView extends Application {
         primaryStage.show();
     }
 
+    /**
+     * @param args
+     */
     public static void main(String[] args) {
         launch(args);
     }

@@ -6,6 +6,11 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
+/**
+ * Classe view di PatientChart
+ * @PAckege view
+ * @see <a href="../resources/fxml/PatientChart.fxml">PatientChart.fxml</a>
+ */
 public class PatientChartView extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {

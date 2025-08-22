@@ -6,15 +6,19 @@ import utility.UIUtils;
 import java.util.ArrayList;
 
 public class FilterDataSetter {
+
+    // Costanti definite per la classe
+        // Costanti per semplificare per la formazione delle strighe SQL
     private static final String FARMACO = " farmaco = \'";
     private static final String STATO = " stato = \'";
     private static final String END = "\' ";
     private static final String AND = " AND ";
     private static final String OR = " OR ";
 
+        // Costanti per la visualizzazione della terapia
     public static final String ALL_THERAPY = null;
 
-    // Costanti per le visualizzazioni
+        // Costanti per la visualizzazione dello stato
     public static final int ON_GOING_STATUS = 1;
     public static final int ON_PAUSE_STATUS = 2;
     public static final int ON_GOING_PAUSED_STATUS = 3;
@@ -24,11 +28,18 @@ public class FilterDataSetter {
     public static final int ALL_STATUS_VIEWS = 7;
     public static final int DEFAULT_STATUS_VIEWS = ALL_STATUS_VIEWS;
 
+    // Attributi della classe
     private final String patientUserName;
     private final int statusView;
     private final String farmaco;
     private String sqlView;
 
+    /**
+     * Costruttore della classe
+     * @param patientName Nome del paziente
+     * @param statusView Vista da applicare allo stato
+     * @param farmaco Nome del farmaco
+     */
     public FilterDataSetter(String patientName, int statusView, String farmaco) {
         if (patientName == null) {
             throw new NullPointerException("patientUserName is null");
@@ -51,7 +62,7 @@ public class FilterDataSetter {
         }
 
         // Costruisci la query SQL in base alla vista
-        switch (statusView) {
+        switch (this.statusView) {
             case ON_GOING_STATUS:
                 chartDataSetterOnGoing();
                 break;
@@ -80,6 +91,7 @@ public class FilterDataSetter {
     }
 
     // Metodi per gestire le varie condizioni di stato
+
     private void chartDataSetterOnGoing() {
         this.sqlView = AND + " ( " + STATO + StatoTerapia.ATTIVA.getStato() + END + " ) ";
     }
@@ -121,48 +133,31 @@ public class FilterDataSetter {
         chartDataSetterAll();
     }
 
+    /**
+     * Questo metodo restituisce l'username del paziente
+     * @return il nome del paziente
+     */
     public String getPatientUserName() {
         return patientUserName;
     }
 
-    public int getStatusView() {
-        return statusView;
-    }
-
-    public String getFarmaco() {
-        return farmaco;
-    }
-
-    public String getStatoSqlView() {
-        return sqlView;
-    }
-
+    /**
+     * Questo metodo restituisce la stringa SQL per filtrare per farmaco
+     * @return la stringa SQL del filtro
+     */
     public String getFarmacoSqlView() {
         return farmaco == null ? "" : AND + FARMACO + farmaco + END;
     }
 
+    /**
+     * Questo metodo restituisce la stringa SQL per filtrare pre farmaco e stato
+     * @return la stringa SQL del filtro
+     */
     public String getSqlView() {
         if (farmaco == null) {
             return sqlView;
         } else {
             return sqlView + getFarmacoSqlView();
         }
-    }
-
-    public static int getViewKey(String stato) {
-        return switch (stato) {
-            case "ATTIVA" -> ON_GOING_STATUS;
-            case "SOSPESA" -> ON_PAUSE_STATUS;
-            case "TERMINATA" -> TERMINATED_STATUS;
-            default -> 0;
-        };
-    }
-
-    public static int getViewKey(StatoTerapia stato) {
-        return switch (stato) {
-            case ATTIVA -> ON_GOING_STATUS;
-            case SOSPESA -> ON_PAUSE_STATUS;
-            case TERMINATA -> TERMINATED_STATUS;
-        };
     }
 }

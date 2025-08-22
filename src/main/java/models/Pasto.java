@@ -35,9 +35,4 @@ public class Pasto {
 
     public float getPost() { return post.get(); }
     public void setPost(float value) { post.set(value); }
-
-    @Override
-    public String toString(){
-        return "pasto " + pasto + " orario " + orario + " pre " + pre + " post " + post + " oggetto " +  super.toString();
-    }
 }

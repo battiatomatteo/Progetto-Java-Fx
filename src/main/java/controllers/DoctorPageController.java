@@ -17,6 +17,11 @@ import utility.UIUtils;
 import java.io.IOException;
 import java.util.ArrayList;
 
+/**
+ * Controller della pagina LogIn.
+ * @packege controllers
+ * @see <a href="../resources/fxml/DoctorPage.fxml">DoctorPage.fxml</a>
+ */
 public class DoctorPageController {
     @FXML private Button logOutButton;
     @FXML private VBox patientsContainer;
@@ -28,15 +33,14 @@ public class DoctorPageController {
     private DoctorPageDao dao = new DoctorPageDao();
     private int notificheNonLette = 0;
 
-    private final ObservableList<Terapia> data = FXCollections.observableArrayList();
-
-    public DoctorPageController() {
-    }
-
+    /**
+     * Questo metodo ha lo scopo di inizializzare.
+     * @see utility.UIUtils
+     * @see utility.SessionManager
+     */
     @FXML
     private void initialize() {
 
-        //logOutButton.setOnAction(e -> LogOutButton());
         // Come funziona: Quando clicco sul bottone, prendi la finestra corrente e passala a UIUtils.LogOutButton() per eseguire il logout
         logOutButton.setOnAction(e -> UIUtils.LogOutButton((Stage) logOutButton.getScene().getWindow()));
 
@@ -62,6 +66,12 @@ public class DoctorPageController {
 
     }
 
+    /**
+     * Questo metodo ha lo scopo di aggiungere un pannello di ricerca paziente, ogni pannello ha lo scopo di mostrare la tabella clinica id un paziente
+     * e di prescrivere nuove terapie.
+     * Lancia un Alert nel caso sia impossibile caricare un nuovo panello.
+     * @see <a href="../resources/fxml/PatientPane.fxml">PatientPane.fxml</a>
+     */
     private void aggiungiPaziente() {
         try{
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/PatientPane.fxml"));
@@ -75,6 +85,10 @@ public class DoctorPageController {
         }
     }
 
+    /**
+     * Questo metodo ha lo scopo di aggiungere una notifica nel box notifiche del dottore, nel caso ce ne fosse almeno una.
+     * @param testo testo della notifica
+     */
     private void aggiungiNotifica(String testo) {
         Label notifica = new Label("• " + testo);
         notificationPanel.getChildren().add(notifica);
@@ -84,6 +98,10 @@ public class DoctorPageController {
         notificationBadge.setVisible(true);
     }
 
+    /**
+     * Questo metodo ha lo scopo di mostrare il numero di notifiche al medico.
+     * @param event
+     */
     private void toggleNotifiche(MouseEvent event) {
         boolean isVisible = notificationPanel.isVisible();
         notificationPanel.setVisible(!isVisible);
@@ -96,11 +114,20 @@ public class DoctorPageController {
         }
     }
 
+    /**
+     * Questo metodo ha lo scopo di mandare il messaggio a tutti i pazienti del dottore loggato
+     * @param username
+     * @see DAO.DoctorPageDao
+     */
     private void sendAllMess(String username){
-        System.out.println("sono in sendAllMess in doctor page " +  username + "\n" + areaMessAll.getText());
         dao.sendAllMess(username, areaMessAll.getText());
     }
 
+    /**
+     * Questo metodo ha lo scopo di recuperare le notifiche da mostrare al medico , se ha nnuovi messaggi non letti.
+     * @see DAO.DoctorPageDao
+     * @see utility.SessionManager
+     */
     private void recuperoNotifiche(){
         ArrayList<String> listaNotifiche = dao.recuperoNotifica(SessionManager.currentUser);
         listaNotifiche.forEach(this::aggiungiNotifica);

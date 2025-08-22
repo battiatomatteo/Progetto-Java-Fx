@@ -7,7 +7,16 @@ import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
 
+/**
+ * Classe view di LogIn
+ * @PAckege view
+ * @see <a href="../resources/fxml/LogIn.fxml">LogIn.fxml</a>
+ */
 public class LogInView extends Application {
+    /**
+     * @param primaryStage
+     * @throws Exception
+     */
     @Override
     public void start(Stage primaryStage) throws Exception {
         Parent root = FXMLLoader.load(getClass().getResource("/fxml/LogIn.fxml"));
@@ -17,6 +26,9 @@ public class LogInView extends Application {
         primaryStage.show();
     }
 
+    /**
+     * @param args
+     */
     public static void main(String[] args) {
         launch(args);
     }

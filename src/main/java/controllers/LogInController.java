@@ -10,6 +10,11 @@ import view.AdminPageView;
 import view.DoctorPageView;
 import view.PatientPageView;
 
+/**
+ * Controller della pagina LogIn.
+ * @packege controllers
+ * @see <a href="../resources/fxml/LogIn.fxml">LogIn.fxml</a>
+ */
 public class LogInController {
 
     @FXML private TextField userField;
@@ -18,9 +23,11 @@ public class LogInController {
     @FXML private Label messageLabel;
     @FXML private TextField visiblePassField;
     @FXML private ToggleButton showPasswordToggle;
-    private static String user;
     private UIUtilsDao dao = new UIUtilsDao();
 
+    /**
+     *  Questo metodo ha lo scopo di inizializzare.
+     */
     @FXML
     private void initialize() {
         visiblePassField.textProperty().bindBidirectional(passField.textProperty());
@@ -35,14 +42,16 @@ public class LogInController {
         loginButton.setOnAction(e -> handleLogin());
     }
 
-    public static String getUsername(){
-        return user;
-    }
-
+    /**
+     * Questo metodo ha lo scopo di far accedere alla pagina corretta in base all'utente che esegue l'accesso, guardando il tipoUtente, se l'utente inserisce
+     * delle credenziali errate, verrà visualizzato un label di errore.
+     * @see view.PatientPageView
+     * @see view.DoctorPageView
+     * @see view.AdminPageView
+     */
     private void handleLogin() {
         String username = userField.getText();
         String password = passField.getText();
-        user = username;
         if (UIUtils.authenticate(username, password, 0)) {
             messageLabel.setText("Accesso riuscito!");
             String tipo_utente = getTipoUtente(username);
@@ -72,10 +81,20 @@ public class LogInController {
         }
     }
 
+    /**
+     * Questo metodo ha lo scopo di prendere il tipo dell'utente che esegue l'accesso così da indirizzarlo nella pagina corretta nell'handleLogin().
+     * @param username
+     * @return stringa - tipo utente
+     * @see DAO.UIUtilsDao
+     */
     private String getTipoUtente(String username) {
          return dao.tipoUtente(username);
     }
 
+    /**
+     * Metodo con lo scopo di restituire una stringa di errore.
+     * @return stringa - errore di autenticazione
+     */
     private static String getErrore() {
         return "Errore di autenticazione. Riprova.";
     }
