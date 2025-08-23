@@ -7,9 +7,18 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
-
+/**
+ * Classe che gestisce l'accesso al database per il grafico
+ * @package DAO
+ */
 public class PatientChartDao {
-
+    /**
+     * Questo metodo recupera tutte le rilevazioni di un utente applicando il filtro desiderato
+     * @param username Nome del paziente
+     * @param filter Filtro da applicare ai dati
+     * @return ArrayList<Rilevazioni> - tutte le rilevazioni che rispettano il criterio del filtro
+     * @see models.ChartFilter
+     */
     public ArrayList<Rilevazioni> getSommRilevati(String username, ChartFilter filter) {
         ArrayList<Rilevazioni> rilevazioni = new ArrayList<>();
         String sql = "SELECT data_rilevazione, rilevazione_post_pasto, rilevazione_pre_pasto, orario " +
@@ -35,6 +44,11 @@ public class PatientChartDao {
         }
     }
 
+    /**
+     * Questo metodo recupera tutti i giorni in cui il paziente ha inserito almeno una rilevazione
+     * @param username Nome del paziente
+     * @return ArrayList<Rilevazioni> - tutte le giornate in cui dono presenti delle rilevazioni per il paziente
+     */
     public ArrayList<String> getDateRilevazioni(String username) {
         ArrayList<String> date = new ArrayList<>();
         String sql = "SELECT data_rilevazione FROM rilevazioni_giornaliere WHERE username = ? GROUP BY data_rilevazione";

@@ -4,9 +4,16 @@ import models.Message;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
-
+/**
+ * Classe che gestisce l'accesso al database per la pagina Chat
+ * @package DAO
+ */
 public class MessageDao {
-
+    /**
+     * Questo metodo ha lo scopo di salvare il messaggio inviato nel database
+     * @param msg Messaggio da salvare
+     * @see models.Message
+     */
     public void saveMessage(Message msg){
         String sql = "INSERT INTO messages (sender, receiver, content, timestamp) VALUES (?, ?, ?, ?)";
         try(Connection conn = DBConnection.getConnection();
@@ -23,6 +30,14 @@ public class MessageDao {
         }
     }
 
+    /**
+     * Questo metodo ha lo scopo di recuperare l'intera conversazione tra 2 utenti
+     * @param user1
+     * @param user2
+     * @return List<Message> - la lista ordinata di tutti i messaggi inviati tra i 2 utenti
+     * @throws SQLException
+     * @see models.Message
+     */
     public List<Message> getConversation(String user1, String user2) throws SQLException {
         String sql = "SELECT * FROM messages WHERE " +
                 "(sender = ? AND receiver = ?) OR (sender = ? AND receiver = ?) " +
@@ -52,6 +67,11 @@ public class MessageDao {
         }
     }
 
+    /**
+     * Questo metodo ha lo scopo di salvare al database una lista di messaggi
+     * @param list La lista dei messaggi da inviare
+     * @see models.Message
+     */
     public void messageList(ArrayList<Message> list ){
         list.forEach(this::saveMessage);
     }

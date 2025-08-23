@@ -375,6 +375,7 @@ public class PatientPageController {
      * Viene lanciato un ALert nel caso mancassero o si è in ritardo nell'inserimento delle somministrazioni delle ore precedenti.
      * @see DAO.PatientPageDao
      * @see utility.UIUtils
+     * @see models.ChartFilter
      */
     private void checkSommOdierne() {
         LocalTime ora = LocalTime.now();
@@ -405,7 +406,7 @@ public class PatientPageController {
             String data1 = nuovaData.format(formatter);
 
             ChartFilter filter = new ChartFilter(data1, data2, ChartFilter.NO_ID);
-            if(dao.messageSommDim(data1, data2 , filter, SessionManager.currentUser)) {
+            if(dao.messageSommDim( filter, SessionManager.currentUser)) {
                 // content mess al dottore
                 String content = "Mancano delle somministrazioni da parte di " + SessionManager.currentUser+ " da almeno 3 giorni . Oggi è il : " + data2;
                 // invio mess al dottore

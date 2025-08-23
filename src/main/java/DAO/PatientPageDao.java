@@ -15,9 +15,19 @@ import java.util.HashMap;
 import java.util.Map;
 import models.Day;
 
+/**
+ * Classe che gestisce l'accesso al database per i metodi presenti in PatientPage
+ * @package DAO
+ */
 public class PatientPageDao {
     private Map<String, Pasto> rilevati = new HashMap<>();
 
+    /**
+     * Metodo con lo scopo di ottenere le somministrazioni da mostrare nella tabella odierna
+     * @param username nome paziente
+     * @return Map<String, Pasto> - le rilevazioni del giorno corrente mappate per orario
+     * @see models.Pasto
+     */
     public Map<String, Pasto> somministrazioneTabella(String username){
 
         String sql = "SELECT * FROM rilevazioni_giornaliere WHERE data_rilevazione = ? AND rilevazioni_giornaliere.username = ?";
@@ -27,7 +37,6 @@ public class PatientPageDao {
             pstmt.setString(1, UIUtils.dataOggi());
             pstmt.setString(2, username);
 
-            UIUtils.printMessage("query rilevazioni " + sql + "   " + pstmt);
             var rs = pstmt.executeQuery();
 
             while (rs.next()) {
@@ -54,6 +63,13 @@ public class PatientPageDao {
         }
     }
 
+    /**
+     * Metodo con los scopo di aggiungere le nuove somministrazioni nel database
+     * @param rilevazioneGiornaliera
+     * @param username nome paziente
+     * @return boolean - valore booleano, true se ci sta almeno un inseriemento, false altrimenti
+     * @see models.Day
+     */
     public boolean addSomministrazione(Day rilevazioneGiornaliera, String username){
         String sql = "INSERT INTO rilevazioni_giornaliere (data_rilevazione, rilevazione_post_pasto, note_rilevazione, username, rilevazione_pre_pasto, orario) VALUES (?, ?, ?, ?, ?, ?)";
 
@@ -84,6 +100,14 @@ public class PatientPageDao {
         }
     }
 
+    /**
+     * Metodo con lo scopo di controllare le somministrazioni, se esiste già una rilevazione per oggi con questo orario
+     * @param orario orario somministrazione
+     * @param data data odierna
+     * @param formatter data formattata
+     * @param username nome paziente
+     * @return boolean - valore booleano, true se ci sta la somministrazione, false altrimenti
+     */
     public boolean checkSomministarazione(String orario, LocalDate data, DateTimeFormatter formatter, String username){
 
         String sql = "SELECT COUNT(*) FROM rilevazioni_giornaliere WHERE data_rilevazione = ? AND orario = ? AND username = ?";
@@ -105,6 +129,13 @@ public class PatientPageDao {
         }
     }
 
+    /**
+     * Metodo con lo scopo di inserire nel database il messaggio della mancata somministrazione inviato o nel caso in cui le
+     * somministrazioni sono fuori dal range minimo e massimo, messaggio automatico
+     * @param content contenuto massaggio
+     * @param receiver chi riceve
+     * @param user chi invia
+     */
     public void messageSomm(String content, String receiver, String user){
         String sql = "INSERT INTO messages (sender, receiver, content, timestamp) VALUES (?, ?, ?, ?)";
         try(Connection conn = DBConnection.getConnection();
@@ -121,6 +152,11 @@ public class PatientPageDao {
         }
     }
 
+    /**
+     * Metodo con lo scopo di recuperare la notifica
+     * @param paziente
+     * @return boolean - valore booleano, true nel caso ci sia almeno una notifica, false altrimenti
+     */
     public boolean recuperoNotifica(String paziente){
         String sql = "SELECT sender FROM messages WHERE receiver = ? AND visualizzato = false GROUP BY sender";
         try (Connection conn = DBConnection.getConnection();
@@ -134,6 +170,11 @@ public class PatientPageDao {
         }
     }
 
+    /**
+     * Metodo con lo scopo di aggiornare lo stato della visuallizzazione del messaggio
+     * @param doctor medico
+     * @param patient paziente
+     */
     public void cambioVisualizzato(String doctor, String patient) {
         String sql = "UPDATE messages SET visualizzato = true WHERE sender = ? AND receiver = ? AND visualizzato = false ";
         try (Connection conn = DBConnection.getConnection();
@@ -146,11 +187,13 @@ public class PatientPageDao {
         }
     }
 
-    /*
-    * data1Trovata: diventa true se nel DB troviamo data1.
-    * data2Trovata: diventa true se troviamo data2.
-    * */
-    public boolean messageSommDim(String data2, String data1, ChartFilter filter, String user) {
+    /**
+     * Metodo con lo scopo di controllare se non sono state inserite da 3 giorni delle somministrazioni
+     * @param filter Filtro da applicare
+     * @param user paziente
+     * @return boolean - valore booleano, true nel caso non ci sono somministrazioni, false altrimenti
+     */ //javadoc -d C:\javadoc\test com.test
+    public boolean messageSommDim(ChartFilter filter, String user) {
         String sql = "SELECT data_rilevazione ,  count(data_rilevazione) FROM rilevazioni_giornaliere WHERE username = ? " + filter.getSqlView() + " GROUP BY data_rilevazione";
 
         try(Connection conn = DBConnection.getConnection();
@@ -174,6 +217,13 @@ public class PatientPageDao {
         }
     }
 
+    /**
+     * Questo metodo ha lo scopo di controllare se un determinato messaggio è gia presente nel database
+     * @param content Corpo del Messaggio
+     * @param receiver Destinatario
+     * @param user Mittente
+     * @return boolean - Esito della valutazione
+     */
     public boolean messDuplicato(String content, String receiver, String user) {
         UIUtils.printMessage("entro nella funzione");
         String sql = "SELECT content ,  count(content) FROM messages WHERE sender = ? AND receiver = ? AND content = ? GROUP BY content ";
@@ -199,7 +249,11 @@ public class PatientPageDao {
             return false;
         }
     }
-
+    /**
+     * Questo metodo ha lo scopo di salvare i sintomi del paziente nella rilevazione più recente di oggi
+     * @param nuovaNota La nota con i sintomi del paziente
+     * @param username Username del paziente
+     */
     public boolean cercoSintomiOggi(LocalDate oggi, DateTimeFormatter formatter, String nuovaNota, String username) {
         String sql = "SELECT ID_rilevazioni FROM rilevazioni_giornaliere WHERE data_rilevazione = ? AND username = ? ORDER BY ID_rilevazioni DESC LIMIT 1";
         try (Connection conn = DBConnection.getConnection();
@@ -229,6 +283,11 @@ public class PatientPageDao {
         }
     }
 
+    /**
+     * Questo metodo ha lo scopo di salvare i sintomi del paziente nella rilevazione più recente
+     * @param nuovaNota La nota con i sintomi del paziente
+     * @param username Username del paziente
+     */
     public void cercoSintomiGiorniPrecedenti(String nuovaNota, String username) {
         String queryUltima = "SELECT ID_rilevazioni, note_rilevazione, data_rilevazione, username FROM rilevazioni_giornaliere WHERE username = ? ORDER BY data_rilevazione DESC, ID_rilevazioni DESC LIMIT 1";
         try (Connection conn = DBConnection.getConnection();

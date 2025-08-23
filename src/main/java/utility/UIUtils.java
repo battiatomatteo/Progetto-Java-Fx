@@ -23,11 +23,22 @@ import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.util.ArrayList;
 
+/**
+ * Classe UIUtils
+ * @packege utility
+ * @see DAO.UIUtilsDao
+ * @see DAO.PatientPaneDao
+ */
 public class UIUtils {
     private static final UIUtilsDao dao = new UIUtilsDao();
     private static final PatientPaneDao daoP = new PatientPaneDao();
 
-    //  mostra l'Alert
+    /**
+     * Metodo con lo scopo di creare l'Alert da lanciare
+     * @param t tipo di Alert
+     * @param title titolo Alert
+     * @param txt testo Alert
+     */
     public static void showAlert(Alert.AlertType t, String title, String txt) {
         Alert a = new Alert(t);
         a.setTitle(title);
@@ -36,7 +47,16 @@ public class UIUtils {
         a.showAndWait();
     }
 
-    // metodo authenticate, in base al tipo 'flag' = 0 o 'flag' = 1 esegue un tipo di autenticazione
+    // metodo authenticate,
+
+    /**
+     * Metodo con lo scopo di controllare il tipo di autenticazione da svolgere, in base al tipo 'flag' = 0 o 'flag' = 1 esegue un tipo di autenticazione
+     * @param username
+     * @param password
+     * @param flag
+     * @return valore booleano
+     * @see DAO.UIUtilsDao
+     */
     public static boolean authenticate(String username, String password, int flag) {
         if(flag == 0 ){
              return dao.authenticateLogin(username, password);
@@ -45,6 +65,10 @@ public class UIUtils {
         }
     }
 
+    /**
+     * Metodo con lo scopo di far tornare alla pagina di log in
+     * @param stage
+     */
     public static void LogOutButton(Stage stage){
         try {
             stage.close();
@@ -54,11 +78,19 @@ public class UIUtils {
         }
     }
 
+    /**
+     * Metodo con lo scopo di restituire la data di oggi
+     * @return stringa - data di oggi
+     */
     public static String dataOggi(){
         LocalDate oggi = LocalDate.now();
         return oggi.toString();
     }
 
+    /**
+     * Metodo con lo scopo di restituire la data col giorno esatto, lo calcolo poi in italiano
+     * @return stringa - giorno della settimana + data
+     */
     public static String dataConGiorno(){
         LocalDate oggi = LocalDate.now();
         DayOfWeek giorno = oggi.getDayOfWeek(); // esempio MONDAY: mi restituisce il giorno in inglese 
@@ -68,9 +100,17 @@ public class UIUtils {
         int ind = giorno.getValue() - 1;
         GiorniSettimana giornoSettimana =  GiorniSettimana.values()[ind];
 
-        return giornoSettimana + " " + oggi.toString();
+        return giornoSettimana + " " + oggi;
     }
 
+    /**
+     * Metodo con lo scopo di creare un PDF con le informazioni del paziente cercato dal medico
+     * @param stage  PatientPane, grafico, tabella e informazioni paziente
+     * @param usernameInput  paziente cercato dal medico
+     * @param chartInclude
+     * @param table  tabella con tutti i valori delle terapie assegnate al paziente
+     * @see models.Terapia
+     */
     public static void generaPDFReport(Stage stage, TextField usernameInput, VBox chartInclude, TableView<Terapia> table) { // passa lo Stage principale qui
         String nomePaziente = usernameInput.getText();
         try {
@@ -142,27 +182,57 @@ public class UIUtils {
         }
     }
 
+    /**
+     * Metodo con lo scopo di recuperare il nome del dottore del paziente passato
+     * @param username nome paziente
+     * @return stringa - nome del dottore
+     * @see DAO.UIUtilsDao
+     */
     public static String getDoctor(String username){
         return dao.getDoctorUser(username);
-
     }
 
+    /**
+     * Metodo con lo scopo di recuperare i farmaci del paziente
+     * @param username nome del paziente
+     * @return ArrayList<String> coi nomi dei farmaci
+     * @see DAO.UIUtilsDao
+     */
     public  static ArrayList<String> getFarmaciPaziente(String username){
         return dao.getFarmaciPaziente(username);
     }
 
+    /**
+     * Metodo con lo scopo di stampare a video una stringa passata
+     * @param message content da stampare
+     */
     public static void printMessage(String message){
         System.out.println(message);
     }
 
+    /**
+     * Metodo con lo scopo di controllare la parola passata, deve contenere solo lettere altrimenti ritorna falso.
+     * @param input parola da controllare
+     * @return valore booleano, vero se la risposta è corretta, falso altrimenti.
+     */
     public static boolean controlloParolaStringa(String input) {
         return input != null && input.matches("^[A-Za-z]+$");
     }
 
+    /**
+     * Metodo con lo scopo di controllare la password passata, deve contenere almeno 8 caratteri, una maiuscola e un numero.
+     * @param password password da controllare
+     * @return valore booleano, vero se la risposta è corretta, falso altrimenti.
+     */
     public static boolean controlloPassword(String password) {
         return password != null && password.matches("^(?=.*[A-Z])(?=.*[0-9])(?=.*[^A-Za-z0-9]).{8,}$");
     }
 
+    /**
+     * Metodo con lo scopo di controllare il numero passato
+     * @param number numero da controllare
+     * @return valore booleano, vero se la risposta è corretta, falso altrimenti.
+     */
     public static boolean controlloFloat(String number){
         try {
             int n = Integer.parseInt(number);

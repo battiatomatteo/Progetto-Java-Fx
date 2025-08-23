@@ -5,14 +5,24 @@ import javafx.collections.ObservableList;
 import javafx.scene.control.Alert;
 import models.User;
 import utility.UIUtils;
-
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
+/**
+ * Classe che gestisce l'accesso al database per la pagina Admin
+ * @package DAO
+ */
 public class AdminDao {
+    // Attributi della classe
+    // Tutte le operazioni che effettuano modifiche al database vengono riflesse anche sulla lista userData
     private final ObservableList<User> userData = FXCollections.observableArrayList();
 
+    /**
+     * Questo metodo restituisce una lista con tutti gli utenti presenti nel database
+     * @return ObservableList<User> - Lista ordinata di tutti gli utenti
+     * @see models.User
+     */
     public ObservableList<User> caricaUtentiDao(){
         String sql = "SELECT username, tipo_utente, password, medico, informazioni FROM utenti";
         try (Connection conn = DBConnection.getConnection();
@@ -34,6 +44,12 @@ public class AdminDao {
         }
     }
 
+    /**
+     * Questo metodo ha lo scopo di eliminare un utente dal database
+     * @param selectedUser L'utente da eliminare
+     * @return User - L'utente che è stato eliminato
+     * @see models.User
+     */
     public User eliminaUtenteDao(User selectedUser){
         String sql = "DELETE FROM utenti WHERE username = ?";
         try (Connection conn = DBConnection.getConnection();
@@ -48,6 +64,12 @@ public class AdminDao {
         }
     }
 
+    /**
+     * Questo metodo controlla se un utente esiste
+     * @param user Utente da controllare
+     * @return boolean - Esito della valutazione
+     * @see models.User
+     */
     public boolean esisteUtente(User user){
         boolean exists = userData.contains(user);
         if(exists)System.out.println("esiste");
@@ -55,6 +77,12 @@ public class AdminDao {
         return exists;
     }
 
+    /**
+     * Questo metodo ha lo scopo di aggiungere un utente al database
+     * @param user Utente da aggiungere
+     * @return User - Utente aggiunto al database
+     * @see models.User
+     */
     public User aggiungiUtente(User user){
         if(!controlloMedico(user.getMedico())) {
             UIUtils.showAlert(Alert.AlertType.ERROR, "Errore :", "Il medico da lei inserito non esiste");
@@ -85,6 +113,15 @@ public class AdminDao {
         }
     }
 
+    /**
+     * Questo metodo ha lo scopo di modificare un utente già presente nel database
+     * @param username nuovo username dell'utente (nel caso in cui venga modificato)
+     * @param tipoUtente Tipo dell'utente
+     * @param password Password dell'utente
+     * @param medico Medico associato all'utente
+     * @param info Informazioni relative all'utente
+     * @param oldUsername username precedente dell'utente
+     */
     public void aggiornaUtente(String username, String tipoUtente, String password, String medico, String info, String oldUsername){
 
         if(tipoUtente.equals("admin") || tipoUtente.equals("medico")){
@@ -125,7 +162,11 @@ public class AdminDao {
         }
     }
 
-    // ritorno true se esiste
+    /**
+     * Questo metodo valuta se l'utente è un medico
+     * @param medico Utente da valutare
+     * @return boolean - Esito della valutazione
+     */
     private boolean controlloMedico(String medico){
         String sql = "SELECT username FROM utenti WHERE username = ? AND tipo_utente = ?" ;
         try (Connection conn = DBConnection.getConnection();
