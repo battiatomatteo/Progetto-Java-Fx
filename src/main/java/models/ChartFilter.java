@@ -17,10 +17,21 @@ public class ChartFilter {
     private static final DateFormat dateFormat = new SimpleDateFormat(DATE_FORMAT);
 
     // Attributi della classe
+    /**
+     * Data di inizio dell'intervallo
+     */
     private String startDate;
+    /**
+     * Data di fine dell'intervallo
+     */
     private String endDate;
+    /**
+     * ID della serie da mostrare
+     * @see models.ChartDataInstance
+     */
     private final int seriesID;
 
+    // Metodi della classe
     /**
      * Costruttore della classe
      * @param startDate Estremo inferiore dell'intervallo

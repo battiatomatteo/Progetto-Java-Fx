@@ -11,11 +11,18 @@ import models.Rilevazioni;
 /**
  * Classe che gestisce il grafico per visualizzare le rilevazione di un paziente
  * @packege controllers
-* @see <a href="../resources/fxml/PatientChartr.fxml">PatientChartr.fxml</a>
+* @see <a href="https://github.com/battiatomatteo/Progetto-Java-Fx/blob/main/src/main/resources/fxml/PatientChart.fxml">PatientChartr.fxml</a>
  */
 public class PatientChartController {
     // Attributi della classe
+    /**
+     * Grafico a linee
+     */
     @FXML private LineChart<String, Number> PatientChart;  // Il grafico a linee
+    /**
+     * Oggetto per accesso al database
+     * @see DAO.PatientChartDao
+     */
     private PatientChartDao dao;
 
     @FXML

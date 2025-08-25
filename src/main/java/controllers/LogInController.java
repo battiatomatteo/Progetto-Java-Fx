@@ -13,7 +13,7 @@ import view.PatientPageView;
 /**
  * Controller della pagina LogIn.
  * @packege controllers
- * @see <a href="../resources/fxml/LogIn.fxml">LogIn.fxml</a>
+ * @see <a href="https://github.com/battiatomatteo/Progetto-Java-Fx/blob/main/src/main/resources/fxml/LogIn.fxml">LogIn.fxml</a>
  */
 public class LogInController {
 
@@ -23,6 +23,10 @@ public class LogInController {
     @FXML private Label messageLabel;
     @FXML private TextField visiblePassField;
     @FXML private ToggleButton showPasswordToggle;
+    /**
+     * Oggetto per accesso al database
+     * @see DAO.UIUtilsDao
+     */
     private UIUtilsDao dao = new UIUtilsDao();
 
     /**
@@ -83,7 +87,7 @@ public class LogInController {
 
     /**
      * Questo metodo ha lo scopo di prendere il tipo dell'utente che esegue l'accesso così da indirizzarlo nella pagina corretta nell'handleLogin().
-     * @param username
+     * @param username nome utente inserito nella pagina di login
      * @return stringa - tipo utente
      * @see DAO.UIUtilsDao
      */
@@ -93,7 +97,7 @@ public class LogInController {
 
     /**
      * Metodo con lo scopo di restituire una stringa di errore.
-     * @return stringa - errore di autenticazione
+     * @return String - errore di autenticazione
      */
     private static String getErrore() {
         return "Errore di autenticazione. Riprova.";

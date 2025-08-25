@@ -15,6 +15,10 @@ import java.util.ArrayList;
  */
 public class DoctorPageDao {
     // Attributi della classe
+    /**
+     * Oggetto per accesso al database
+     * @see DAO.MessageDao
+     */
     private MessageDao msDao = new MessageDao();
 
     /**

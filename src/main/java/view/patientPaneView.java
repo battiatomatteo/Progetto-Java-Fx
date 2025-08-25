@@ -9,7 +9,7 @@ import javafx.stage.Stage;
 /**
  * Classe view di PatientPane
  * @PAckege view
- * @see <a href="../resources/fxml/PatientPane.fxml">PatientPane.fxml</a>
+ * @see <a href="https://github.com/battiatomatteo/Progetto-Java-Fx/blob/main/src/main/resources/fxml/PatientPane.fxml">PatientPane.fxml</a>
  */
 public class patientPaneView extends Application {
     /**

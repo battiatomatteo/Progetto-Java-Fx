@@ -20,7 +20,7 @@ import java.util.ArrayList;
 /**
  * Controller della pagina LogIn.
  * @packege controllers
- * @see <a href="../resources/fxml/DoctorPage.fxml">DoctorPage.fxml</a>
+ * @see <a href="https://github.com/battiatomatteo/Progetto-Java-Fx/blob/main/src/main/resources/fxml/DoctorPage.fxml">DoctorPage.fxml</a>
  */
 public class DoctorPageController {
     @FXML private Button logOutButton;
@@ -30,7 +30,14 @@ public class DoctorPageController {
     @FXML private StackPane notificationButton;
     @FXML private Label notificationBadge;
     @FXML private VBox notificationPanel;
+    /**
+     * Oggetto per accesso al database
+     * @see DAO.DoctorPageDao
+     */
     private DoctorPageDao dao = new DoctorPageDao();
+    /**
+     * Numero delle notifiche ancora non lette
+     */
     private int notificheNonLette = 0;
 
     /**
@@ -116,7 +123,7 @@ public class DoctorPageController {
 
     /**
      * Questo metodo ha lo scopo di mandare il messaggio a tutti i pazienti del dottore loggato
-     * @param username
+     * @param username nome medico loggato
      * @see DAO.DoctorPageDao
      */
     private void sendAllMess(String username){

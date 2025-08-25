@@ -13,7 +13,6 @@ import java.sql.*;
  * @package DAO
  */
 public class PatientPaneDao{
-    private ObservableList<Terapia> TerapieData = FXCollections.observableArrayList();
 
     /**
      * Metodo con lo scopo di ottenere la lista delle terapie filtrate
@@ -23,7 +22,8 @@ public class PatientPaneDao{
      * @see models.FilterDataSetter
      */
     public ObservableList<Terapia> getTerapieList(FilterDataSetter filter) {
-        TerapieData.clear();
+
+        ObservableList<Terapia> TerapieData = FXCollections.observableArrayList();
         String sql = "SELECT ID_terapia, stato, farmaco, count_farmaco, quantità_farmaco, note FROM terapie WHERE username = ?" + filter.getSqlView();
         try (Connection conn = DBConnection.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql)){

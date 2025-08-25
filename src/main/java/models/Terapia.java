@@ -14,11 +14,29 @@ import javafx.beans.property.*;
 public class Terapia {
 
     // Attributi della classe
+    /**
+     * ID della terapia
+     */
     private final IntegerProperty id_terapia;
+    /**
+     * Nome del farmaco
+     */
     private final StringProperty farmaco;
+    /**
+     * Numero di assunzioni del farmaco
+     */
     private final StringProperty assunzioni;
+    /**
+     * Quantità di farmaco da assumere
+     */
     private final StringProperty quantFarmaco;
+    /**
+     * Note sul farmaco
+     */
     private final StringProperty note;
+    /**
+     * Stato attuale della terapia
+     */
     private final ObjectProperty<StatoTerapia> stato;
 
     /**
@@ -39,7 +57,6 @@ public class Terapia {
         this.assunzioni = new SimpleStringProperty(assunzioni);
         this.quantFarmaco = new SimpleStringProperty(quantFarmaco);
         this.note = new SimpleStringProperty(note);
-        //this.stato = new SimpleObjectProperty<>(StatoTerapia.valueOf(stato));
 
         //  per prevenire eccezioni nel caso in cui nel database venga salvata per errore una stringa non valida
         StatoTerapia statoEnum;

@@ -22,8 +22,12 @@ public class ChartDataInstance {
     public static final String[] TEXT_LIST = {PRE_TEXT,POST_TEXT,ALL_TEXT};
 
     // Attributi della classe
+    /**
+     * Lista di tutte le serie che verranno utilizzate
+     */
     private final XYChart.Series<String, Number>[] seriesData = new XYChart.Series[MAX_ID];
 
+    // Metodi della classe
     /**
      * Costruttore della Classe
      */

@@ -27,7 +27,7 @@ import javafx.scene.shape.Circle;
 /**
  * Controller del panello del paziente.
  * @packege controllers
- * @see <a href="../resources/fxml/PatientPane.fxml">PatientPane.fxml</a>
+ * @see <a href="https://github.com/battiatomatteo/Progetto-Java-Fx/blob/main/src/main/resources/fxml/PatientPane.fxml">PatientPane.fxml</a>
  */
 public class PatientPaneController {
 
@@ -42,6 +42,10 @@ public class PatientPaneController {
     @FXML private VBox chartInclude;
     @FXML private PatientChartController chartIncludeController;
     @FXML private TextArea infoTextArea;
+    /**
+     * Oggetto per accesso al database
+     * @see DAO.PatientPaneDao
+     */
     private PatientPaneDao dao;
 
     /**
@@ -298,7 +302,7 @@ public class PatientPaneController {
 
     /**
      * Questo metodo ha il compito di salvare le modifiche che si trovano nel box delle informazioni del paziente
-     * @param username
+     * @param username username del paziente
      * @see DAO.PatientPaneDao
      */
     private void salvaModifiche(String username){
@@ -308,7 +312,7 @@ public class PatientPaneController {
 
     /**
      * Questo metodo ha il compito di caricare nel box le informazioni del paziente cercato.
-     * @param username
+     * @param username username del paziente
      * @see DAO.PatientPaneDao
      */
     public void caricaInfoUtente(String username){
@@ -324,8 +328,8 @@ public class PatientPaneController {
      * @throws IOException
      * @see utility.SessionManager
      * @see utility.UIUtils
-     * @see <a href="../resources/fxml/ChatPage.fxml">ChatPage.fxml</a>
-     * @see <a href="../resources/img/icona_dottore.jpg">icona_dottore.jpg</a>
+     * @see <a href="https://github.com/battiatomatteo/Progetto-Java-Fx/blob/main/src/main/resources/fxml/ChatPage.fxml">ChatPage.fxml</a>
+     * @see <a href="https://github.com/battiatomatteo/Progetto-Java-Fx/blob/main/src/main/resources/img/icona_dottore.jpg">icona_dottore.jpg</a>
      */
     @FXML
     private void openChat() throws IOException {

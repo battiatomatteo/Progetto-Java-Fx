@@ -11,9 +11,14 @@ public class Day {
     // Costanti definite per la classe
     private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
-    //Attributi della classe
+
+     // Attributi della classe
+    /**
+     * Lista dei pasti del giorno
+     */
     private final ArrayList<Pasto> pasti = new ArrayList<>();
 
+    // Metodi della classe
     /**
      * Costruttore della classe
      */

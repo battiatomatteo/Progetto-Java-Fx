@@ -9,9 +9,18 @@ package models;
 public class Rilevazioni {
 
     // Attributi della classe
-    private final String date; // Data della rilevazione (formato stringa)
-    private final float rilevazionePrePasto; // Valore della glicemia prima del pasto
-    private final float rilevazionePostPasto; // Valore della glicemia dopo il pasto
+    /**
+     * Data della rilevazione (formato stringa)
+     */
+    private final String date;
+    /**
+     * Valore della glicemia prima del pasto
+     */
+    private final float rilevazionePrePasto;
+    /**
+     * Valore della glicemia dopo il pasto
+     */
+    private final float rilevazionePostPasto;
 
     /**
      * Costruttore della classe Rilevazioni.

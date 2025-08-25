@@ -11,7 +11,7 @@ import utility.UIUtils;
 /**
  * Controller della pagina Admin.
  * @packege controllers
- * @see <a href="../resources/fxml/AdminPage.fxml">AdminPage.fxml</a>
+ * @see <a href="https://github.com/battiatomatteo/Progetto-Java-Fx/blob/main/src/main/resources/fxml/AdminPage.fxml">AdminPage.fxml</a>
  */
 public class AdminPageController {
 
@@ -21,6 +21,10 @@ public class AdminPageController {
     @FXML private PasswordField passwordInput;
     @FXML private TableView<User> table;
     @FXML private TableColumn<User, String> usernameCol, tipoUtenteCol, passwordCol, medicoCol, infoCol;
+    /**
+     * Oggetto per accesso al database
+     * @see DAO.AdminDao
+     */
     private AdminDao dao = new AdminDao();
 
     /**
@@ -120,7 +124,7 @@ public class AdminPageController {
      * Questo metodo ha lo scopo di controllare che l'username inserito sia valido.
      * Utilizza il metodo controlloParolaStringa() che si trova nella classe UIUtils, nel caso il valore non fosse valido lancia un Alert di errore.
      * @see utility.UIUtils
-     * @param username
+     * @param username nome utente da controllare
      * @return stringa - username o ""
      */
     private String controlloUser(String username){
@@ -137,7 +141,7 @@ public class AdminPageController {
      * Utilizza il metodo controlloPassword() che si trova nella classe UIUtils, nel caso il valore non fosse valido lancia un Alert di errore.
      * @see utility.UIUtils
      * @param password   password utente
-     * @return stringa - password o ""
+     * @return String - password o ""
      */
     private String controlloPass(String password){
         if (!UIUtils.controlloPassword(password)) {

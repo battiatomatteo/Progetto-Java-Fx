@@ -10,7 +10,7 @@ import javafx.stage.Stage;
 /**
  * Classe view di LogIn
  * @PAckege view
- * @see <a href="../resources/fxml/LogIn.fxml">LogIn.fxml</a>
+ * @see <a href="https://github.com/battiatomatteo/Progetto-Java-Fx/blob/main/src/main/resources/fxml/LogIn.fxml">LogIn.fxml</a>
  */
 public class LogInView extends Application {
     /**

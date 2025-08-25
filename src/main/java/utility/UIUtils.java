@@ -30,7 +30,15 @@ import java.util.ArrayList;
  * @see DAO.PatientPaneDao
  */
 public class UIUtils {
+    /**
+     * Oggetto per accesso al database
+     * @see DAO.UIUtilsDao
+     */
     private static final UIUtilsDao dao = new UIUtilsDao();
+    /**
+     * Oggetto per accesso al database
+     * @see DAO.PatientPaneDao
+     */
     private static final PatientPaneDao daoP = new PatientPaneDao();
 
     /**

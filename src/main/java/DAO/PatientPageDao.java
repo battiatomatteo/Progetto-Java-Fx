@@ -20,7 +20,6 @@ import models.Day;
  * @package DAO
  */
 public class PatientPageDao {
-    private Map<String, Pasto> rilevati = new HashMap<>();
 
     /**
      * Metodo con lo scopo di ottenere le somministrazioni da mostrare nella tabella odierna
@@ -29,7 +28,8 @@ public class PatientPageDao {
      * @see models.Pasto
      */
     public Map<String, Pasto> somministrazioneTabella(String username){
-
+        // rilevazioni del giorno corrente mappate per orario
+        Map<String, Pasto> rilevati = new HashMap<>();
         String sql = "SELECT * FROM rilevazioni_giornaliere WHERE data_rilevazione = ? AND rilevazioni_giornaliere.username = ?";
         try(Connection conn = DBConnection.getConnection();
             PreparedStatement pstmt = conn.prepareStatement(sql)){

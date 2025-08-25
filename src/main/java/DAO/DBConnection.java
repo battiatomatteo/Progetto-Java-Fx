@@ -5,15 +5,18 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 
 /**
- * Classe che crea una connesione con il database
+ * Classe che crea una connessione con il database
  * @package DAO
  */
 public class DBConnection {
-    // Attributi della classe
-    private static final String URL = "jdbc:sqlite:miodatabase.db?busy_timeout=5000";
+    // Costanti della classe
+    /**
+     * URL al database con tempo di attesa di 3 secondi.
+     */
+    private static final String URL = "jdbc:sqlite:miodatabase.db?busy_timeout=3000";
 
     /**
-     * Crea una connesione al database
+     * Crea una connessione al database
      * @return La connessione effettuata
      * @throws SQLException
      */

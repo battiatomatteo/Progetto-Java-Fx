@@ -11,9 +11,21 @@ import java.time.LocalDateTime;
 public class Message {
 
     // Attributi della classe
+    /**
+     * Chi invia il messaggio
+     */
     private String sender; // "dottore" o "paziente"
+    /**
+     * Chi riceve il messaggio
+     */
     private String receiver;
+    /**
+     * Contenuti del messaggio
+     */
     private String content;
+    /**
+     * Momento in cui si invia il messaggio
+     */
     private LocalDateTime timestamp;
 
     /**

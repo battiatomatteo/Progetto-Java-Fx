@@ -5,6 +5,11 @@ import utility.UIUtils;
 
 import java.util.ArrayList;
 
+/**
+ * Questa classe è utilizzata per entrare i dati della tabella delle Terapie
+ *
+ * @package models
+ */
 public class FilterDataSetter {
 
     // Costanti definite per la classe
@@ -18,7 +23,7 @@ public class FilterDataSetter {
         // Costanti per la visualizzazione della terapia
     public static final String ALL_THERAPY = null;
 
-        // Costanti per la visualizzazione dello stato
+        // Costanti che definisco per la visualizzazione dello stato
     public static final int ON_GOING_STATUS = 1;
     public static final int ON_PAUSE_STATUS = 2;
     public static final int ON_GOING_PAUSED_STATUS = 3;
@@ -29,8 +34,11 @@ public class FilterDataSetter {
     public static final int DEFAULT_STATUS_VIEWS = ALL_STATUS_VIEWS;
 
     // Attributi della classe
+    /**
+     * Username dell'utente considerato
+     */
     private final String patientUserName;
-    private final int statusView;
+
     private final String farmaco;
     private String sqlView;
 
@@ -46,11 +54,9 @@ public class FilterDataSetter {
         }
         this.patientUserName = patientName;
 
-        // Imposta la vista
+        // Aggiusta la vista in caso di dato errato la vista
         if (statusView < 1 || statusView > ALL_STATUS_VIEWS) {
-            this.statusView = DEFAULT_STATUS_VIEWS;
-        } else {
-            this.statusView = statusView;
+            statusView = DEFAULT_STATUS_VIEWS;
         }
 
         // Imposta il farmaco
@@ -62,7 +68,7 @@ public class FilterDataSetter {
         }
 
         // Costruisci la query SQL in base alla vista
-        switch (this.statusView) {
+        switch (statusView) {
             case ON_GOING_STATUS:
                 chartDataSetterOnGoing();
                 break;

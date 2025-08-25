@@ -28,7 +28,7 @@ import java.time.temporal.TemporalAdjusters;
 /**
  * Controller della pagina del paziente.
  * @packege controllers
- * @see <a href="../resources/fxml/PatientPage.fxml">PatientPage.fxml</a>
+ * @see <a href="https://github.com/battiatomatteo/Progetto-Java-Fx/blob/main/src/main/resources/fxml/PatientPage.fxml">PatientPage.fxml</a>
  */
 public class PatientPageController {
     @FXML private Label notificationBadge;
@@ -40,17 +40,50 @@ public class PatientPageController {
     @FXML private Label messageStart, infoPaziente, IntevalloLabel;
     @FXML private Button logOutButton, nuovaSomministrazioneButton, salvaSintomi,settimanaSucc, settimanaPrec, meseSucc, mesePrec;
     @FXML private TextArea textArea;
+    /**
+     * Lista con al suo interno i Pasti
+     * @see models.Pasto
+     */
     private final ObservableList<Pasto> pastiData = FXCollections.observableArrayList();
     @FXML private PatientChartController chartIncludeController;
+    /**
+     * Oggetto per accesso al database
+     * @see DAO.PatientPageDao
+     */
     private PatientPageDao dao;
+    /**
+     * Oggetto per accesso al database
+     * @see DAO.PatientPaneDao
+     */
     private PatientPaneDao dao2;
+    /**
+     *
+     */
     private boolean hasNotification = false;
+    /**
+     * Valore pre pasto minimo
+     */
     private static final int PREPASTOMIN = 80;
+    /**
+     * Valore pre pasto massimo
+     */
     private static final int PREPASTOMAX = 130;
+    /**
+     * Valore post pasto max
+     */
     private static final int POSTPASTOMAX = 180;
+    /**
+     * Formato della data: anno-mese-giorno
+     */
     public static final String DATE_FORMAT = "yyyy-MM-dd";
+    /**
+     * Data formattata in base a DATE_FORMAT
+     */
     private static final DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern(DATE_FORMAT);
 
+    /**
+     * Data attuale
+     */
     private LocalDate dataAttuale = LocalDate.now().with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY));
 
     /**
@@ -134,7 +167,7 @@ public class PatientPageController {
     }
 
     // questi metodi quando vengono richiamati modificano la data visualizzata e ricaricano il grafico
-    private void datiSettimanaPrecedente() {
+        private void datiSettimanaPrecedente() {
         dataAttuale = dataAttuale.minusWeeks(1);
         ricaricaDatiGrafico();
     }
@@ -159,10 +192,21 @@ public class PatientPageController {
         return dayToString(fineSettimana);
     }
 
+    /**
+     * Data a stringa
+     * @param day
+     * @return String - giorno in stringa
+     */
     private String dayToString(LocalDate day){
         return day.format(dateFormat);
     }
 
+    /**
+     * Costruisce la label coi giorni dell'intervallo mostrati
+     * @param startDay giorno inizio
+     * @param endDay giorno fine
+     * @return String - intervallo giorni
+     */
     private String intervalloLabelText(String startDay, String endDay){
         return startDay + " - " + endDay;
     }
@@ -172,8 +216,8 @@ public class PatientPageController {
      * @throws IOException
      * @see utility.SessionManager
      * @see utility.UIUtils
-     * @see <a href="../resources/fxml/ChatPage.fxml">ChatPage.fxml</a>
-     * @see <a href="../resources/img/icona_dottore.jpg">icona_dottore.jpg</a>
+     * @see <a href="https://github.com/battiatomatteo/Progetto-Java-Fx/blob/main/src/main/resources/fxml/ChatPage.fxml">ChatPage.fxml</a>
+     * @see <a href="https://github.com/battiatomatteo/Progetto-Java-Fx/blob/main/src/main/resources/img/icona_dottore.jpg">icona_dottore.jpg</a>
      */
     @FXML
     private void openChat() throws IOException {
@@ -292,7 +336,7 @@ public class PatientPageController {
      * @param orario orario somministrazione
      * @param pasto  pasto somministrazione
      * @param data   data somministrazione
-     * @return stringa - messaggio da inviare al medico
+     * @return String - messaggio da inviare al medico
      */
     private String autoNotificationContent(float pre , float post, String orario, String pasto, String data){
         return "Messaggio somministrazione : oggi " + data + " , " + pasto + " ore "+ orario +" pre : " +
@@ -301,7 +345,7 @@ public class PatientPageController {
 
     /**
      * Questo metodo ha lo scopo di caricare le somministrazioni odierne.
-     * @param username
+     * @param username nome utente
      * @see DAO.PatientPageDao
      */
     private void caricaSomministrazioniOdierne(String username) {
@@ -419,7 +463,7 @@ public class PatientPageController {
 
     /**
      * Questo metodo ha lo scopo di controllare se l'utente è in ritardo con la rilevazione.
-     * @param pasto      pasto somministrazione
+     * @param pasto pasto somministrazione
      * @param oraAttuale ora attuale
      * @return valore booleano che indica l'esito della valutazione
      */

@@ -14,10 +14,25 @@ import javafx.beans.property.SimpleStringProperty;
 public class User {
 
     // Attributi della classe
+    /**
+     * Username utente
+     */
     private final SimpleStringProperty username;
+    /**
+     * Tipo dell'utente
+     */
     private final SimpleStringProperty tipo_utente;
+    /**
+     * Password dell'utente
+     */
     private final SimpleStringProperty password;
+    /**
+     * Medico dell'utente selezionato
+     */
     private final SimpleStringProperty medico;
+    /**
+     * Informazioni dell'utente
+     */
     private final SimpleStringProperty infoPaziente;
 
     /**

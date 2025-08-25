@@ -21,7 +21,7 @@ import java.util.HashMap;
  * @see DAO.PatientChartDao
  * @see enums.StatoTerapia
  * @see utility.UIUtils
- * @see <a href="../resources/fxml/SceltaOpzione.fxml">SceltaOpzione.fxml</a>
+ * @see <a href="https://github.com/battiatomatteo/Progetto-Java-Fx/blob/main/src/main/resources/fxml/SceltaOpzione.fxml">SceltaOpzione.fxml</a>
  */
 public class SceltaOpzioneController {
 
@@ -35,14 +35,34 @@ public class SceltaOpzioneController {
     @FXML private CheckBox check3;
 
     private static final PatientChartDao dao = new PatientChartDao(); // DAO per recuperare dati relativi alle rilevazioni del paziente
-
-    private int valoreStatoSelezionato = 0; // Valore numerico per rappresentare lo stato della terapia selezionato
-    private String valoreSerieSelezionato = ChartDataInstance.ALL_TEXT; // Serie selezionata dall’utente
-    private String valoreFarmacoSelezionato = null; // Farmaco selezionato
-    private String username = null; // Username del paziente di riferimento
-    private String dataInizio = null; // Data di inizio selezionata
-    private String dataFine = null; // Data di fine selezionata
-    private final HashMap<String,Integer> serieMap = new HashMap<>(); // Mappa che associa nome serie al rispettivo ID
+    /**
+     * Valore numerico per rappresentare lo stato della terapia selezionato
+     */
+    private int valoreStatoSelezionato = 0;
+    /**
+     * Serie selezionata dall’utente
+     */
+    private String valoreSerieSelezionato = ChartDataInstance.ALL_TEXT;
+    /**
+     * Farmaco selezionato
+     */
+    private String valoreFarmacoSelezionato = null;
+    /**
+     * Username del paziente di riferimento
+     */
+    private String username = null;
+    /**
+     * Data di inizio selezionata
+     */
+    private String dataInizio = null;
+    /**
+     * Data di fine selezionata
+     */
+    private String dataFine = null; //
+    /**
+     * Mappa che associa nome serie al rispettivo ID
+     */
+    private final HashMap<String,Integer> serieMap = new HashMap<>();
 
     /**
      * Metodo di inizializzazione automatico eseguito al caricamento del controller.

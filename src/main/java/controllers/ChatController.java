@@ -17,15 +17,25 @@ import java.util.List;
 /**
  * Controller della finestra chat.
  * @packege controllers
- * @see <a href="../resources/fxml/ChatPage.fxml">ChatPage.fxml</a>
+ * @see <a href="https://github.com/battiatomatteo/Progetto-Java-Fx/blob/main/src/main/resources/fxml/ChatPage.fxml">ChatPage.fxml</a>
  */
 public class ChatController {
 
     @FXML private VBox messageContainer;
     @FXML private TextField messageField;
     @FXML private ScrollPane chatScrollPane;
+    /**
+     * Oggetto per accesso al database
+     * @see DAO.MessageDao
+     */
     private final MessageDao messageDao = new MessageDao();
+    /**
+     * Utente loggato
+     */
     private String currentUser;
+    /**
+     * Utente con cui sto chattando
+     */
     private String chattingWith;
 
     /**

@@ -15,7 +15,9 @@ import java.sql.ResultSet;
  */
 public class AdminDao {
     // Attributi della classe
-    // Tutte le operazioni che effettuano modifiche al database vengono riflesse anche sulla lista userData
+    /**
+     * Tutte le operazioni che effettuano modifiche al database vengono riflesse anche sulla lista userData
+     */
     private final ObservableList<User> userData = FXCollections.observableArrayList();
 
     /**

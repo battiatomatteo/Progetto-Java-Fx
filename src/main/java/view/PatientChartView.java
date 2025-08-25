@@ -9,9 +9,14 @@ import javafx.stage.Stage;
 /**
  * Classe view di PatientChart
  * @PAckege view
- * @see <a href="../resources/fxml/PatientChart.fxml">PatientChart.fxml</a>
+ * @see <a href="https://github.com/battiatomatteo/Progetto-Java-Fx/blob/main/src/main/resources/fxml/PatientChart.fxml">PatientChartr.fxml</a>
  */
 public class PatientChartView extends Application {
+    /**
+     *
+     * @param primaryStage
+     * @throws Exception
+     */
     @Override
     public void start(Stage primaryStage) throws Exception {
         Parent root = FXMLLoader.load(getClass().getResource("/fxml/PatientChart.fxml"));
@@ -20,6 +25,10 @@ public class PatientChartView extends Application {
         primaryStage.show();
     }
 
+    /**
+     *
+     * @param args
+     */
     public static void main(String[] args) {
         launch(args);
     }
