@@ -28,7 +28,8 @@ Progetto-Java-Fx/
 │
 ├── lib/                  ← librerie esterne (jar) necessarie
 ├── src/main/             ← codice fonte Java
-├── doc/                  ← documentazione 
+├── doc/                  ← documentazione
+├── relazione/            ← relazione progetto
 ├── identifier.sqlite     ← database SQLite usato per il salvataggio dati
 ├── miodatabase.db        ← eventualmente un altro file di database
 ├── .idea/                ← file del progetto IDE (se usato IntelliJ, ecc.)
