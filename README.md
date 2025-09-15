@@ -20,13 +20,15 @@ Puoi ottenere il codice sorgente in due modi:
 ```bash
 git clone https://github.com/battiatomatteo/Progetto-Java-Fx.git
 ```
+oppure scaricare un archivio ZIP tramite l’interfaccia di GitHub e decomprimerlo.
+
 ## Struttura del progetto 
 ``` css
 Progetto-Java-Fx/
 │
 ├── lib/                  ← librerie esterne (jar) necessarie
 ├── src/main/             ← codice fonte Java
-├── doc/                  ← documentazione (descrizioni, diagrammi, manuali, API)
+├── doc/                  ← documentazione 
 ├── identifier.sqlite     ← database SQLite usato per il salvataggio dati
 ├── miodatabase.db        ← eventualmente un altro file di database
 ├── .idea/                ← file del progetto IDE (se usato IntelliJ, ecc.)
