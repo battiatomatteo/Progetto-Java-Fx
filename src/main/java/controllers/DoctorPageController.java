@@ -69,7 +69,7 @@ public class DoctorPageController {
         notificationButton.setOnMouseClicked(this::toggleNotifiche);
 
         aggiungiPaziente();
-        buttonMessAll.setOnAction(e -> sendAllMess(SessionManager.currentUser));
+        buttonMessAll.setOnAction(e -> sendAllMess(SessionManager.getCurrentUser()));
 
     }
 
@@ -136,7 +136,7 @@ public class DoctorPageController {
      * @see utility.SessionManager
      */
     private void recuperoNotifiche(){
-        ArrayList<String> listaNotifiche = dao.recuperoNotifica(SessionManager.currentUser);
+        ArrayList<String> listaNotifiche = dao.recuperoNotifica(SessionManager.getCurrentUser());
         listaNotifiche.forEach(this::aggiungiNotifica);
     }
 

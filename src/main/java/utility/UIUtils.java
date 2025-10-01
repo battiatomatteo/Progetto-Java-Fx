@@ -55,22 +55,24 @@ public class UIUtils {
         a.showAndWait();
     }
 
-    // metodo authenticate,
-
     /**
-     * Metodo con lo scopo di controllare il tipo di autenticazione da svolgere, in base al tipo 'flag' = 0 o 'flag' = 1 esegue un tipo di autenticazione
+     * Metodo autenticazione logIn
      * @param username
      * @param password
-     * @param flag
-     * @return valore booleano
-     * @see DAO.UIUtilsDao
+     * @return boolean - true se è corretto, false in caso contrario
      */
-    public static boolean authenticate(String username, String password, int flag) {
-        if(flag == 0 ){
-             return dao.authenticateLogin(username, password);
-        } else {
-            return dao.authenticatePatient(username);
-        }
+    public static boolean authenticate(String username, String password){
+        return dao.authenticateLogin(username, password);
+    }
+
+    /**
+     * Metodo che controlla il paziente cercato dal medico
+     * @param username
+     * @param medico
+     * @return int - caso autenticazione
+     */
+    public static int checkPatient(String username,String medico){
+        return dao.authenticatePatient(username,medico);
     }
 
     /**
@@ -80,6 +82,7 @@ public class UIUtils {
     public static void LogOutButton(Stage stage){
         try {
             stage.close();
+            SessionManager.exit();
             new LogInView().start(new Stage());
         } catch (Exception e) {
             throw new RuntimeException(e);

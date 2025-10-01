@@ -143,11 +143,11 @@ public class PatientPageController {
         mesePrec.setOnAction(event -> datiMesePrecedente());
         meseSucc.setOnAction(event -> datiMeseSuccessivo());
 
-        caricaSomministrazioniOdierne(SessionManager.currentUser);
+        caricaSomministrazioniOdierne(SessionManager.getCurrentUser());
         // Come funziona: Quando clicco sul bottone, prendi la finestra corrente e passala a UIUtils.LogOutButton() per eseguire il logout
         logOutButton.setOnAction(e -> UIUtils.LogOutButton((Stage) logOutButton.getScene().getWindow()));
         salvaSintomi.setOnAction(e -> salvaSintomibox(textArea.getText()));
-        caricaInfoPaziente(SessionManager.currentUser);
+        caricaInfoPaziente(SessionManager.getCurrentUser());
 
         ricaricaDatiGrafico();
         recuperoNotifiche();
@@ -163,7 +163,7 @@ public class PatientPageController {
         String oggi = dayToString(dataAttuale);
         IntevalloLabel.setText(intervalloLabelText(oggi, fine));
         ChartFilter filter = new ChartFilter(oggi, fine,ChartFilter.NO_ID );
-        chartIncludeController.setData(SessionManager.currentUser, filter );
+        chartIncludeController.setData(SessionManager.getCurrentUser(), filter );
     }
 
     // questi metodi quando vengono richiamati modificano la data visualizzata e ricaricano il grafico
@@ -222,19 +222,19 @@ public class PatientPageController {
     @FXML
     private void openChat() throws IOException {
         // Verifico che l'utente sia loggato
-        if (SessionManager.currentUser == null || SessionManager.currentRole == null) {
+        if (SessionManager.getCurrentUser() == null || SessionManager.getCurrentRole() == null) {
             System.out.println("Errore: utente non loggato o ruolo non definito.");
             return;
         }
 
         // Verifico che il ruolo sia effettivamente "patient"
-        if (!SessionManager.currentRole.equals("paziente")) {
+        if (!SessionManager.getCurrentRole().equals("paziente")) {
             System.out.println("Accesso negato: solo i pazienti possono aprire questa chat.");
             return;
         }
 
         // Determina il medico con cui il paziente deve chattare
-        String assignedDoctor = UIUtils.getDoctor(SessionManager.currentUser); // TODO: prendo dinamicamente il medico assegnato
+        String assignedDoctor = UIUtils.getDoctor(SessionManager.getCurrentUser()); // TODO: prendo dinamicamente il medico assegnato
 
         toggleNotifiche();
 
@@ -244,7 +244,7 @@ public class PatientPageController {
 
         // Ottieni il controller della chat e inizializza la conversazione
         ChatController chatController = loader.getController();
-        chatController.initializeChat(SessionManager.currentUser, assignedDoctor);
+        chatController.initializeChat(SessionManager.getCurrentUser(), assignedDoctor);
 
         // Crea una nuova finestra per la chat
         Stage stage = new Stage();
@@ -269,7 +269,8 @@ public class PatientPageController {
     private void toggleNotifiche() {
         if (hasNotification) {
             // Se l'utente apre la chat, azzeriamo il contatore
-            dao.cambioVisualizzato(UIUtils.getDoctor(SessionManager.currentUser), SessionManager.currentUser);
+            String paziente = SessionManager.getCurrentUser();
+            dao.cambioVisualizzato(UIUtils.getDoctor(paziente), paziente);
             notificationBadge.setVisible(false);
             hasNotification = false;
         }
@@ -280,7 +281,7 @@ public class PatientPageController {
      * @see DAO.PatientPageDao
      */
     private void recuperoNotifiche(){
-        hasNotification = dao.recuperoNotifica(SessionManager.currentUser);
+        hasNotification = dao.recuperoNotifica(SessionManager.getCurrentUser());
         if(hasNotification) aggiungiNotifica();
     }
 
@@ -300,7 +301,7 @@ public class PatientPageController {
 
         for (Pasto p : tableView.getItems()){
             String orario = p.getOrario();
-            if (!dao.checkSomministarazione(orario, oggi, formatter, SessionManager.currentUser))
+            if (!dao.checkSomministarazione(orario, oggi, formatter, SessionManager.getCurrentUser()))
                 continue; // Esiste già, quindi salto
             float pre = p.getPre();
             float post = p.getPost();
@@ -309,7 +310,8 @@ public class PatientPageController {
             if((pre < PREPASTOMIN || pre > PREPASTOMAX || post > POSTPASTOMAX ) && (pre != 0 && post != 0)) {
                 UIUtils.showAlert(Alert.AlertType.WARNING, "Valori somministrazione", "I valori di questa somministrazione sono fuori dal range : ");
                 // mess di def. somm
-                dao.messageSomm(autoNotificationContent(pre, post , orario, p.getPasto(), rilevazioneGiorno.getDataString()), UIUtils.getDoctor(SessionManager.currentUser), SessionManager.currentUser);
+                String patient = SessionManager.getCurrentUser();
+                dao.messageSomm(autoNotificationContent(pre, post , orario, p.getPasto(), rilevazioneGiorno.getDataString()), UIUtils.getDoctor(patient), patient);
             }
             rilevazioneGiorno.addPasto(new Pasto(null,orario,pre,post));
 
@@ -320,7 +322,7 @@ public class PatientPageController {
                     .append("Post = ").append(post).append("\n");
         }
 
-        if (dao.addSomministrazione(rilevazioneGiorno, SessionManager.currentUser)) {
+        if (dao.addSomministrazione(rilevazioneGiorno, SessionManager.getCurrentUser())) {
             stampaTabella();
             UIUtils.showAlert(Alert.AlertType.INFORMATION, "Somministrazione salvata", riepilogo.toString());
             ricaricaDatiGrafico();
@@ -384,9 +386,16 @@ public class PatientPageController {
         LocalDate oggi = LocalDate.now();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
-        if(!dao.cercoSintomiOggi(oggi, formatter, nuovaNota, SessionManager.currentUser)){// 1. Controllo se ci sono somministrazioni oggi
-            dao.cercoSintomiGiorniPrecedenti(nuovaNota, SessionManager.currentUser);  // 2. Nessuna somministrazione oggi → cerco l’ultima disponibile
+        if(dao.cercoSintomi(nuovaNota, SessionManager.getCurrentUser(), oggi, formatter)){
+            System.out.println("operazione riuscita");
         }
+        else{
+            System.out.println("operazione non riuscita");
+        }
+
+        /*if(!dao.cercoSintomiOggi(oggi, formatter, nuovaNota, SessionManager.currentUser)){// 1. Controllo se ci sono somministrazioni oggi
+            dao.cercoSintomiGiorniPrecedenti(nuovaNota, SessionManager.currentUser);  // 2. Nessuna somministrazione oggi → cerco l’ultima disponibile
+        }*/
     }
 
     /**
@@ -450,12 +459,14 @@ public class PatientPageController {
             String data1 = nuovaData.format(formatter);
 
             ChartFilter filter = new ChartFilter(data1, data2, ChartFilter.NO_ID);
-            if(dao.messageSommDim( filter, SessionManager.currentUser)) {
+            String patient = SessionManager.getCurrentUser();
+            if(dao.messageSommDim( filter, patient)) {
                 // content mess al dottore
-                String content = "Mancano delle somministrazioni da parte di " + SessionManager.currentUser+ " da almeno 3 giorni . Oggi è il : " + data2;
+                String content = "Mancano delle somministrazioni da parte di " + patient+ " da almeno 3 giorni . Oggi è il : " + data2;
                 // invio mess al dottore
-                if(! dao.messDuplicato(content, UIUtils.getDoctor(SessionManager.currentUser), SessionManager.currentUser)) {
-                    dao.messageSomm(content, UIUtils.getDoctor(SessionManager.currentUser), SessionManager.currentUser);
+
+                if(! dao.messDuplicato(content, UIUtils.getDoctor(patient), patient)) {
+                    dao.messageSomm(content, UIUtils.getDoctor(patient), patient);
                 }
             }
         }

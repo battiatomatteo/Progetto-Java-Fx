@@ -10,6 +10,10 @@ import java.util.ArrayList;
  * @packege DAO
  */
 public class UIUtilsDao {
+    // Costanti definite per la classe
+    public static int ACCESS_GRANTED = 0;
+    public static int ACCESS_ERROR = -1;
+    public static int ACCESS_DENIED = -2;
 
     /**
      * Metodo con lo scopo di verificare l'autenticazione nella pagina di LogIn
@@ -34,18 +38,24 @@ public class UIUtilsDao {
     /**
      * Metodo con lo scopo di verificare l'autenticazione nella pagina del dottore, quando inserisce un nome di un paziente da cercare
      * @param username nome
-     * @return boolean - true in caso l'autenticazione fosse corretta, false altrimenti.
+     * @return int - 0 in caso positivo, -1 se ci sono stati dei problemi, -2 il medico sta cercando un paziente non suo
      */
-    public boolean authenticatePatient(String username) {
+    public int authenticatePatient(String username,String medico) {
         String sql = "SELECT * FROM utenti WHERE username = ?";
         try (Connection conn = DBConnection.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql)){
             pstmt.setString(1, username);
             ResultSet rs = pstmt.executeQuery();
-            return rs.next();
+            if(rs.next()){
+                if(rs.getString("medico").equals(medico))
+                    return ACCESS_GRANTED;
+                else
+                    return ACCESS_DENIED;
+            }
+            else return ACCESS_ERROR;
         } catch (Exception e) {
             e.printStackTrace();
-            return false;
+            return ACCESS_ERROR;
         }
 
     }

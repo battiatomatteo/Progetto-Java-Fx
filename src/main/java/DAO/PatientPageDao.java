@@ -249,78 +249,82 @@ public class PatientPageDao {
             return false;
         }
     }
+
     /**
-     * Questo metodo ha lo scopo di salvare i sintomi del paziente nella rilevazione più recente di oggi
-     * @param nuovaNota La nota con i sintomi del paziente
-     * @param username Username del paziente
+     * Questo metodo ha lo scopo di salvare i sintomi inseriti dal paziente
+     * @param nuovaNota - nota da salvare
+     * @param username - username paziente
+     * @param oggi - data odierna
+     * @param formatter - data formattata
+     * @return boolean - valore booleano , true che è andato a buon fine, false altrimenti
      */
-    public boolean cercoSintomiOggi(LocalDate oggi, DateTimeFormatter formatter, String nuovaNota, String username) {
-        String sql = "SELECT ID_rilevazioni FROM rilevazioni_giornaliere WHERE data_rilevazione = ? AND username = ? ORDER BY ID_rilevazioni DESC LIMIT 1";
+    public boolean cercoSintomi(String nuovaNota, String username, LocalDate oggi, DateTimeFormatter formatter) {
+        // Query per trovare la rilevazione più recente per oggi, se presente, altrimenti la più recente in assoluto
+        String sql = "SELECT ID_rilevazioni, note_rilevazione, data_rilevazione " +
+                "FROM rilevazioni_giornaliere " +
+                "WHERE username = ? AND (data_rilevazione = ? OR data_rilevazione <= ?) " +
+                "ORDER BY data_rilevazione DESC, ID_rilevazioni DESC LIMIT 1";
+
         try (Connection conn = DBConnection.getConnection();
-            PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setString(1, oggi.format(formatter));
-            stmt.setString(2, username);
-            ResultSet rsOggi = stmt.executeQuery();
-            if (rsOggi.next()) {
-                // Somministrazione trovata per oggi → aggiorna la più recente
-                int id = rsOggi.getInt("ID_rilevazioni");
-                String update = "UPDATE rilevazioni_giornaliere SET note_rilevazione = ? WHERE ID_rilevazioni = ? ";
-                try (PreparedStatement updateStmt = conn.prepareStatement(update)) {
-                    updateStmt.setString(1, nuovaNota);
-                    updateStmt.setInt(2, id);
-                    updateStmt.executeUpdate();
-                    UIUtils.showAlert(Alert.AlertType.INFORMATION, "Nota salvata", "Nota salvata sulla somministrazione odierna.");
-                    return true;
-                } catch (Exception e) {
-                    UIUtils.showAlert(Alert.AlertType.ERROR , "Errore 1.1", "Errore salvataggio sintomi .");
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setString(1, username);
+            stmt.setString(2, oggi.format(formatter));  // Filtra per oggi
+            stmt.setString(3, oggi.format(formatter));  // Altrimenti, trova la più recente in assoluto
+
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                int id = rs.getInt("ID_rilevazioni");
+                String note = rs.getString("note_rilevazione");
+
+                // Se la nota è già presente (per esempio "note..."), aggiorniamo
+                if ("note...".equalsIgnoreCase(note) || note == null) {
+                    return aggiornaNota(conn, nuovaNota, id);
+                } else {
+                    // La nota esiste già, quindi mostriamo un avviso
+                    UIUtils.showAlert(Alert.AlertType.WARNING, "Nota non salvata", "Hai già scritto una nota nella rilevazione più recente.");
                     return false;
                 }
+            } else {
+                UIUtils.showAlert(Alert.AlertType.WARNING, "Nessuna rilevazione", "Non è presente alcuna rilevazione su cui salvare la nota.");
+                return false;
             }
-            else return false; // Nessuna somministrazione trovata per oggi
-        }catch (Exception e) {
-            UIUtils.showAlert(Alert.AlertType.ERROR, "Errore 1", "Si è verificato un errore durante il salvataggio della nota.");
-            return false; // Nessuna somministrazione trovata per oggi
+        } catch (Exception e) {
+            gestisciErrore("Errore durante la ricerca dei sintomi", e);
+            return false;
         }
     }
 
     /**
-     * Questo metodo ha lo scopo di salvare i sintomi del paziente nella rilevazione più recente
-     * @param nuovaNota La nota con i sintomi del paziente
-     * @param username Username del paziente
+     * Questo metodo ha lo scopo di aggiornare i sintomi del paziente nel database
+     * @param conn - connessione
+     * @param nuovaNota - nuova nota da inserire
+     * @param id - id rilevazioni
+     * @return boolean - valore booleano, true nel caso il sintomo è stato aggiornato , false altrimenti
      */
-    public void cercoSintomiGiorniPrecedenti(String nuovaNota, String username) {
-        String queryUltima = "SELECT ID_rilevazioni, note_rilevazione, data_rilevazione, username FROM rilevazioni_giornaliere WHERE username = ? ORDER BY data_rilevazione DESC, ID_rilevazioni DESC LIMIT 1";
-        try (Connection conn = DBConnection.getConnection();
-            PreparedStatement pstmtUltima = conn.prepareStatement(queryUltima)) {
-            pstmtUltima.setString(1, username);
-            ResultSet rsUltima = pstmtUltima.executeQuery();
-            if (rsUltima.next()) {
-                String note = rsUltima.getString("note_rilevazione");
-                int id = rsUltima.getInt("ID_rilevazioni");
-                String dataUltima = rsUltima.getString("data_rilevazione");
-
-                if ("note...".equalsIgnoreCase(note)) {
-                    // Aggiorno la nota
-                    String update = "UPDATE rilevazioni_giornaliere SET note_rilevazione = ? WHERE ID_rilevazioni = ?";
-                    try (PreparedStatement updateStmt = conn.prepareStatement(update)) {
-                        updateStmt.setString(1, nuovaNota);
-                        updateStmt.setInt(2, id);
-                        updateStmt.executeUpdate();
-                        UIUtils.showAlert(Alert.AlertType.INFORMATION, "Nota salvata", "Nota salvata nella somministrazione più recente del " + dataUltima);
-                    } catch (Exception e) {
-                        UIUtils.showAlert(Alert.AlertType.ERROR , "Errore 2.1", "Errore salvataggio sintomi .");
-                    }
-                } else {
-                    // Nota già presente → mostro alert
-                    UIUtils.showAlert(Alert.AlertType.WARNING, "Nota non salvata", "Hai già scritto una nota nella somministrazione più recente. Contatta il medico o attendi una nuova somministrazione.");
-                }
-            } else {
-                UIUtils.showAlert(Alert.AlertType.WARNING, "Nessuna rilevazione", "Non è presente alcuna somministrazione su cui salvare la nota.");
-            }
-        }catch (Exception e) {
-            e.printStackTrace();
-            UIUtils.showAlert(Alert.AlertType.ERROR, "Errore 2", "Si è verificato un errore durante il salvataggio della nota.");
+    private boolean aggiornaNota(Connection conn, String nuovaNota, int id) {
+        String update = "UPDATE rilevazioni_giornaliere SET note_rilevazione = ? WHERE ID_rilevazioni = ?";
+        try (PreparedStatement updateStmt = conn.prepareStatement(update)) {
+            updateStmt.setString(1, nuovaNota);
+            updateStmt.setInt(2, id);
+            updateStmt.executeUpdate();
+            UIUtils.showAlert(Alert.AlertType.INFORMATION, "Nota salvata", "Nota aggiornata con successo.");
+            return true;
+        } catch (Exception e) {
+            gestisciErrore("Errore durante l'aggiornamento della nota", e);
+            return false;
         }
+    }
+
+    /**
+     * Questo metodo ha lo scopo di gestire gli errori
+     * @param messaggio - messaggio errore
+     * @param e
+     */
+    private void gestisciErrore(String messaggio, Exception e) {
+        e.printStackTrace();  // Puoi loggare anche l'errore per debug
+        UIUtils.showAlert(Alert.AlertType.ERROR, "Errore", messaggio + " Dettagli: " + e.getMessage());
     }
 
 }

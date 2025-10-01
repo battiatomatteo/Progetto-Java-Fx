@@ -56,7 +56,7 @@ public class LogInController {
     private void handleLogin() {
         String username = userField.getText();
         String password = passField.getText();
-        if (UIUtils.authenticate(username, password, 0)) {
+        if (UIUtils.authenticate(username, password)) {
             messageLabel.setText("Accesso riuscito!");
             String tipo_utente = getTipoUtente(username);
 
@@ -66,8 +66,7 @@ public class LogInController {
                     messageLabel.setText("Tipo di utente non trovato.");
                 } else {
 
-                    SessionManager.currentUser = username;
-                    SessionManager.currentRole = tipo_utente;
+                    SessionManager.signIn(username,tipo_utente);
 
                     if (tipo_utente.equals("paziente")) {
                         new PatientPageView().start(stage);

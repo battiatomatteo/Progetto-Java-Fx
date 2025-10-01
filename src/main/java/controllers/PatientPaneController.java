@@ -109,7 +109,6 @@ public class PatientPaneController {
             }
         });
 
-
         searchButton.setOnAction(e -> searchTerapie());
         addFarmacoButton.setOnAction(e -> aggiungiTerapia());
         deleteButton.setOnAction(e -> eliminaTerapia());
@@ -132,8 +131,13 @@ public class PatientPaneController {
             UIUtils.showAlert(Alert.AlertType.WARNING, "Nessuna selezione", "Inserire un utente prima di eseguire la ricerca.");
             return;
         }
-        if (!UIUtils.authenticate(username, "", 1)) {
+        int controlloAutenticazione = UIUtils.checkPatient(username, SessionManager.getCurrentUser());
+        if (controlloAutenticazione == -1) {
             UIUtils.showAlert(Alert.AlertType.ERROR, "Errore di ricerca", "Paziente non trovato.");
+            return;
+        }
+        else if(controlloAutenticazione == -2){
+            UIUtils.showAlert(Alert.AlertType.ERROR, "Errore di ricerca", "Il medico attuale non può accedere alla cartella del paziente");
             return;
         }
         // label che si possono vedere una volta che il paziente inserito viene trovato nel database
@@ -334,13 +338,13 @@ public class PatientPaneController {
     @FXML
     private void openChat() throws IOException {
         // Verifico che l'utente sia loggato
-        if (SessionManager.currentUser == null || SessionManager.currentRole == null) {
+        if (SessionManager.getCurrentUser() == null || SessionManager.getCurrentRole() == null) {
             System.out.println("Errore: utente non loggato o ruolo non definito.");
             return;
         }
 
         // Verifico che il ruolo sia effettivamente "doctor"
-        if (!SessionManager.currentRole.equals("medico")) {
+        if (!SessionManager.getCurrentRole().equals("medico")) {
             System.out.println("Accesso negato: solo i medici possono aprire questa chat.");
             return;
         }
@@ -355,9 +359,9 @@ public class PatientPaneController {
 
         // Ottieni il controller della chat e inizializza la conversazione
         ChatController chatController = loader.getController();
-        chatController.initializeChat(SessionManager.currentUser, selectedPatient);
+        chatController.initializeChat(SessionManager.getCurrentUser(), selectedPatient);
 
-        dao.cambioVisualizzato(SessionManager.currentUser, usernameInput.getText());
+        dao.cambioVisualizzato(SessionManager.getCurrentUser(), usernameInput.getText());
 
         // Crea una nuova finestra per la chat
         Stage stage = new Stage();
