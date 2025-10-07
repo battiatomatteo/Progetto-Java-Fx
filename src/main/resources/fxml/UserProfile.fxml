@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+
+<StackPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="controllers.UserProfileController"
+            stylesheets="/css/user-profile.css"
+            prefWidth="600" prefHeight="400">
+    <VBox spacing="10">
+        <HBox>
+            <GridPane hgap="10" vgap="10">
+                <!-- Intestazione -->
+                <HBox spacing="20" alignment="CENTER_LEFT"  GridPane.columnIndex="1" GridPane.rowIndex="1">
+                    <Label text="Profilo Utente" styleClass="header-label"/>
+                    <Region HBox.hgrow="ALWAYS"/>
+                </HBox>
+
+                <!-- Contenuto centrale -->
+                <GridPane hgap="15" vgap="15"  GridPane.columnIndex="1" GridPane.rowIndex="5">
+                    <!-- Immagine profilo -->
+                    <ImageView fx:id="profileImage" fitWidth="120" fitHeight="120" GridPane.columnIndex="0" GridPane.rowIndex="0" GridPane.rowSpan="4"/>
+
+                    <Label text="Nome:" GridPane.columnIndex="1" GridPane.rowIndex="0"/>
+                    <Label fx:id="nomeLabel" GridPane.columnIndex="2" GridPane.rowIndex="0"/>
+
+                    <Label text="Cognome:" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+                    <Label fx:id="cognomeLabel" GridPane.columnIndex="2" GridPane.rowIndex="1"/>
+
+                    <Label text="Email:" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
+                    <Label fx:id="emailLabel" GridPane.columnIndex="2" GridPane.rowIndex="2"/>
+
+                    <Label text="Telefono:" GridPane.columnIndex="1" GridPane.rowIndex="3"/>
+                    <Label fx:id="telefonoLabel" GridPane.columnIndex="2" GridPane.rowIndex="3"/>
+
+                    <Label text="Tipo utente:" GridPane.columnIndex="1" GridPane.rowIndex="4"/>
+                    <Label fx:id="tipoUtenteLabel" GridPane.columnIndex="2" GridPane.rowIndex="4"/>
+
+                    <Label text="Info utente:" GridPane.columnIndex="1" GridPane.rowIndex="5"/>
+                    <Label fx:id="infoLabel" GridPane.columnIndex="2" GridPane.rowIndex="5"/>
+                </GridPane>
+
+                <!-- Footer -->
+                <HBox spacing="10" alignment="CENTER_RIGHT"  GridPane.columnIndex="1" GridPane.rowIndex="10" >
+                    <Button text="Modifica Profilo" onAction="#handleEdit"/>
+                </HBox>
+            </GridPane>
+        </HBox>
+
+        <Region prefHeight="50" style="-fx-background-color: transparent;"/>
+        <fx:include source="footer.fxml"/>
+
+    </VBox>
+</StackPane>

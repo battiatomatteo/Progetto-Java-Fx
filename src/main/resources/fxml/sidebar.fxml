@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+
+<VBox xmlns="http://javafx.com/javafx"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="controllers.SidebarController"
+      fx:id="sidebarContainer"
+      stylesheets="/css/navbar-style.css"
+      prefWidth="200"
+      visible="true"
+      translateX="0"
+      alignment="TOP_RIGHT"
+      spacing="20">
+    <Button fx:id="toggleButton" text="☰" onAction="#handleToggle"/>
+    <Label fx:id="dashboardLabel" text="Dashboard"/>
+    <Label fx:id="addLabel" text="Add New"/>
+    <Label fx:id="settingsLabel" text="Settings"/>
+
+</VBox>
