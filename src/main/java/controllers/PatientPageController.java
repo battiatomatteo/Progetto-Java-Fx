@@ -20,6 +20,9 @@ import javafx.stage.Stage;
 import models.*;
 import utility.SessionManager;
 import utility.UIUtils;
+import view.PatientPageView;
+import view.UserProfileView;
+
 import java.time.LocalDate;
 import java.util.*;
 import java.time.DayOfWeek;
@@ -38,7 +41,7 @@ public class PatientPageController {
     @FXML private TableColumn<Pasto, Float> postColumn;
     @FXML private TableColumn<Pasto, String> orarioColumn;
     @FXML private Label messageStart, infoPaziente, IntevalloLabel;
-    @FXML private Button logOutButton, nuovaSomministrazioneButton, salvaSintomi,settimanaSucc, settimanaPrec, meseSucc, mesePrec;
+    @FXML private Button logOutButton, nuovaSomministrazioneButton, salvaSintomi,settimanaSucc, settimanaPrec, meseSucc, mesePrec, provaAccount;
     @FXML private TextArea textArea;
     /**
      * Lista con al suo interno i Pasti
@@ -153,6 +156,14 @@ public class PatientPageController {
         recuperoNotifiche();
 
         Platform.runLater(() -> checkSommOdierne());
+
+        provaAccount.setOnAction(e -> {
+            try {
+                profilo((Stage) provaAccount.getScene().getWindow());
+            } catch (Exception ex) {
+                throw new RuntimeException(ex);
+            }
+        });
     }
 
     /**
@@ -167,7 +178,7 @@ public class PatientPageController {
     }
 
     // questi metodi quando vengono richiamati modificano la data visualizzata e ricaricano il grafico
-        private void datiSettimanaPrecedente() {
+    private void datiSettimanaPrecedente() {
         dataAttuale = dataAttuale.minusWeeks(1);
         ricaricaDatiGrafico();
     }
@@ -443,6 +454,7 @@ public class PatientPageController {
         if(! s[0].isEmpty()) {
             // warning all'utente
             UIUtils.showAlert(Alert.AlertType.WARNING, "Attenzione", "Mancano le rilevazioni delle ore precedenti \n"+ s[0]);
+            /*
             // messaggio al medico
             // data2 è la data di oggi e data1 è la data di 3 giorni prima di data2, controllo se data1 è nel db
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
@@ -462,13 +474,13 @@ public class PatientPageController {
             String patient = SessionManager.getCurrentUser();
             if(dao.messageSommDim( filter, patient)) {
                 // content mess al dottore
-                String content = "Mancano delle somministrazioni da parte di " + patient+ " da almeno 3 giorni . Oggi è il : " + data2;
+                String content = "Mancano delle somministrazioni da parte di " + patient + " da almeno 3 giorni . Oggi è il : " + data2;
                 // invio mess al dottore
 
                 if(! dao.messDuplicato(content, UIUtils.getDoctor(patient), patient)) {
                     dao.messageSomm(content, UIUtils.getDoctor(patient), patient);
                 }
-            }
+            }*/
         }
     }
 
@@ -482,6 +494,11 @@ public class PatientPageController {
         LocalTime time = LocalTime.parse(pasto.getOrario(),DateTimeFormatter.ofPattern("HH:mm") );
         int oraInt = time.getHour();
         return (pasto.getPre() == 0 || pasto.getPost() == 0) && (oraInt < oraAttuale);
+    }
+
+
+    private void profilo(Stage stage) throws Exception {
+        new UserProfileView().start(stage);
     }
 
 }

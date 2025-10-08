@@ -1,12 +1,15 @@
 package DAO;
 
 import javafx.scene.control.Alert;
+import models.ChartFilter;
 import models.Message;
 import utility.UIUtils;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
 /**
@@ -96,5 +99,50 @@ public class DoctorPageDao {
             UIUtils.showAlert(Alert.AlertType.ERROR, "Errore recupero notifiche", "Errore nel recupero delle notifiche .");
             return null;
         }
+    }
+
+    /**
+     * Questo metodo ha lo scopo di
+     * @param doctor
+     * @return
+     */
+    public ArrayList<String> getTooManyDaysWithoutLogIn(String doctor) {
+        ArrayList<String> list = new ArrayList<>();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        LocalDate nuovaData = LocalDate.now().minusDays(2);
+
+        String sql ="SELECT utenti.username , MAX(data_rilevazione) AS data " +
+                "FROM utenti  " +
+                "LEFT JOIN rilevazioni_giornaliere ON (rilevazioni_giornaliere.username = utenti.username) " +
+                "WHERE medico = ? " +
+                "GROUP BY utenti.username " +
+                "ORDER BY data_rilevazione DESC" ;
+
+        try(Connection conn = DBConnection.getConnection();
+            PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, doctor);
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    String dataRilevazione = rs.getString("data");
+                    String username = rs.getString("username");
+
+                    if(dataRilevazione == null) {
+                        System.out.println("il paziente " + username + " non ha registrazioni associate ");
+                        list.add("il paziente " + username + " non ha registrazioni associate ");
+                    }
+                    else if(LocalDate.parse(dataRilevazione, formatter).isBefore(nuovaData)) {
+                        System.out.println("il paziente " + username + " non registra una rilevazione da " +  dataRilevazione);
+                        list.add("il paziente " + username + " non registra una rilevazione da " +  dataRilevazione);
+                    }
+                    else {
+                        System.out.println("il paziente " + username + " non registra una rilevazione da al massimo 3 giorni" );
+                    }
+                }
+            }
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+
+        return list;
     }
 }

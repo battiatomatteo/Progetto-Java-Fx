@@ -1,9 +1,6 @@
 package DAO;
 
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.scene.control.Alert;
-import models.User;
 import utility.UIUtils;
 
 import java.sql.Connection;
@@ -33,6 +30,22 @@ public class UserProfileDao {
         } catch (Exception e) {
             UIUtils.showAlert(Alert.AlertType.ERROR, "Errore sql visual." , "Errore nel recupero dei dati .");
             return null;
+        }
+    }
+
+    public void changeInfo(String nome, String cognome, String telefono, String mail, String user) {
+        String sql = "UPDATE utenti SET nome = ?, cognome = ?, telefono = ?, mail = ? WHERE username = ?";
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)){
+            pstmt.setString(1, nome);
+            pstmt.setString(2, cognome);
+            pstmt.setString(3, telefono);
+            pstmt.setString(4, mail);
+            pstmt.setString(5, user);
+            pstmt.executeUpdate();
+            UIUtils.showAlert(Alert.AlertType.INFORMATION, "Dati salvati", "I dati nuovi sono stati salvati con successo.");
+        } catch (Exception e) {
+            UIUtils.showAlert(Alert.AlertType.ERROR, "Errore." ,"Errore durante il salvataggio dei nuovi dati ");
         }
     }
 }

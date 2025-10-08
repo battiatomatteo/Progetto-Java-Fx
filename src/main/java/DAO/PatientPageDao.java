@@ -301,7 +301,7 @@ public class PatientPageDao {
      * @param conn - connessione
      * @param nuovaNota - nuova nota da inserire
      * @param id - id rilevazioni
-     * @return boolean - valore booleano, true nel caso il sintomo è stato aggiornato , false altrimenti
+     * @return boolean - valore booleano, true nel caso il sintomo è stato aggiornato, false altrimenti
      */
     private boolean aggiornaNota(Connection conn, String nuovaNota, int id) {
         String update = "UPDATE rilevazioni_giornaliere SET note_rilevazione = ? WHERE ID_rilevazioni = ?";

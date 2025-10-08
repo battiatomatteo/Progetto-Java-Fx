@@ -11,10 +11,13 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import models.ChartFilter;
 import models.Terapia;
 import utility.SessionManager;
 import utility.UIUtils;
 import java.io.IOException;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
 /**
@@ -128,15 +131,18 @@ public class DoctorPageController {
      */
     private void sendAllMess(String username){
         dao.sendAllMess(username, areaMessAll.getText());
+        // svuota la text area dopo l'invio
+        areaMessAll.clear();
     }
 
     /**
-     * Questo metodo ha lo scopo di recuperare le notifiche da mostrare al medico , se ha nnuovi messaggi non letti.
+     * Questo metodo ha lo scopo di recuperare le notifiche da mostrare al medico , se ha nuovi messaggi non letti.
      * @see DAO.DoctorPageDao
      * @see utility.SessionManager
      */
     private void recuperoNotifiche(){
         ArrayList<String> listaNotifiche = dao.recuperoNotifica(SessionManager.getCurrentUser());
+        listaNotifiche.addAll(dao.getTooManyDaysWithoutLogIn(SessionManager.getCurrentUser()));
         listaNotifiche.forEach(this::aggiungiNotifica);
     }
 

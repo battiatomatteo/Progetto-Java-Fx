@@ -57,6 +57,8 @@
                 </GridPane>
             </HBox>
 
+            <Button fx:id="provaAccount" text="Il mio profilo" />
+
             <Region prefHeight="50" style="-fx-background-color: transparent;"/>
             <fx:include source="footer.fxml"/>
 

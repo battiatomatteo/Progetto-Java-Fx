@@ -41,8 +41,26 @@
                     <Label fx:id="infoLabel" GridPane.columnIndex="2" GridPane.rowIndex="5"/>
                 </GridPane>
 
+                <GridPane hgap="15" vgap="15" fx:id="infoN" GridPane.columnIndex="1" GridPane.rowIndex="10">
+                    <!-- Immagine profilo -->
+
+                    <Label text="Nome:" GridPane.columnIndex="1" GridPane.rowIndex="0"/>
+                    <TextField fx:id="nomeLabelN" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+
+                    <Label text="Cognome:" GridPane.columnIndex="2" GridPane.rowIndex="0"/>
+                    <TextField fx:id="cognomeLabelN" GridPane.columnIndex="2" GridPane.rowIndex="1"/>
+
+                    <Label text="Email:" GridPane.columnIndex="3" GridPane.rowIndex="0"/>
+                    <TextField fx:id="emailLabelN" GridPane.columnIndex="3" GridPane.rowIndex="1"/>
+
+                    <Label text="Telefono:" GridPane.columnIndex="4" GridPane.rowIndex="0"/>
+                    <TextField fx:id="telefonoLabelN" GridPane.columnIndex="4" GridPane.rowIndex="1"/>
+
+                    <Button text="Salva" onAction="#saveNewInfo" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
+                </GridPane>
+
                 <!-- Footer -->
-                <HBox spacing="10" alignment="CENTER_RIGHT"  GridPane.columnIndex="1" GridPane.rowIndex="10" >
+                <HBox spacing="10" alignment="CENTER_RIGHT"  GridPane.columnIndex="1" GridPane.rowIndex="13" >
                     <Button text="Modifica Profilo" onAction="#handleEdit"/>
                 </HBox>
             </GridPane>

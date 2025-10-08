@@ -3,48 +3,52 @@ package controllers;
 import DAO.UserProfileDao;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.GridPane;
 import utility.SessionManager;
 
 import java.util.ArrayList;
 
 public class UserProfileController {
 
-    @FXML private Label nomeLabel;
-    @FXML private Label cognomeLabel;
-    @FXML private Label emailLabel;
-    @FXML private Label telefonoLabel;
-    @FXML private Label tipoUtenteLabel, infoLabel;
+    @FXML private Label nomeLabel, tipoUtenteLabel, infoLabel, telefonoLabel, emailLabel, cognomeLabel;
     @FXML private ImageView profileImage;
-
+    @FXML private GridPane infoN;
+    @FXML private TextField nomeLabelN, telefonoLabelN, emailLabelN, cognomeLabelN;
     private UserProfileDao dao = new UserProfileDao();
 
     @FXML
     public void initialize() {
-        // Esempio dati utente
-
 
         // Immagine profilo
         Image image = new Image("/img/unnamed.jpg");
         profileImage.setImage(image);
 
-        infoUser();
-    }
+        infoN.setVisible(false);
 
-    @FXML
-    private void handleLogout() {
-        // TODO: logica di logout
+        infoUser();
     }
 
     @FXML
     private void handleEdit() {
         // TODO: apri form modifica profilo
+        infoN.setVisible(true);
+
+    }
+
+    @FXML
+    private void saveNewInfo(){
+        String username = SessionManager.getCurrentUser();
+        dao.changeInfo(nomeLabelN.getText(), cognomeLabelN.getText(), telefonoLabelN.getText(), emailLabelN.getText(), username);
+        infoUser();
+        infoN.setVisible(false);
     }
 
     private void infoUser(){
-
-        ArrayList<String> list = dao.caricoInfoUtente("p");
+        String username = SessionManager.getCurrentUser();
+        ArrayList<String> list = dao.caricoInfoUtente(username);
 
         if (list != null && list.size() == 6) {
             nomeLabel.setText(list.get(0));
