@@ -34,6 +34,8 @@
                     <Label text="Telefono:" GridPane.columnIndex="1" GridPane.rowIndex="3"/>
                     <Label fx:id="telefonoLabel" GridPane.columnIndex="2" GridPane.rowIndex="3"/>
 
+                    <Button text="Cambio immagine" onAction="#newImg" GridPane.columnIndex="0" GridPane.rowIndex="4"/>
+
                     <Label text="Tipo utente:" GridPane.columnIndex="1" GridPane.rowIndex="4"/>
                     <Label fx:id="tipoUtenteLabel" GridPane.columnIndex="2" GridPane.rowIndex="4"/>
 
@@ -57,6 +59,7 @@
                     <TextField fx:id="telefonoLabelN" GridPane.columnIndex="4" GridPane.rowIndex="1"/>
 
                     <Button text="Salva" onAction="#saveNewInfo" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
+                    <Button text="Annulla" onAction="#annulla" GridPane.columnIndex="2" GridPane.rowIndex="2"/>
                 </GridPane>
 
                 <!-- Footer -->
