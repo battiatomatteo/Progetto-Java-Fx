@@ -14,7 +14,7 @@ public class UserProfileView extends Application {
         Parent root = FXMLLoader.load(getClass().getResource("/fxml/UserProfile.fxml"));
         stage.setTitle("User Dashboard");
         stage.getIcons().add(new Image(getClass().getResourceAsStream("/img/icona_dottore.jpg")));
-        stage.setScene(new Scene(root, 800, 600));
+        stage.setScene(new Scene(root, 900, 660));
         stage.show();
     }
 

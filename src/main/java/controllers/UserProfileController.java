@@ -1,7 +1,6 @@
 package controllers;
 
 import DAO.UserProfileDao;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
@@ -12,22 +11,24 @@ import javafx.scene.layout.GridPane;
 import javafx.stage.FileChooser;
 import utility.SessionManager;
 import utility.UIUtils;
-
+import java.awt.*;
 import java.io.File;
 import java.io.FileInputStream;
 import java.util.ArrayList;
+import javafx.scene.control.Button;
 
 public class UserProfileController {
 
     @FXML private Label nomeLabel, tipoUtenteLabel, infoLabel, telefonoLabel, emailLabel, cognomeLabel;
     @FXML private ImageView profileImage;
-    @FXML private GridPane infoN;
+    @FXML private GridPane infoN, newPass;
     @FXML private TextField nomeLabelN, telefonoLabelN, emailLabelN, cognomeLabelN;
+    @FXML private Button editProf, newPassB;
     private UserProfileDao dao = new UserProfileDao();
 
     @FXML
     public void initialize() {
-
+        newPass.setVisible(false);
         infoN.setVisible(false);
         infoUser();
 
@@ -47,6 +48,7 @@ public class UserProfileController {
     @FXML
     private void handleEdit() {
         infoN.setVisible(true);
+        newPassB.setVisible(false);
     }
 
     @FXML
@@ -108,6 +110,7 @@ public class UserProfileController {
     @FXML
     public void annulla() {
         infoN.setVisible(false);
+        newPassB.setVisible(true);
     }
 
     @FXML
@@ -127,5 +130,29 @@ public class UserProfileController {
                 UIUtils.showAlert(Alert.AlertType.ERROR,"Errore", "Impossibile salvare l'immagine.");
             }
         }
+    }
+
+    public void handleBack() {
+    }
+
+    public void handleHelp() {
+    }
+
+    public void handleLogout() {
+    }
+
+    @FXML
+    private void newPassword() {
+        newPass.setVisible(true);
+        editProf.setVisible(false);
+    }
+
+
+    public void invioRichiesta() {
+    }
+
+    public void annullaP() {
+        newPass.setVisible(false);
+        editProf.setVisible(true);
     }
 }

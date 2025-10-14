@@ -24,7 +24,7 @@
             <columns>
                 <TableColumn fx:id="usernameCol" text="Username"/>
                 <TableColumn fx:id="tipoUtenteCol" text="Tipo Utente"/>
-                <TableColumn fx:id="passwordCol" text="Password"/>
+                <!--<TableColumn fx:id="passwordCol" text="Password"/>-->
                 <TableColumn fx:id="medicoCol" text="Medico"/>
                 <TableColumn fx:id="infoCol" text="Informazioni" minWidth="210"/>
             </columns>
@@ -32,7 +32,7 @@
 
         <!-- Bottone elimina -->
         <Button fx:id="cancelButton" text="Elimina" GridPane.columnIndex="0" GridPane.rowIndex="8"/>
-
+            <Button fx:id="profiloButton" text="Profilo" GridPane.columnIndex="1" GridPane.rowIndex="8"/>
         <!-- Sezione aggiunta utente -->
         <Label text="Se si desidera aggiungere un nuovo utente, compilare i campi sottostanti:" GridPane.columnIndex="0" GridPane.rowIndex="1" GridPane.columnSpan="12"/>
         <Label text="Username:" GridPane.columnIndex="0" GridPane.rowIndex="2"/>

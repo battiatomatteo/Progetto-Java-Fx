@@ -1,12 +1,14 @@
 package controllers;
 
 import DAO.AdminDao;
+import DAO.PasswordMigrator;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import models.User;
 import utility.UIUtils;
+import view.UserProfileView;
 
 /**
  * Controller della pagina Admin.
@@ -15,7 +17,7 @@ import utility.UIUtils;
  */
 public class AdminPageController {
 
-    @FXML private Button logoutButton, addButton, cancelButton, updateButton;
+    @FXML private Button logoutButton, addButton, cancelButton, updateButton, profiloButton;
     @FXML private TextField usernameInput, medicoInput;
     @FXML private ComboBox<String> tipoUtenteInput;
     @FXML private PasswordField passwordInput;
@@ -26,6 +28,7 @@ public class AdminPageController {
      * @see DAO.AdminDao
      */
     private AdminDao dao = new AdminDao();
+    private PasswordMigrator passwordMigrator = new PasswordMigrator();
 
     /**
      * Questo metodo ha lo scopo di inizializzare.
@@ -35,14 +38,14 @@ public class AdminPageController {
     private void initialize() {
         usernameCol.setCellValueFactory(cellData -> cellData.getValue().usernameProperty());
         tipoUtenteCol.setCellValueFactory(cellData -> cellData.getValue().tipo_utenteProperty());
-        passwordCol.setCellValueFactory(cellData -> cellData.getValue().passwordProperty());
+        //passwordCol.setCellValueFactory(cellData -> cellData.getValue().passwordProperty());
         medicoCol.setCellValueFactory(cellData -> cellData.getValue().medicoProperty());
         infoCol.setCellValueFactory(cellData -> cellData.getValue().infoPazienteProperty());
         table.setItems(dao.caricaUtentiDao());         // Carica utenti dal database
 
         tipoUtenteInput.getItems().addAll("medico", "paziente", "admin");
 
-
+        passwordMigrator.criptaPasswordEsistenti();
 
         //Ogni volta che cambia la selezione della comboBox, il listener controlla il nuovo valore (newVal)
         tipoUtenteInput.valueProperty().addListener((obs, oldVal, newVal) -> {
@@ -60,6 +63,7 @@ public class AdminPageController {
         addButton.setOnAction(e -> addUser());
         cancelButton.setOnAction(e -> deleteUser());
         updateButton.setOnAction(e -> updateUser());
+        profiloButton.setOnAction(e -> mostraProfilo());
 
         // Colonna con testo multilinea (wrapping)
         infoCol.setCellFactory(tc -> {
@@ -166,6 +170,21 @@ public class AdminPageController {
             confirm.setContentText("Sei sicuro di voler eliminare l'utente " + selectedUser.getUsername() + "?");
             if (confirm.showAndWait().orElse(ButtonType.CANCEL) == ButtonType.OK) {
                 dao.eliminaUtenteDao(selectedUser);
+            }
+        } else {
+            UIUtils.showAlert(Alert.AlertType.WARNING, "Nessuna selezione", "Seleziona un utente dalla tabella da eliminare.");
+        }
+    }
+
+    private void mostraProfilo(){
+        User selectedUser = table.getSelectionModel().getSelectedItem();
+        if (selectedUser != null) {
+            Alert confirm = new Alert(Alert.AlertType.CONFIRMATION);
+            confirm.setTitle("Conferma visione profilo");
+            confirm.setHeaderText(null);
+            confirm.setContentText("Sei sicuro di voler visionare il profilo di : " + selectedUser.getUsername() + "?");
+            if (confirm.showAndWait().orElse(ButtonType.CANCEL) == ButtonType.OK) {
+
             }
         } else {
             UIUtils.showAlert(Alert.AlertType.WARNING, "Nessuna selezione", "Seleziona un utente dalla tabella da eliminare.");

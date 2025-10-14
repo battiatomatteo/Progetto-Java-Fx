@@ -8,6 +8,7 @@ import utility.UIUtils;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import org.mindrot.jbcrypt.BCrypt;
 
 /**
  * Classe che gestisce l'accesso al database per la pagina Admin
@@ -90,12 +91,16 @@ public class AdminDao {
             UIUtils.showAlert(Alert.AlertType.ERROR, "Errore :", "Il medico da lei inserito non esiste");
             return null;
         }
+
+        // 🔐 Cripta la password prima di salvarla
+        String hashedPassword = BCrypt.hashpw(user.getPassword(), BCrypt.gensalt());
+
         String sql = "INSERT INTO utenti(username, tipo_utente, password, medico, informazioni) VALUES (?, ?, ?, ?, ?)";
         try (Connection conn = DBConnection.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
             pstmt.setString(1, user.getUsername());
             pstmt.setString(2, user.getTipoUtente());
-            pstmt.setString(3, user.getPassword());
+            pstmt.setString(3, hashedPassword);
             if(user.getTipoUtente().equals("medico") || user.getTipoUtente().equals("admin")) {
                 pstmt.setString(4, "NULL");
             }
@@ -181,4 +186,8 @@ public class AdminDao {
             return false;
         }
     }
+
+
+
+
 }
