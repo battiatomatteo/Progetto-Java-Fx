@@ -1,5 +1,6 @@
 package controllers;
 
+import DAO.UIUtilsDao;
 import DAO.UserProfileDao;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
@@ -9,6 +10,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
 import javafx.stage.FileChooser;
+import javafx.stage.Stage;
 import utility.SessionManager;
 import utility.UIUtils;
 import java.awt.*;
@@ -23,11 +25,12 @@ public class UserProfileController {
     @FXML private ImageView profileImage;
     @FXML private GridPane infoN, newPass;
     @FXML private TextField nomeLabelN, telefonoLabelN, emailLabelN, cognomeLabelN;
-    @FXML private Button editProf, newPassB;
+    @FXML private Button editProf, newPassB, logOutButton, backb;
     private UserProfileDao dao = new UserProfileDao();
+    private UIUtils daoU = new UIUtils();
 
     @FXML
-    public void initialize() {
+    public void initialize() throws Exception {
         newPass.setVisible(false);
         infoN.setVisible(false);
         infoUser();
@@ -43,6 +46,18 @@ public class UserProfileController {
             e.printStackTrace();
             profileImage.setImage(new Image("/img/unnamed.jpg"));
         }
+
+        String nome = SessionManager.getCurrentUser();
+        backb.setOnAction(e -> {
+            try {
+                daoU.handleBack(nome, (Stage) backb.getScene().getWindow());
+            } catch (Exception ex) {
+                throw new RuntimeException(ex);
+            }
+        });
+
+        // Come funziona: Quando clicco sul bottone, prendi la finestra corrente e passala a UIUtils.LogOutButton() per eseguire il logout
+        logOutButton.setOnAction(e -> UIUtils.LogOutButton((Stage) logOutButton.getScene().getWindow()));
     }
 
     @FXML
@@ -132,14 +147,22 @@ public class UserProfileController {
         }
     }
 
-    public void handleBack() {
-    }
+    /**public void handleBack() throws Exception {
+        Stage stage = (Stage) backb.getScene().getWindow();
 
-    public void handleHelp() {
-    }
+        String nome = SessionManager.getCurrentUser();
+        String tipo_utente = daoU.tipoUtente(nome);
 
-    public void handleLogout() {
-    }
+        SessionManager.signIn(nome,tipo_utente);
+
+        if (tipo_utente.equals("paziente")) {
+            new PatientPageView().start(stage);
+        } else if (tipo_utente.equals("medico")) {
+            new DoctorPageView().start(stage);
+        } else {
+            new AdminPageView().start(stage);
+        }
+    }**/
 
     @FXML
     private void newPassword() {

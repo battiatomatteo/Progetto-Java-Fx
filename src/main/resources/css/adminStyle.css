@@ -92,3 +92,16 @@
     -fx-border-color: #ccc;
     -fx-border-radius: 5;
 }
+
+.sidebar-button {
+    -fx-background-color: #34495e;
+    -fx-text-fill: white;
+    -fx-font-size: 14px;
+    -fx-pref-width: 120px;
+    -fx-pref-height: 40px;
+    -fx-background-radius: 5;
+}
+
+.sidebar-button:hover {
+    -fx-background-color: #3d566e;
+}

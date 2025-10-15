@@ -1,10 +1,4 @@
 
-
-.root {
-    -fx-font-family: "Segoe UI", sans-serif;
-    -fx-background-color: #f8fafd;
-}
-
 .label {
     -fx-font-size: 13px;
     -fx-text-fill: #333;
@@ -60,6 +54,17 @@
 }
 
 
+.sidebar-button {
+    -fx-background-color: #34495e !important;
+    -fx-text-fill: white !important;
+    -fx-font-size: 14px !important;
+    -fx-pref-width: 120px !important;
+    -fx-pref-height: 40px !important;
+    -fx-background-radius: 5 !important;
+}
 
+.sidebar-button:hover {
+    -fx-background-color: #3d566e !important;
+}
 
 

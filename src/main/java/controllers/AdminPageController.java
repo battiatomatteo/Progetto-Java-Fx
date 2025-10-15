@@ -17,7 +17,7 @@ import view.UserProfileView;
  */
 public class AdminPageController {
 
-    @FXML private Button logoutButton, addButton, cancelButton, updateButton, profiloButton;
+    @FXML private Button logOutButton, addButton, cancelButton, updateButton, profiloButton;
     @FXML private TextField usernameInput, medicoInput;
     @FXML private ComboBox<String> tipoUtenteInput;
     @FXML private PasswordField passwordInput;
@@ -58,7 +58,7 @@ public class AdminPageController {
         });
 
         // Come funziona: Quando clicco sul bottone, prendi la finestra corrente e passala a UIUtils.LogOutButton() per eseguire il logout
-        logoutButton.setOnAction(e -> UIUtils.LogOutButton((Stage) logoutButton.getScene().getWindow()));
+        logOutButton.setOnAction(e -> UIUtils.LogOutButton((Stage) logOutButton.getScene().getWindow()));
 
         addButton.setOnAction(e -> addUser());
         cancelButton.setOnAction(e -> deleteUser());

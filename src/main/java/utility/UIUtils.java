@@ -14,7 +14,11 @@ import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import models.Terapia;
+import view.AdminPageView;
+import view.DoctorPageView;
 import view.LogInView;
+import view.PatientPageView;
+
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -251,6 +255,19 @@ public class UIUtils {
         }
         catch ( NumberFormatException e) {
             return false;
+        }
+    }
+
+    public static void handleBack(String nome, Stage stage) throws Exception {
+
+        String tipo_utente = dao.tipoUtente(nome);
+        SessionManager.signIn(nome,tipo_utente);
+        if (tipo_utente.equals("paziente")) {
+            new PatientPageView().start(stage);
+        } else if (tipo_utente.equals("medico")) {
+            new DoctorPageView().start(stage);
+        } else {
+            new AdminPageView().start(stage);
         }
     }
 
