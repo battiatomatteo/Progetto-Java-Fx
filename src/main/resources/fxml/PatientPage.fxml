@@ -17,7 +17,7 @@
             <Button text="Logout" fx:id="logOutButton" styleClass="sidebar-button"/>
             <Button fx:id="provaAccount" text="My profile" styleClass="sidebar-button" />
             <StackPane fx:id="notificationButton" >
-                <Button text="Chat" onAction="#openChat" styleClass="sidebar-button"/>
+                <Button text="Chat" fx:id="chatB" onAction="#openChat" styleClass="sidebar-button"/>
                 <Label fx:id="notificationBadge" text="0"
                        visible="false"
                        StackPane.alignment="TOP_RIGHT"/>

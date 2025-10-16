@@ -5,7 +5,7 @@
 <?import javafx.scene.control.*?>
 
 <StackPane fx:id="mainScrollPane" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml"
-            fx:controller="controllers.DoctorPageController"  stylesheets="/css/patientPaneStyle.css" >
+            fx:controller="controllers.DoctorPageController"  stylesheets="/css/doctor-page.css" >
 
     <HBox spacing="0">
         <!-- 🔹 Sidebar laterale -->

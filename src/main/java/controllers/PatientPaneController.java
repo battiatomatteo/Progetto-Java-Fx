@@ -367,7 +367,7 @@ public class PatientPaneController {
         Stage stage = new Stage();
         stage.setTitle("Chat con " + selectedPatient);
         stage.getIcons().add(new Image(getClass().getResourceAsStream("/img/icona_dottore.jpg")));
-        stage.setScene(new Scene(root, 400, 350));
+        stage.setScene(new Scene(root, 500, 400));
         stage.show();
 
     }

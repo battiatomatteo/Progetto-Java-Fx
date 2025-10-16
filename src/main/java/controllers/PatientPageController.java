@@ -20,6 +20,7 @@ import javafx.stage.Stage;
 import models.*;
 import utility.SessionManager;
 import utility.UIUtils;
+import view.ChatPageView;
 import view.PatientPageView;
 import view.UserProfileView;
 
@@ -41,7 +42,7 @@ public class PatientPageController {
     @FXML private TableColumn<Pasto, Float> postColumn;
     @FXML private TableColumn<Pasto, String> orarioColumn;
     @FXML private Label messageStart, infoPaziente, IntevalloLabel;
-    @FXML private Button logOutButton, nuovaSomministrazioneButton, salvaSintomi,settimanaSucc, settimanaPrec, meseSucc, mesePrec, provaAccount;
+    @FXML private Button logOutButton, nuovaSomministrazioneButton, salvaSintomi, settimanaSucc, settimanaPrec, meseSucc, mesePrec, provaAccount, chatB;
     @FXML private TextArea textArea;
     /**
      * Lista con al suo interno i Pasti
@@ -231,7 +232,7 @@ public class PatientPageController {
      * @see <a href="https://github.com/battiatomatteo/Progetto-Java-Fx/blob/main/src/main/resources/img/icona_dottore.jpg">icona_dottore.jpg</a>
      */
     @FXML
-    private void openChat() throws IOException {
+    private void openChat() throws Exception {
         // Verifico che l'utente sia loggato
         if (SessionManager.getCurrentUser() == null || SessionManager.getCurrentRole() == null) {
             System.out.println("Errore: utente non loggato o ruolo non definito.");
@@ -261,8 +262,10 @@ public class PatientPageController {
         Stage stage = new Stage();
         stage.setTitle("Chat con " + assignedDoctor);
         stage.getIcons().add(new Image(getClass().getResourceAsStream("/img/icona_dottore.jpg")));
-        stage.setScene(new Scene(root, 400, 350));
+        new ChatPageView().start(stage);
+        stage.setScene(new Scene(root, 500, 400));
         stage.show();
+
     }
 
     /**

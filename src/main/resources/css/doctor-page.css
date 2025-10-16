@@ -45,6 +45,7 @@
     -fx-alignment: CENTER-LEFT;
 }
 
+/*
 .footer {
     -fx-background-color: #5c9ded;
     -fx-padding: 10;
@@ -52,7 +53,7 @@
     -fx-border-color: #ccc;
     -fx-border-width: 1px 0 0 0;
 }
-
+*/
 
 .sidebar-button {
     -fx-background-color: #34495e !important;
