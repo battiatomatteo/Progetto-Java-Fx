@@ -28,15 +28,37 @@ public class UserProfileController {
     @FXML private Button editProf, newPassB, logOutButton, backb;
     private UserProfileDao dao = new UserProfileDao();
     private UIUtils daoU = new UIUtils();
+    private String profiloUsername;
 
     @FXML
     public void initialize() throws Exception {
         newPass.setVisible(false);
         infoN.setVisible(false);
-        infoUser();
 
+        String username = (profiloUsername != null) ? profiloUsername : SessionManager.getCurrentUser();
+        infoUser(username);
+        caricaImmagine(username);
+
+        backb.setOnAction(e -> {
+            try {
+                daoU.handleBack(username, (Stage) backb.getScene().getWindow());
+            } catch (Exception ex) {
+                throw new RuntimeException(ex);
+            }
+        });
+
+        logOutButton.setOnAction(e -> UIUtils.LogOutButton((Stage) logOutButton.getScene().getWindow()));
+    }
+
+    public void setProfiloUsername(String username) {
+        this.profiloUsername = username;
+        infoUser(username);
+        caricaImmagine(username);
+    }
+
+    private void caricaImmagine(String username) {
         try {
-            Image img = dao.caricaImmagineProfilo(SessionManager.getCurrentUser());
+            Image img = dao.caricaImmagineProfilo(username);
             if (img != null && img.getWidth() > 0) {
                 profileImage.setImage(img);
             } else {
@@ -46,18 +68,6 @@ public class UserProfileController {
             e.printStackTrace();
             profileImage.setImage(new Image("/img/unnamed.jpg"));
         }
-
-        String nome = SessionManager.getCurrentUser();
-        backb.setOnAction(e -> {
-            try {
-                daoU.handleBack(nome, (Stage) backb.getScene().getWindow());
-            } catch (Exception ex) {
-                throw new RuntimeException(ex);
-            }
-        });
-
-        // Come funziona: Quando clicco sul bottone, prendi la finestra corrente e passala a UIUtils.LogOutButton() per eseguire il logout
-        logOutButton.setOnAction(e -> UIUtils.LogOutButton((Stage) logOutButton.getScene().getWindow()));
     }
 
     @FXML
@@ -95,7 +105,7 @@ public class UserProfileController {
         }
 
         dao.changeInfo(newName, newCognome, newTelefono, newEmail, username);
-        infoUser();
+        infoUser(username);
 
         telefonoLabelN.clear();
         emailLabelN.clear();
@@ -105,8 +115,8 @@ public class UserProfileController {
         infoN.setVisible(false);
     }
 
-    private void infoUser(){
-        String username = SessionManager.getCurrentUser();
+    private void infoUser(String username){
+        //String username = SessionManager.getCurrentUser();
         ArrayList<String> list = dao.caricoInfoUtente(username);
 
         if (list != null && list.size() == 6) {
@@ -119,7 +129,6 @@ public class UserProfileController {
         } else {
             System.out.println("Dati utente incompleti o null");
         }
-
     }
 
     @FXML
@@ -146,23 +155,6 @@ public class UserProfileController {
             }
         }
     }
-
-    /**public void handleBack() throws Exception {
-        Stage stage = (Stage) backb.getScene().getWindow();
-
-        String nome = SessionManager.getCurrentUser();
-        String tipo_utente = daoU.tipoUtente(nome);
-
-        SessionManager.signIn(nome,tipo_utente);
-
-        if (tipo_utente.equals("paziente")) {
-            new PatientPageView().start(stage);
-        } else if (tipo_utente.equals("medico")) {
-            new DoctorPageView().start(stage);
-        } else {
-            new AdminPageView().start(stage);
-        }
-    }**/
 
     @FXML
     private void newPassword() {

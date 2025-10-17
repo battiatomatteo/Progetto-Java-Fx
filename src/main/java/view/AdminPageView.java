@@ -20,7 +20,7 @@ public class AdminPageView extends Application {
     public void start(Stage primaryStage) throws Exception {
         Parent root = FXMLLoader.load(getClass().getResource("/fxml/AdminPage.fxml"));
         primaryStage.setTitle("Admin Page");
-        primaryStage.setScene(new Scene(root, 800, 500));
+        primaryStage.setScene(new Scene(root, 960, 720));
         primaryStage.show();
     }
 

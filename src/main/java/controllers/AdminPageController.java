@@ -63,7 +63,13 @@ public class AdminPageController {
         addButton.setOnAction(e -> addUser());
         cancelButton.setOnAction(e -> deleteUser());
         updateButton.setOnAction(e -> updateUser());
-        profiloButton.setOnAction(e -> mostraProfilo());
+        profiloButton.setOnAction(e -> {
+            try {
+                mostraProfilo((Stage) profiloButton.getScene().getWindow());
+            } catch (Exception ex) {
+                throw new RuntimeException(ex);
+            }
+        });
 
         // Colonna con testo multilinea (wrapping)
         infoCol.setCellFactory(tc -> {
@@ -176,18 +182,19 @@ public class AdminPageController {
         }
     }
 
-    private void mostraProfilo(){
+    private void mostraProfilo(Stage stage) throws Exception {
         User selectedUser = table.getSelectionModel().getSelectedItem();
         if (selectedUser != null) {
             Alert confirm = new Alert(Alert.AlertType.CONFIRMATION);
             confirm.setTitle("Conferma visione profilo");
             confirm.setHeaderText(null);
-            confirm.setContentText("Sei sicuro di voler visionare il profilo di : " + selectedUser.getUsername() + "?");
-            if (confirm.showAndWait().orElse(ButtonType.CANCEL) == ButtonType.OK) {
+            confirm.setContentText("Sei sicuro di voler visionare il profilo di: " + selectedUser.getUsername() + "?");
 
+            if (confirm.showAndWait().orElse(ButtonType.CANCEL) == ButtonType.OK) {
+                new UserProfileView(selectedUser.getUsername()).start(stage);
             }
         } else {
-            UIUtils.showAlert(Alert.AlertType.WARNING, "Nessuna selezione", "Seleziona un utente dalla tabella da eliminare.");
+            UIUtils.showAlert(Alert.AlertType.WARNING, "Nessuna selezione", "Seleziona un utente dalla tabella.");
         }
     }
 

@@ -501,8 +501,10 @@ public class PatientPageController {
 
 
     private void profilo(Stage stage) throws Exception {
-        new UserProfileView().start(stage);
+        String username = SessionManager.getCurrentUser();
+        new UserProfileView(username).start(stage);
     }
+
 
 }
 
