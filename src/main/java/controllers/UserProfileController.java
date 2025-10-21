@@ -1,6 +1,5 @@
 package controllers;
 
-import DAO.UIUtilsDao;
 import DAO.UserProfileDao;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;

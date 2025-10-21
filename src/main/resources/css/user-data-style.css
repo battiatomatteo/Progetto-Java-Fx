@@ -1,0 +1,75 @@
+.sidebar-button {
+    -fx-background-color: #34495e;
+    -fx-text-fill: white;
+    -fx-font-size: 14px;
+    -fx-pref-width: 120px;
+    -fx-pref-height: 40px;
+    -fx-background-radius: 5;
+}
+
+.sidebar-button:hover {
+    -fx-background-color: #3d566e;
+}
+
+/* TableView */
+.table-view {
+    -fx-background-color: #ffffff;
+    -fx-border-color: #ccd6e0;
+    -fx-border-radius: 5;
+    -fx-background-radius: 5;
+    -fx-table-cell-border-color: #e1e8ee;
+    -fx-font-size: 13px;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.04), 2, 0, 0, 1);
+}
+
+.table-view .column-header-background {
+    -fx-background-color: linear-gradient(to bottom, #e7eff7, #dbe8f1);
+    -fx-border-color: transparent;
+    -fx-background-radius: 5 5 0 0;
+}
+
+.table-column {
+    -fx-alignment: CENTER-LEFT;
+}
+
+/* Stile per l'HBox */
+#HboxBottoniGrafico {
+    -fx-alignment: center; /* Allinea tutto al centro */
+    -fx-padding: 10 0 15 0; /* margini sopra e sotto */
+    -fx-background-color: #f8f9fa; /* grigio chiaro elegante */
+    -fx-spacing: 12px; /* spazio tra i bottoni */
+    -fx-border-color: #dcdcdc;
+    -fx-border-width: 0 0 1 0; /* linea divisoria sotto */
+}
+
+/* Stile generico per i pulsanti */
+#HboxBottoniGrafico .button {
+    -fx-background-color: #1976d2; /* blu principale */
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-font-size: 13px;
+    -fx-padding: 8 14;
+    -fx-background-radius: 20; /* bordi arrotondati */
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.15), 3, 0, 0, 1);
+    -fx-border-width: 0;
+    -fx-transition: 0.3s;
+}
+
+/* Hover effetto */
+#HboxBottoniGrafico .button:hover {
+    -fx-background-color: #1565c0; /* blu un po’ più scuro */
+}
+
+/* Pressed effetto */
+#HboxBottoniGrafico .button:pressed {
+    -fx-background-color: #0d47a1;
+}
+
+/* Label centrale */
+#IntevalloLabel {
+    -fx-font-size: 14px;
+    -fx-text-fill: #333333;
+    -fx-font-weight: bold;
+    -fx-padding: 0 10 0 10;
+}

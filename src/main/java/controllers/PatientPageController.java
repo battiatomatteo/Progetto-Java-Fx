@@ -21,6 +21,7 @@ import models.*;
 import utility.SessionManager;
 import utility.UIUtils;
 import view.ChatPageView;
+import view.DataUserView;
 import view.PatientPageView;
 import view.UserProfileView;
 
@@ -42,7 +43,7 @@ public class PatientPageController {
     @FXML private TableColumn<Pasto, Float> postColumn;
     @FXML private TableColumn<Pasto, String> orarioColumn;
     @FXML private Label messageStart, infoPaziente, IntevalloLabel;
-    @FXML private Button logOutButton, nuovaSomministrazioneButton, salvaSintomi, settimanaSucc, settimanaPrec, meseSucc, mesePrec, provaAccount, chatB;
+    @FXML private Button logOutButton, nuovaSomministrazioneButton, salvaSintomi, settimanaSucc, settimanaPrec, meseSucc, mesePrec, provaAccount, chatB, myData;
     @FXML private TextArea textArea;
     /**
      * Lista con al suo interno i Pasti
@@ -161,6 +162,14 @@ public class PatientPageController {
         provaAccount.setOnAction(e -> {
             try {
                 profilo((Stage) provaAccount.getScene().getWindow());
+            } catch (Exception ex) {
+                throw new RuntimeException(ex);
+            }
+        });
+
+        myData.setOnAction(e -> {
+            try {
+                myDataPage((Stage) provaAccount.getScene().getWindow());
             } catch (Exception ex) {
                 throw new RuntimeException(ex);
             }
@@ -503,6 +512,11 @@ public class PatientPageController {
     private void profilo(Stage stage) throws Exception {
         String username = SessionManager.getCurrentUser();
         new UserProfileView(username).start(stage);
+    }
+
+    private void myDataPage(Stage stage) throws Exception {
+        String username = SessionManager.getCurrentUser();
+        new DataUserView().start(stage);
     }
 
 
