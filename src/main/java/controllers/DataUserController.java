@@ -3,30 +3,51 @@ package controllers;
 import DAO.PatientPaneDao;
 import enums.StatoTerapia;
 import javafx.fxml.FXML;
-import javafx.scene.control.Alert;
-import javafx.scene.control.TableCell;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
+import javafx.scene.control.*;
 import javafx.scene.shape.Circle;
+import javafx.stage.Stage;
 import models.ChartFilter;
 import models.FilterDataSetter;
 import models.Terapia;
 import utility.SessionManager;
 import utility.UIUtils;
+import view.UserProfileView;
+
+import java.time.DayOfWeek;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.TemporalAdjusters;
 
 public class DataUserController {
 
-    private String profiloUsername;
     @FXML private PatientChartController chartIncludeController;
     @FXML private TableView<Terapia> table;
     @FXML private TableColumn<Terapia, String> farmacoCol, assunzioniCol, quantFarCol, noteCol;
     @FXML private TableColumn<Terapia, Integer > terapiaCol;
     @FXML private TableColumn<Terapia, StatoTerapia> statoCol;
+    @FXML private Button logOutButton, backb, provaAccount;
+    @FXML private Label IntevalloLabel;
+    @FXML private Button  settimanaSucc, settimanaPrec, meseSucc, mesePrec;
     /**
      * Oggetto per accesso al database
      * @see DAO.PatientPaneDao
      */
     private PatientPaneDao dao;
+    private UIUtils daoU = new UIUtils();
+
+    /**
+     * Formato della data: anno-mese-giorno
+     */
+    public static final String DATE_FORMAT = "yyyy-MM-dd";
+    /**
+     * Data formattata in base a DATE_FORMAT
+     */
+    private static final DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern(DATE_FORMAT);
+
+    /**
+     * Data attuale
+     */
+    private LocalDate dataAttuale = LocalDate.now().with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY));
 
     @FXML
     private void initialize() {
@@ -56,6 +77,31 @@ public class DataUserController {
             }
         });
         searchTerapie();
+
+        backb.setOnAction(e -> {
+            try {
+                daoU.handleBack(SessionManager.getCurrentUser(), (Stage) backb.getScene().getWindow());
+            } catch (Exception ex) {
+                throw new RuntimeException(ex);
+            }
+        });
+
+        logOutButton.setOnAction(e -> UIUtils.LogOutButton((Stage) logOutButton.getScene().getWindow()));
+
+        provaAccount.setOnAction(e -> {
+            try {
+                profilo((Stage) provaAccount.getScene().getWindow());
+            } catch (Exception ex) {
+                throw new RuntimeException(ex);
+            }
+        });
+
+        settimanaPrec.setOnAction(event -> datiSettimanaPrecedente());
+        settimanaSucc.setOnAction(event -> datiSettimanaSuccessiva());
+        mesePrec.setOnAction(event -> datiMesePrecedente());
+        meseSucc.setOnAction(event -> datiMeseSuccessivo());
+
+        ricaricaDatiGrafico();
     }
 
     @FXML
@@ -66,6 +112,66 @@ public class DataUserController {
         table.setItems(dao.getTerapieList(filter));
         UIUtils.printMessage("inizializzazione in cerca");
         chartIncludeController.setData(username, new ChartFilter(ChartFilter.NO_START_DATE, ChartFilter.NO_END_DATE,ChartFilter.NO_ID )); // passo il nome del paziente
+    }
 
+    private void profilo(Stage stage) throws Exception {
+        String username = SessionManager.getCurrentUser();
+        new UserProfileView(username).start(stage);
+    }
+
+    /**
+     * Questo metodo ha lo scopo di ricaricare il grafico con i dati attuali
+     */
+    private void ricaricaDatiGrafico(){
+        String fine = fineSettimana();
+        String oggi = dayToString(dataAttuale);
+        IntevalloLabel.setText(intervalloLabelText(oggi, fine));
+        ChartFilter filter = new ChartFilter(oggi, fine,ChartFilter.NO_ID );
+        chartIncludeController.setData(SessionManager.getCurrentUser(), filter );
+    }
+
+    // questi metodi quando vengono richiamati modificano la data visualizzata e ricaricano il grafico
+    private void datiSettimanaPrecedente() {
+        dataAttuale = dataAttuale.minusWeeks(1);
+        ricaricaDatiGrafico();
+    }
+
+    private void datiSettimanaSuccessiva() {
+        dataAttuale = dataAttuale.plusWeeks(1);
+        ricaricaDatiGrafico();
+    }
+
+    private void datiMeseSuccessivo() {
+        dataAttuale = dataAttuale.plusMonths(1).with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY));
+        ricaricaDatiGrafico();
+    }
+
+    private void datiMesePrecedente() {
+        dataAttuale = dataAttuale.minusMonths(1).with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY));
+        ricaricaDatiGrafico();
+    }
+
+    private String fineSettimana(){
+        LocalDate fineSettimana =  dataAttuale.plusDays(6);
+        return dayToString(fineSettimana);
+    }
+
+    /**
+     * Data a stringa
+     * @param day
+     * @return String - giorno in stringa
+     */
+    private String dayToString(LocalDate day){
+        return day.format(dateFormat);
+    }
+
+    /**
+     * Costruisce la label coi giorni dell'intervallo mostrati
+     * @param startDay giorno inizio
+     * @param endDay giorno fine
+     * @return String - intervallo giorni
+     */
+    private String intervalloLabelText(String startDay, String endDay){
+        return startDay + " - " + endDay;
     }
 }

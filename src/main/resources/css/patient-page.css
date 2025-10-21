@@ -134,3 +134,10 @@
     -fx-background-color: #3d566e;
 }
 
+.notificationBadge{
+    -fx-background-color: red;
+    -fx-color-label-visible: white !important;
+    -fx-text-fill:  white;
+    -fx-border-radius: 3px;
+}
+

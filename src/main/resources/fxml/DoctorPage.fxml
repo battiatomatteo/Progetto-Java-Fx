@@ -11,7 +11,7 @@
         <!-- 🔹 Sidebar laterale -->
         <VBox spacing="20" styleClass="sidebar" alignment="TOP_CENTER" prefWidth="150" style="-fx-background-color: #2c3e50; -fx-padding: 20;">
             <!--<Button text="Indietro" fx:id="backb" styleClass="sidebar-button"/>-->
-            <Button text="Assistenza" styleClass="sidebar-button"/>
+            <!--<Button text="Assistenza" styleClass="sidebar-button"/>-->
             <Button text="Logout" fx:id="logOutButton" styleClass="sidebar-button"/>
         </VBox>
 
@@ -51,7 +51,6 @@
                                 <Button fx:id="removeLastPatientButton" text="Rimuovi Ultima Ricerca" style="-fx-background-color: #f44336; -fx-text-fill: white;"/>
                             </HBox>
                             <!-- Container per i TitledPane dei pazienti -->
-
                             <VBox fx:id="patientsContainer" spacing="10"  />
                             <Separator />
                             <GridPane hgap="10" vgap="10">
@@ -81,7 +80,7 @@
 
                 </HBox>
 
-                <Region prefHeight="50" style="-fx-background-color: transparent;"/>
+                <Region prefHeight="180" style="-fx-background-color: transparent;"/>
                 <fx:include source="footer.fxml"   />
 
             </VBox>

@@ -42,8 +42,8 @@ public class PatientPageController {
     @FXML private TableColumn<Pasto, Float> preColumn;
     @FXML private TableColumn<Pasto, Float> postColumn;
     @FXML private TableColumn<Pasto, String> orarioColumn;
-    @FXML private Label messageStart, infoPaziente, IntevalloLabel;
-    @FXML private Button logOutButton, nuovaSomministrazioneButton, salvaSintomi, settimanaSucc, settimanaPrec, meseSucc, mesePrec, provaAccount, chatB, myData;
+    @FXML private Label messageStart, infoPaziente;
+    @FXML private Button logOutButton, nuovaSomministrazioneButton, salvaSintomi, provaAccount, chatB, myData;
     @FXML private TextArea textArea;
     /**
      * Lista con al suo interno i Pasti
@@ -77,19 +77,6 @@ public class PatientPageController {
      * Valore post pasto max
      */
     private static final int POSTPASTOMAX = 180;
-    /**
-     * Formato della data: anno-mese-giorno
-     */
-    public static final String DATE_FORMAT = "yyyy-MM-dd";
-    /**
-     * Data formattata in base a DATE_FORMAT
-     */
-    private static final DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern(DATE_FORMAT);
-
-    /**
-     * Data attuale
-     */
-    private LocalDate dataAttuale = LocalDate.now().with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY));
 
     /**
      * Questo metodo ha lo scopo di inizializzare.
@@ -143,18 +130,12 @@ public class PatientPageController {
 
         nuovaSomministrazioneButton.setOnAction(e -> nuovaSomministrazione());
 
-        settimanaPrec.setOnAction(event -> datiSettimanaPrecedente());
-        settimanaSucc.setOnAction(event -> datiSettimanaSuccessiva());
-        mesePrec.setOnAction(event -> datiMesePrecedente());
-        meseSucc.setOnAction(event -> datiMeseSuccessivo());
-
         caricaSomministrazioniOdierne(SessionManager.getCurrentUser());
         // Come funziona: Quando clicco sul bottone, prendi la finestra corrente e passala a UIUtils.LogOutButton() per eseguire il logout
         logOutButton.setOnAction(e -> UIUtils.LogOutButton((Stage) logOutButton.getScene().getWindow()));
         salvaSintomi.setOnAction(e -> salvaSintomibox(textArea.getText()));
         caricaInfoPaziente(SessionManager.getCurrentUser());
 
-        ricaricaDatiGrafico();
         recuperoNotifiche();
 
         Platform.runLater(() -> checkSommOdierne());
@@ -174,62 +155,6 @@ public class PatientPageController {
                 throw new RuntimeException(ex);
             }
         });
-    }
-
-    /**
-     * Questo metodo ha lo scopo di ricaricare il grafico con i dati attuali
-     */
-    private void ricaricaDatiGrafico(){
-        String fine = fineSettimana();
-        String oggi = dayToString(dataAttuale);
-        IntevalloLabel.setText(intervalloLabelText(oggi, fine));
-        ChartFilter filter = new ChartFilter(oggi, fine,ChartFilter.NO_ID );
-        chartIncludeController.setData(SessionManager.getCurrentUser(), filter );
-    }
-
-    // questi metodi quando vengono richiamati modificano la data visualizzata e ricaricano il grafico
-    private void datiSettimanaPrecedente() {
-        dataAttuale = dataAttuale.minusWeeks(1);
-        ricaricaDatiGrafico();
-    }
-
-    private void datiSettimanaSuccessiva() {
-        dataAttuale = dataAttuale.plusWeeks(1);
-        ricaricaDatiGrafico();
-    }
-
-    private void datiMeseSuccessivo() {
-        dataAttuale = dataAttuale.plusMonths(1).with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY));
-        ricaricaDatiGrafico();
-    }
-
-    private void datiMesePrecedente() {
-        dataAttuale = dataAttuale.minusMonths(1).with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY));
-        ricaricaDatiGrafico();
-    }
-
-    private String fineSettimana(){
-        LocalDate fineSettimana =  dataAttuale.plusDays(6);
-        return dayToString(fineSettimana);
-    }
-
-    /**
-     * Data a stringa
-     * @param day
-     * @return String - giorno in stringa
-     */
-    private String dayToString(LocalDate day){
-        return day.format(dateFormat);
-    }
-
-    /**
-     * Costruisce la label coi giorni dell'intervallo mostrati
-     * @param startDay giorno inizio
-     * @param endDay giorno fine
-     * @return String - intervallo giorni
-     */
-    private String intervalloLabelText(String startDay, String endDay){
-        return startDay + " - " + endDay;
     }
 
     /**
@@ -348,7 +273,6 @@ public class PatientPageController {
         if (dao.addSomministrazione(rilevazioneGiorno, SessionManager.getCurrentUser())) {
             stampaTabella();
             UIUtils.showAlert(Alert.AlertType.INFORMATION, "Somministrazione salvata", riepilogo.toString());
-            ricaricaDatiGrafico();
         } else {
             UIUtils.showAlert(Alert.AlertType.WARNING, "Nessun pasto inserito", "Tutti i pasti erano già presenti o non validi (pre/post nulli o 0).");
         }

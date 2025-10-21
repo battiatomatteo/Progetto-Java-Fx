@@ -42,6 +42,7 @@ public class PatientPaneController {
     @FXML private VBox chartInclude;
     @FXML private PatientChartController chartIncludeController;
     @FXML private TextArea infoTextArea;
+    @FXML private TitledPane patientPane;
     /**
      * Oggetto per accesso al database
      * @see DAO.PatientPaneDao
@@ -54,6 +55,8 @@ public class PatientPaneController {
      */
     @FXML
     private void initialize() {
+        patientPane.setExpanded(false);
+
         terapiaCol.setCellValueFactory(cell -> cell.getValue().idTerapiaProperty().asObject());
         statoCol.setCellValueFactory(cell -> cell.getValue().statoEnumProperty());
         farmacoCol.setCellValueFactory(cell -> cell.getValue().farmacoProperty());

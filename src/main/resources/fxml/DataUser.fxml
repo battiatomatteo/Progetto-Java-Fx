@@ -18,50 +18,55 @@
         <VBox spacing="20" styleClass="sidebar" alignment="TOP_CENTER" prefWidth="150" style="-fx-background-color: #2c3e50; -fx-padding: 20;">
             <Button text="Indietro" fx:id="backb" styleClass="sidebar-button"/>
             <!--<Button text="Assistenza" styleClass="sidebar-button"/>-->
+            <Button fx:id="provaAccount" text="My profile" styleClass="sidebar-button" />
             <Button text="Logout" fx:id="logOutButton" styleClass="sidebar-button"/>
         </VBox>
+        <ScrollPane hbarPolicy="NEVER" vbarPolicy="NEVER">
+            <VBox spacing="10">
+                <HBox>
+                    <GridPane alignment="CENTER" hgap="10" vgap="10" >
+                        <padding>
+                            <Insets top="20" right="20" bottom="20" left="50"/>
+                        </padding>
+                        <Label text="Dati utente " GridPane.columnIndex="0" GridPane.rowIndex="0"/>
+                        <Label text="Tabella per la visione delle terapie utente , si possono visionare le terapie attive ( pallino verde ),"
+                               GridPane.columnIndex="0" GridPane.rowIndex="1" />
+                        <Label text="le terapie in sospeso ( pallino giallo ) e le terapie concluse ( pallino rosso ) ." GridPane.columnIndex="0" GridPane.rowIndex="2" />
+                        <Label text="ATTENZIONE  solo il medico può modificare le tue terapie ." GridPane.columnIndex="0" GridPane.rowIndex="3" />
+                        <HBox GridPane.columnIndex="0" GridPane.rowIndex="4">
+                            <TableView fx:id="table" minHeight="250" minWidth="500" VBox.vgrow="ALWAYS">
+                                <columns>
+                                    <TableColumn fx:id="terapiaCol" text="ID Terapia" minWidth="93"/>
+                                    <TableColumn fx:id="statoCol" text="Stato" prefWidth="70" />
+                                    <TableColumn fx:id="farmacoCol" text="Farmaco" minWidth="130"/>
+                                    <TableColumn fx:id="assunzioniCol" text="Assunzioni" minWidth="120"/>
+                                    <TableColumn fx:id="quantFarCol" text="Quantità" minWidth="110"/>
+                                    <TableColumn fx:id="noteCol" text="Note" minWidth="190"/>
+                                </columns>
+                            </TableView>
+                        </HBox>
+                        <Label text="Grafico per la visione telle tue somministrazioni " GridPane.columnIndex="0" GridPane.rowIndex="5"/>
+                        <HBox  GridPane.columnIndex="0" GridPane.rowIndex="6" maxWidth="725" maxHeight="500">
+                            <GridPane alignment="CENTER" >
+                                <HBox fx:id="HboxBottoniGrafico" spacing="10" GridPane.columnIndex="1" GridPane.rowIndex="11">
+                                    <Button text="Mese prec." fx:id="mesePrec"/>
+                                    <Button text="Settimana prec." fx:id="settimanaPrec"/>
+                                    <Label text="INTERVALLO DATA INIZIO - DATA FINE" fx:id="IntevalloLabel"/>
+                                    <Button text="Settimana succ." fx:id="settimanaSucc"/>
+                                    <Button text="Mese succ." fx:id="meseSucc"/>
+                                </HBox>
 
-        <VBox spacing="10">
-            <HBox>
-                <GridPane alignment="CENTER" hgap="10" vgap="10" >
-                    <padding>
-                        <Insets top="20" right="20" bottom="20" left="50"/>
-                    </padding>
+                                <fx:include source="PatientChart.fxml" fx:id="chartInclude" GridPane.columnIndex="1" GridPane.rowIndex="12"/>
 
-                    <HBox GridPane.columnIndex="0" GridPane.rowIndex="0">
-                        <TableView fx:id="table" minHeight="250" minWidth="500" VBox.vgrow="ALWAYS">
-                            <columns>
-                                <TableColumn fx:id="terapiaCol" text="ID Terapia" minWidth="93"/>
-                                <TableColumn fx:id="statoCol" text="Stato" prefWidth="70" />
-                                <TableColumn fx:id="farmacoCol" text="Farmaco" minWidth="130"/>
-                                <TableColumn fx:id="assunzioniCol" text="Assunzioni" minWidth="120"/>
-                                <TableColumn fx:id="quantFarCol" text="Quantità" minWidth="110"/>
-                                <TableColumn fx:id="noteCol" text="Note" minWidth="190"/>
-                            </columns>
-                        </TableView>
-                    </HBox>
+                            </GridPane>
+                        </HBox>
 
-                    <HBox  GridPane.columnIndex="0" GridPane.rowIndex="1">
-                        <GridPane alignment="CENTER" >
-                            <HBox fx:id="HboxBottoniGrafico" spacing="10" GridPane.columnIndex="1" GridPane.rowIndex="11">
-                                <Button text="Mese prec." fx:id="mesePrec"/>
-                                <Button text="Settimana prec." fx:id="settimanaPrec"/>
-                                <Label text="INTERVALLO DATA INIZIO - DATA FINE" fx:id="IntevalloLabel"/>
-                                <Button text="Settimana succ." fx:id="settimanaSucc"/>
-                                <Button text="Mese succ." fx:id="meseSucc"/>
-                            </HBox>
-
-                            <fx:include source="PatientChart.fxml" fx:id="chartInclude" GridPane.columnIndex="1" GridPane.rowIndex="12"/>
-
-                        </GridPane>
-                    </HBox>
-
-                </GridPane>
-            </HBox>
-            <Region prefHeight="110" style="-fx-background-color: transparent;"/>
-            <fx:include source="footer.fxml"/>
-        </VBox>
-
+                    </GridPane>
+                </HBox>
+                <Region prefHeight="70" style="-fx-background-color: transparent;"/>
+                <fx:include source="footer.fxml"/>
+            </VBox>
+        </ScrollPane>
     </HBox>
 
 </StackPane>

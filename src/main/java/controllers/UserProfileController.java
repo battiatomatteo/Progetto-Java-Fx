@@ -1,5 +1,6 @@
 package controllers;
 
+import DAO.UIUtilsDao;
 import DAO.UserProfileDao;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
@@ -26,7 +27,7 @@ public class UserProfileController {
     @FXML private TextField nomeLabelN, telefonoLabelN, emailLabelN, cognomeLabelN;
     @FXML private Button editProf, newPassB, logOutButton, backb;
     private UserProfileDao dao = new UserProfileDao();
-    private UIUtils daoU = new UIUtils();
+    private UIUtilsDao daoU = new UIUtilsDao();
     private String profiloUsername;
 
     @FXML
@@ -40,11 +41,16 @@ public class UserProfileController {
 
         backb.setOnAction(e -> {
             try {
-                daoU.handleBack(username, (Stage) backb.getScene().getWindow());
+                UIUtils.handleBack(username, (Stage) backb.getScene().getWindow());
             } catch (Exception ex) {
                 throw new RuntimeException(ex);
             }
         });
+
+        if(!daoU.tipoUtente(SessionManager.getCurrentUser()).equals("paziente")){
+            editProf.setVisible(false);
+            newPassB.setVisible(false);
+        }
 
         logOutButton.setOnAction(e -> UIUtils.LogOutButton((Stage) logOutButton.getScene().getWindow()));
     }
