@@ -15,6 +15,7 @@ public class ChatPageView extends Application {
         // stage.setTitle("Chat con " + assignedDoctor);
         stage.getIcons().add(new Image(getClass().getResourceAsStream("/img/icona_dottore.jpg")));
         stage.setScene(new Scene(root, 980, 720));
+        stage.centerOnScreen();
         stage.show();
     }
 

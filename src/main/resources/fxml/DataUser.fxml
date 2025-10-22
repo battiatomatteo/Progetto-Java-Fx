@@ -34,9 +34,9 @@
                         <Label text="le terapie in sospeso ( pallino giallo ) e le terapie concluse ( pallino rosso ) ." GridPane.columnIndex="0" GridPane.rowIndex="2" />
                         <Label text="ATTENZIONE  solo il medico può modificare le tue terapie ." GridPane.columnIndex="0" GridPane.rowIndex="3" />
                         <HBox GridPane.columnIndex="0" GridPane.rowIndex="4">
-                            <TableView fx:id="table" minHeight="250" minWidth="500" VBox.vgrow="ALWAYS">
+                            <TableView fx:id="table" minHeight="150" minWidth="500" VBox.vgrow="ALWAYS">
                                 <columns>
-                                    <TableColumn fx:id="terapiaCol" text="ID Terapia" minWidth="93"/>
+                                    <TableColumn fx:id="terapiaCol" text="ID Terapia" minWidth="90"/>
                                     <TableColumn fx:id="statoCol" text="Stato" prefWidth="70" />
                                     <TableColumn fx:id="farmacoCol" text="Farmaco" minWidth="130"/>
                                     <TableColumn fx:id="assunzioniCol" text="Assunzioni" minWidth="120"/>
@@ -45,8 +45,9 @@
                                 </columns>
                             </TableView>
                         </HBox>
-                        <Label text="Grafico per la visione telle tue somministrazioni " GridPane.columnIndex="0" GridPane.rowIndex="5"/>
-                        <HBox  GridPane.columnIndex="0" GridPane.rowIndex="6" maxWidth="725" maxHeight="500">
+                        <Separator GridPane.columnIndex="0" GridPane.rowIndex="5"/>
+                        <Label text="Grafico per la visione telle tue somministrazioni " GridPane.columnIndex="0" GridPane.rowIndex="6"/>
+                        <HBox  GridPane.columnIndex="0" GridPane.rowIndex="7" maxWidth="725" maxHeight="500">
                             <GridPane alignment="CENTER" >
                                 <HBox fx:id="HboxBottoniGrafico" spacing="10" GridPane.columnIndex="1" GridPane.rowIndex="11">
                                     <Button text="Mese prec." fx:id="mesePrec"/>
@@ -63,7 +64,7 @@
 
                     </GridPane>
                 </HBox>
-                <Region prefHeight="70" style="-fx-background-color: transparent;"/>
+                <Region prefHeight="10" style="-fx-background-color: transparent;"/>
                 <fx:include source="footer.fxml"/>
             </VBox>
         </ScrollPane>

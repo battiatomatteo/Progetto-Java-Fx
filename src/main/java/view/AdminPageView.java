@@ -21,6 +21,7 @@ public class AdminPageView extends Application {
         Parent root = FXMLLoader.load(getClass().getResource("/fxml/AdminPage.fxml"));
         primaryStage.setTitle("Admin Page");
         primaryStage.setScene(new Scene(root, 960, 720));
+        primaryStage.centerOnScreen();
         primaryStage.show();
     }
 

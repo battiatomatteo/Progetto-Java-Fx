@@ -10,7 +10,7 @@
 
 
 .sidebar-button {
-    -fx-background-color: #34495e;
+    -fx-background-color: #34495e !important;
     -fx-text-fill: white;
     -fx-font-size: 14px;
     -fx-pref-width: 120px;
@@ -19,5 +19,15 @@
 }
 
 .sidebar-button:hover {
-    -fx-background-color: #3d566e;
+    -fx-background-color: #3d566e !important;
+}
+
+/* Pulsanti */
+.button {
+    -fx-background-color: linear-gradient(to bottom, #4285f4, #357ae8);
+    -fx-text-fill: white;
+    -fx-padding: 8 16;
+    -fx-background-radius: 5;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.08), 2, 0, 0, 1);
 }

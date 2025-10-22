@@ -26,6 +26,7 @@ public class DataUserView extends Application {
         Scene scene = new Scene(root, 960, 720);
         stage.setScene(scene);
         stage.setTitle("Dati utente");
+        stage.centerOnScreen();
         stage.show();
     }
 

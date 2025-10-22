@@ -21,6 +21,7 @@ public class PatientPageView extends Application {
         Parent root = FXMLLoader.load(getClass().getResource("/fxml/PatientPage.fxml"));
         primaryStage.setTitle("Patient Page");
         primaryStage.setScene(new Scene(root, 980, 720));
+        primaryStage.centerOnScreen();
         primaryStage.show();
     }
 

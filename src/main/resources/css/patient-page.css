@@ -13,7 +13,6 @@
 /* Titolo principale */
 .title-label {
     -fx-font-size: 20px;
-    -fx-font-weight: bold;
     -fx-text-fill: #1f2d3d;
     -fx-padding: 10 0 10 0;
 }
@@ -29,7 +28,6 @@
 .button {
     -fx-background-color: linear-gradient(to bottom, #4285f4, #357ae8);
     -fx-text-fill: white;
-    -fx-font-weight: bold;
     -fx-padding: 8 16;
     -fx-background-radius: 5;
     -fx-cursor: hand;
@@ -93,7 +91,6 @@
 #HboxBottoniGrafico .button {
     -fx-background-color: #1976d2; /* blu principale */
     -fx-text-fill: white;
-    -fx-font-weight: bold;
     -fx-font-size: 13px;
     -fx-padding: 8 14;
     -fx-background-radius: 20; /* bordi arrotondati */
@@ -117,7 +114,6 @@
 #IntevalloLabel {
     -fx-font-size: 14px;
     -fx-text-fill: #333333;
-    -fx-font-weight: bold;
     -fx-padding: 0 10 0 10;
 }
 

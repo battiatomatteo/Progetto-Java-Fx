@@ -23,6 +23,7 @@ public class LogInView extends Application {
         primaryStage.setTitle("Login");
         primaryStage.getIcons().add(new Image(getClass().getResourceAsStream("/img/icona_dottore.jpg")));
         primaryStage.setScene(new Scene(root, 350, 200));
+        primaryStage.centerOnScreen();
         primaryStage.show();
     }
 

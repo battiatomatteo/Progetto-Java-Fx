@@ -76,9 +76,9 @@
                     </GridPane>
 
                     <GridPane hgap="15" vgap="15" fx:id="newPass" GridPane.columnIndex="1" GridPane.rowIndex="10">
-
-                        <Label text="Seleziona il motivo del cambio password :" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
-                        <ComboBox fx:id="tipoRichiesta" promptText="Seleziona un'opzione" GridPane.columnIndex="0" GridPane.rowIndex="1">
+                        <Label text="Richiedi una nuova password, l'admin prenderà in carico la tua richiesta ." GridPane.columnIndex="0" GridPane.rowIndex="0"/>
+                        <Label text="Seleziona il motivo del cambio password :" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
+                        <ComboBox fx:id="tipoRichiesta" promptText="Seleziona un'opzione" GridPane.columnIndex="0" GridPane.rowIndex="2">
                             <items>
                                 <FXCollections fx:factory="observableArrayList">
                                     <String fx:value="Password dimenticata"/>
@@ -87,15 +87,15 @@
                             </items>
                         </ComboBox>
 
-                        <Label text="Altro :" GridPane.columnIndex="0" GridPane.rowIndex="3"/>
+                        <Label text="Altro :" GridPane.columnIndex="0" GridPane.rowIndex="4"/>
                         <TextArea fx:id="commentoArea"
                                   promptText="Inserisci un commento..."
                                   prefRowCount="3"
                                   wrapText="true"
                                   GridPane.columnIndex="0" GridPane.rowIndex="4"/>
 
-                        <Button text="Invio" onAction="#invioRichiesta" GridPane.columnIndex="0" GridPane.rowIndex="5"/>
-                        <Button text="Annulla" onAction="#annullaP" GridPane.columnIndex="1" GridPane.rowIndex="5"/>
+                        <Button text="Invio" onAction="#invioRichiesta" GridPane.columnIndex="0" GridPane.rowIndex="6"/>
+                        <Button text="Annulla" onAction="#annullaP" GridPane.columnIndex="1" GridPane.rowIndex="6"/>
                     </GridPane>
 
                     <!-- Footer -->

@@ -22,6 +22,7 @@ public class DoctorPageView extends Application {
         Parent root = FXMLLoader.load(getClass().getResource("/fxml/DoctorPage.fxml"));
         primaryStage.setTitle("Doctor Page");
         primaryStage.setScene(new Scene(root, 1340, 700));
+        primaryStage.centerOnScreen();
         primaryStage.show();
     }
 

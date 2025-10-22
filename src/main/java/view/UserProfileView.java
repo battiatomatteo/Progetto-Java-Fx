@@ -25,6 +25,7 @@ public class UserProfileView extends Application {
         Scene scene = new Scene(root, 960, 720);
         stage.setScene(scene);
         stage.setTitle("Profilo utente: " + username);
+        stage.centerOnScreen();
         stage.show();
     }
 
