@@ -2,7 +2,6 @@ package DAO;
 
 import javafx.scene.control.Alert;
 import utility.UIUtils;
-
 import javafx.scene.image.Image;
 import java.io.File;
 import java.io.FileInputStream;
@@ -10,6 +9,8 @@ import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 public class UserProfileDao {
@@ -82,6 +83,39 @@ public class UserProfileDao {
             UIUtils.showAlert(Alert.AlertType.ERROR, "Errore." ,"Errore durante il caricamento dell'immagine .");
         }
         return null;
+    }
+
+    public void sendRequest(String user, String content, String motivo) {
+        String sql = "INSERT INTO richieste (usernamePaziente, contenutoRichiesta, motivo, stato ) VALUES (?, ?, ?, ?)";
+        try(Connection conn = DBConnection.getConnection();
+            PreparedStatement stmt = conn.prepareStatement(sql)){
+            stmt.setString(1, user);
+            stmt.setString(2, content);
+            stmt.setString(3, motivo);
+            stmt.setString(4, "in corso...");
+            stmt.executeUpdate();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public boolean hasPendingRequest(String user) {
+        String sql = "SELECT COUNT(*) FROM richieste WHERE usernamePaziente = ? AND stato = ?";
+
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, user);
+            stmt.setString(2, "in corso...");
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    int count = rs.getInt(1);
+                    return count > 0; // true se ci sono richieste in corso
+                }
+            }
+        } catch (Exception e) {
+            throw new RuntimeException("Errore nel controllo richieste in corso", e);
+        }
+        return false; // Nessuna richiesta trovata o errore
     }
 
 }

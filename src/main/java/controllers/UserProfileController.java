@@ -3,7 +3,8 @@ package controllers;
 import DAO.UIUtilsDao;
 import DAO.UserProfileDao;
 import javafx.fxml.FXML;
-import javafx.scene.control.Alert;
+import javafx.scene.control.*;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
@@ -13,11 +14,10 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import utility.SessionManager;
 import utility.UIUtils;
-import java.awt.*;
+import javafx.scene.control.TextArea;
 import java.io.File;
 import java.io.FileInputStream;
 import java.util.ArrayList;
-import javafx.scene.control.Button;
 
 public class UserProfileController {
 
@@ -26,12 +26,18 @@ public class UserProfileController {
     @FXML private GridPane infoN, newPass;
     @FXML private TextField nomeLabelN, telefonoLabelN, emailLabelN, cognomeLabelN;
     @FXML private Button editProf, newPassB, logOutButton, backb;
+    @FXML private TextArea commentoArea;
+    @FXML private ComboBox<String> tipoRichiesta;
+
     private UserProfileDao dao = new UserProfileDao();
     private UIUtilsDao daoU = new UIUtilsDao();
     private String profiloUsername;
 
     @FXML
     public void initialize() throws Exception {
+
+        checkRequet();
+
         newPass.setVisible(false);
         infoN.setVisible(false);
 
@@ -78,7 +84,7 @@ public class UserProfileController {
     @FXML
     private void handleEdit() {
         infoN.setVisible(true);
-        newPassB.setVisible(false);
+        checkRequet();
     }
 
     @FXML
@@ -136,10 +142,17 @@ public class UserProfileController {
         }
     }
 
+    private void checkRequet() {
+        if(dao.hasPendingRequest(SessionManager.getCurrentUser())){
+            newPassB.setVisible(false);
+        }
+        else newPassB.setVisible(true);
+    }
+
     @FXML
     public void annulla() {
         infoN.setVisible(false);
-        newPassB.setVisible(true);
+        checkRequet();
     }
 
     @FXML
@@ -169,6 +182,21 @@ public class UserProfileController {
 
 
     public void invioRichiesta() {
+        String user = SessionManager.getCurrentUser();
+        String content = commentoArea.getText();
+        String motivo = tipoRichiesta.getValue();
+
+        Alert confirm = new Alert(Alert.AlertType.CONFIRMATION);
+        confirm.setTitle("Conferma invio richiesta");
+        confirm.setHeaderText(null);
+        confirm.setContentText("Sei sicuro di voler inviare la richiesta ?");
+
+        if (confirm.showAndWait().orElse(ButtonType.CANCEL) == ButtonType.OK) {
+            dao.sendRequest(user, content, motivo);
+        }
+
+        commentoArea.setText("");
+        tipoRichiesta.setValue(null);
     }
 
     public void annullaP() {
