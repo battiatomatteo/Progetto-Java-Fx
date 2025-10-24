@@ -22,7 +22,7 @@ public class AdminPageController {
     @FXML private ComboBox<String> tipoUtenteInput;
     @FXML private PasswordField passwordInput;
     @FXML private TableView<User> table;
-    @FXML private TableColumn<User, String> usernameCol, tipoUtenteCol, passwordCol, medicoCol, infoCol;
+    @FXML private TableColumn<User, String> usernameCol, tipoUtenteCol, passwordCol, medicoCol, infoCol, richiesteCol;
     /**
      * Oggetto per accesso al database
      * @see DAO.AdminDao
@@ -41,6 +41,7 @@ public class AdminPageController {
         //passwordCol.setCellValueFactory(cellData -> cellData.getValue().passwordProperty());
         medicoCol.setCellValueFactory(cellData -> cellData.getValue().medicoProperty());
         infoCol.setCellValueFactory(cellData -> cellData.getValue().infoPazienteProperty());
+        richiesteCol.setCellValueFactory(cellData -> cellData.getValue().richiesteProperty());
         table.setItems(dao.caricaUtentiDao());         // Carica utenti dal database
 
         tipoUtenteInput.getItems().addAll("medico", "paziente", "admin");
@@ -101,10 +102,12 @@ public class AdminPageController {
         String password = controlloPass(passwordInput.getText());
         String medico = medicoInput.getText();
 
+        String richieste = dao.checkRequest(username);
+
         if(tipoUtente.equals("admin") || tipoUtente.equals("medico")){
             medico = "NULL";
         }
-        User user = new User(username, tipoUtente, password, medico, "informazioni..."); // info paziente vengono create dal medico non dall'admin
+        User user = new User(username, tipoUtente, password, medico, "informazioni...", richieste); // info paziente vengono create dal medico non dall'admin
 
         if (username.isEmpty() || password.isEmpty()) {
             UIUtils.showAlert(Alert.AlertType.ERROR, "Errore", "Compila correttamente tutti i campi obbligatori!");

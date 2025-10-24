@@ -34,6 +34,10 @@ public class User {
      * Informazioni dell'utente
      */
     private final SimpleStringProperty infoPaziente;
+    /**
+     * Richieste paziente
+     */
+    private final SimpleStringProperty richieste;
 
     /**
      * Costruttore della classe User.
@@ -44,12 +48,13 @@ public class User {
      * @param medico         medico assegnato (se paziente)
      * @param infoPaziente   informazioni sanitarie (solo per i pazienti)
      */
-    public User(String username, String tipo_utente, String password, String medico, String infoPaziente) {
+    public User(String username, String tipo_utente, String password, String medico, String infoPaziente, String richieste) {
         this.username = new SimpleStringProperty(username);
         this.tipo_utente = new SimpleStringProperty(tipo_utente);
         this.password = new SimpleStringProperty(password);
         this.medico = new SimpleStringProperty(medico);
         this.infoPaziente = new SimpleStringProperty(infoPaziente);
+        this.richieste = new SimpleStringProperty(richieste);
     }
 
     /**
@@ -83,10 +88,18 @@ public class User {
     public String getInfoPaziente() { return infoPaziente.get(); }
 
     /**
+     *
+     * @return
+     */
+    public String getRichieste() { return richieste.get(); }
+
+    /**
      * Property per lo username (JavaFX binding).
      * @return SimpleStringProperty - username property
      */
     public SimpleStringProperty usernameProperty() { return username; }
+
+    public SimpleStringProperty richiesteProperty() { return richieste; }
 
     /**
      * Property per il tipo utente (JavaFX binding).

@@ -1,7 +1,9 @@
 package controllers;
 
+import DAO.AdminDao;
 import DAO.UIUtilsDao;
 import DAO.UserProfileDao;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.Button;
@@ -21,16 +23,17 @@ import java.util.ArrayList;
 
 public class UserProfileController {
 
-    @FXML private Label nomeLabel, tipoUtenteLabel, infoLabel, telefonoLabel, emailLabel, cognomeLabel;
+    @FXML private Label nomeLabel, tipoUtenteLabel, infoLabel, telefonoLabel, emailLabel, cognomeLabel, contentRequest, motivoR;
     @FXML private ImageView profileImage;
-    @FXML private GridPane infoN, newPass;
+    @FXML private GridPane infoN, newPass, boxRichieste;
     @FXML private TextField nomeLabelN, telefonoLabelN, emailLabelN, cognomeLabelN;
-    @FXML private Button editProf, newPassB, logOutButton, backb;
+    @FXML private Button editProf, newPassB, logOutButton, backb, accettaRichiesta;
     @FXML private TextArea commentoArea;
     @FXML private ComboBox<String> tipoRichiesta;
 
     private UserProfileDao dao = new UserProfileDao();
     private UIUtilsDao daoU = new UIUtilsDao();
+    private AdminDao daoA = new AdminDao();
     private String profiloUsername;
 
     @FXML
@@ -38,12 +41,14 @@ public class UserProfileController {
 
         checkRequet();
 
+        boxRichieste.setVisible(false);
         newPass.setVisible(false);
         infoN.setVisible(false);
 
         String username = (profiloUsername != null) ? profiloUsername : SessionManager.getCurrentUser();
         infoUser(username);
         caricaImmagine(username);
+
 
         backb.setOnAction(e -> {
             try {
@@ -65,6 +70,9 @@ public class UserProfileController {
         this.profiloUsername = username;
         infoUser(username);
         caricaImmagine(username);
+        checkRequestForAdmin(username);
+        accettaRichiesta.setOnAction(e ->  requestAccepted(username));
+
     }
 
     private void caricaImmagine(String username) {
@@ -90,7 +98,6 @@ public class UserProfileController {
     @FXML
     private void saveNewInfo(){
         String username = SessionManager.getCurrentUser();
-
         String newName = nomeLabel.getText();
         String newCognome = cognomeLabel.getText();
         String newEmail = emailLabel.getText();
@@ -149,6 +156,15 @@ public class UserProfileController {
         else newPassB.setVisible(true);
     }
 
+    private void checkRequestForAdmin(String username){
+        System.out.println("Corrent User : " + SessionManager.getCurrentUser()+ "\nUsername paziente : " + username);
+        if(daoU.tipoUtente(SessionManager.getCurrentUser()).equals("admin") && daoA.checkRequest(username).equals("si")){
+            // rendo visibile la richiesta all'admin
+            dao.setLabelRequest(motivoR, contentRequest, username );
+            boxRichieste.setVisible(true);
+        }
+    }
+
     @FXML
     public void annulla() {
         infoN.setVisible(false);
@@ -202,5 +218,18 @@ public class UserProfileController {
     public void annullaP() {
         newPass.setVisible(false);
         editProf.setVisible(true);
+    }
+
+
+    public void requestAccepted(String user) {
+        Alert confirm = new Alert(Alert.AlertType.CONFIRMATION);
+        confirm.setTitle("Conferma richiesta");
+        confirm.setHeaderText(null);
+        confirm.setContentText("Sei sicuro di voler accettare la richiesta cambio password ?");
+
+        if (confirm.showAndWait().orElse(ButtonType.CANCEL) == ButtonType.OK) {
+            dao.changeStateRequest(user);
+            boxRichieste.setVisible(false);
+        }
     }
 }

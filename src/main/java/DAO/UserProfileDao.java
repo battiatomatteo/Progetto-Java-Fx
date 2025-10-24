@@ -1,6 +1,7 @@
 package DAO;
 
 import javafx.scene.control.Alert;
+import javafx.scene.control.Label;
 import utility.UIUtils;
 import javafx.scene.image.Image;
 import java.io.File;
@@ -116,6 +117,53 @@ public class UserProfileDao {
             throw new RuntimeException("Errore nel controllo richieste in corso", e);
         }
         return false; // Nessuna richiesta trovata o errore
+    }
+
+
+    public void setLabelRequest(Label content, Label motivo, String user) {
+        String sql = "SELECT contenutoRichiesta, motivo FROM richieste WHERE usernamePaziente = ? AND stato = ? ORDER BY idRichiesta DESC LIMIT 1";
+
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setString(1, user);
+            stmt.setString(2, "in corso...");
+
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    content.setText(rs.getString("contenutoRichiesta"));
+                    motivo.setText(rs.getString("motivo"));
+                }
+            }
+        } catch (Exception e) {
+            content.setText("Errore nel caricamento");
+            motivo.setText("Controlla la connessione");
+            e.printStackTrace();
+        }
+    }
+
+    public void changeStateRequest(String user) {
+        String sql = "UPDATE richieste SET stato = ? WHERE usernamePaziente = ? AND stato = ?";
+
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setString(1, "accettata");
+            stmt.setString(2, user);
+            stmt.setString(3, "in corso...");
+
+            int rowsUpdated = stmt.executeUpdate();
+            if (rowsUpdated > 0) {
+                UIUtils.showAlert(Alert.AlertType.INFORMATION, "Cambio stato richiesta", "Stato aggiornato a 'accettata' per " + user );
+                System.out.println("Stato aggiornato a 'accettata' per " + user);
+            } else {
+                UIUtils.showAlert(Alert.AlertType.ERROR, "Errore", "Nessuna richiesta 'in corso...' trovata per " + user);
+                System.out.println("Nessuna richiesta 'in corso...' trovata per " + user);
+            }
+        } catch (Exception e) {
+            UIUtils.showAlert(Alert.AlertType.ERROR, "Errore", "Errore durante l'aggiornamento dello stato richiesta");
+            throw new RuntimeException("Errore durante l'aggiornamento dello stato richiesta", e);
+        }
     }
 
 }

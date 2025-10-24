@@ -57,13 +57,14 @@
                             <Label fx:id="label2" text="Tabella utenti :" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
 
                             <!-- Tabella utenti -->
-                            <TableView fx:id="table" prefHeight="250" prefWidth="500" VBox.vgrow="ALWAYS" GridPane.columnIndex="0" GridPane.rowIndex="1" GridPane.columnSpan="11">
+                            <TableView fx:id="table" prefHeight="250" prefWidth="500" minWidth="520" VBox.vgrow="ALWAYS" GridPane.columnIndex="0" GridPane.rowIndex="1" GridPane.columnSpan="11">
                                 <columns>
                                     <TableColumn fx:id="usernameCol" text="Username"/>
                                     <TableColumn fx:id="tipoUtenteCol" text="Tipo Utente"/>
                                     <!--<TableColumn fx:id="passwordCol" text="Password"/>-->
                                     <TableColumn fx:id="medicoCol" text="Medico"/>
                                     <TableColumn fx:id="infoCol" text="Informazioni" minWidth="210"/>
+                                    <TableColumn fx:id="richiesteCol" text="Richieste"/>
                                 </columns>
                             </TableView>
 

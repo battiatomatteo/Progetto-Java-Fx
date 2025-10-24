@@ -98,6 +98,14 @@
                         <Button text="Annulla" onAction="#annullaP" GridPane.columnIndex="1" GridPane.rowIndex="6"/>
                     </GridPane>
 
+                    <GridPane hgap="5" vgap="15" fx:id="boxRichieste" GridPane.columnIndex="1" GridPane.rowIndex="10">
+                        <Label text="L'utente richiede un cambio password :" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
+                        <Label fx:id="contentRequest" GridPane.columnIndex="0" GridPane.rowIndex="1" />
+                        <Label text="Motivo : " GridPane.columnIndex="0" GridPane.rowIndex="2" />
+                        <Label fx:id="motivoR" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                        <Button text="Accetta" fx:id="accettaRichiesta" GridPane.columnIndex="0" GridPane.rowIndex="3" />
+                    </GridPane>
+
                     <!-- Footer -->
                     <HBox spacing="10" alignment="CENTER_RIGHT"  GridPane.columnIndex="1" GridPane.rowIndex="13" >
                         <Button text="Modifica Profilo" fx:id="editProf" onAction="#handleEdit"/>

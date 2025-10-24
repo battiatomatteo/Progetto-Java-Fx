@@ -32,12 +32,15 @@ public class AdminDao {
              PreparedStatement pstmt = conn.prepareStatement(sql)){
              ResultSet rs = pstmt.executeQuery() ;
             while (rs.next()) {
+                String username = rs.getString("username");
+
                 userData.add(new User(
-                        rs.getString("username"),
+                        username,
                         rs.getString("tipo_utente"),
                         rs.getString("password"),
                         rs.getString("medico"),
-                        rs.getString("informazioni")
+                        rs.getString("informazioni"),
+                        checkRequest(username)  // da controllare
                 ));
             }
             return userData;
@@ -140,11 +143,11 @@ public class AdminDao {
             }
         }
 
-        User user = new User(username, tipoUtente, password, medico, info);
+        User user = new User(username, tipoUtente, password, medico, info, checkRequest(username));
         System.out.println("Tipo utente in aggiornaUtente Dao : " + tipoUtente);
 
         if(oldUsername != null){
-            User oldUser = new User(oldUsername, tipoUtente, password, medico, info);
+            User oldUser = new User(oldUsername, tipoUtente, password, medico, info, checkRequest(oldUsername));
             eliminaUtenteDao(oldUser);
             aggiungiUtente(user);
         }
@@ -188,6 +191,23 @@ public class AdminDao {
     }
 
 
+    public String checkRequest(String user) {
+        String sql = "SELECT COUNT(*) FROM richieste WHERE usernamePaziente = ? AND stato = ?";
 
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
 
+            stmt.setString(1, user);
+            stmt.setString(2, "in corso...");
+
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next() && rs.getInt(1) > 0) {
+                    return "si";
+                }
+            }
+        } catch (Exception e) {
+            throw new RuntimeException("Errore nel controllo richieste in corso", e);
+        }
+        return "no";
+    }
 }
