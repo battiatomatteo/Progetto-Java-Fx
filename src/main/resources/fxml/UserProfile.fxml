@@ -33,24 +33,24 @@
                         <!-- Immagine profilo -->
                         <ImageView fx:id="profileImage" fitWidth="120" fitHeight="120" GridPane.columnIndex="0" GridPane.rowIndex="0" GridPane.rowSpan="4"/>
 
-                        <Label text="Nome:" GridPane.columnIndex="1" GridPane.rowIndex="0"/>
+                        <Label text="Nome :" GridPane.columnIndex="1" GridPane.rowIndex="0"/>
                         <Label fx:id="nomeLabel" GridPane.columnIndex="2" GridPane.rowIndex="0"/>
 
-                        <Label text="Cognome:" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+                        <Label text="Cognome :" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
                         <Label fx:id="cognomeLabel" GridPane.columnIndex="2" GridPane.rowIndex="1"/>
 
-                        <Label text="Email:" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
+                        <Label text="Email :" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
                         <Label fx:id="emailLabel" GridPane.columnIndex="2" GridPane.rowIndex="2"/>
 
-                        <Label text="Telefono:" GridPane.columnIndex="1" GridPane.rowIndex="3"/>
+                        <Label text="Telefono :" GridPane.columnIndex="1" GridPane.rowIndex="3"/>
                         <Label fx:id="telefonoLabel" GridPane.columnIndex="2" GridPane.rowIndex="3"/>
 
                         <Button text="Cambio immagine" onAction="#newImg" GridPane.columnIndex="0" GridPane.rowIndex="4"/>
 
-                        <Label text="Tipo utente:" GridPane.columnIndex="1" GridPane.rowIndex="4"/>
+                        <Label text="Tipo utente :" GridPane.columnIndex="1" GridPane.rowIndex="4"/>
                         <Label fx:id="tipoUtenteLabel" GridPane.columnIndex="2" GridPane.rowIndex="4"/>
 
-                        <Label text="Info utente:" GridPane.columnIndex="1" GridPane.rowIndex="5"/>
+                        <Label text="Info utente :" GridPane.columnIndex="1" GridPane.rowIndex="5"/>
                         <Label fx:id="infoLabel" GridPane.columnIndex="2" GridPane.rowIndex="5"/>
 
                         <Button text="Nuova Password" fx:id="newPassB" GridPane.columnIndex="4" GridPane.rowIndex="0" onAction="#newPassword"/>
@@ -59,16 +59,16 @@
                     <GridPane hgap="15" vgap="15" fx:id="infoN" GridPane.columnIndex="1" GridPane.rowIndex="10">
                         <!-- Immagine profilo -->
 
-                        <Label text="Nome:" GridPane.columnIndex="1" GridPane.rowIndex="0"/>
+                        <Label text="Nome :" GridPane.columnIndex="1" GridPane.rowIndex="0"/>
                         <TextField fx:id="nomeLabelN" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
 
-                        <Label text="Cognome:" GridPane.columnIndex="2" GridPane.rowIndex="0"/>
+                        <Label text="Cognome :" GridPane.columnIndex="2" GridPane.rowIndex="0"/>
                         <TextField fx:id="cognomeLabelN" GridPane.columnIndex="2" GridPane.rowIndex="1"/>
 
-                        <Label text="Email:" GridPane.columnIndex="3" GridPane.rowIndex="0"/>
+                        <Label text="Email :" GridPane.columnIndex="3" GridPane.rowIndex="0"/>
                         <TextField fx:id="emailLabelN" GridPane.columnIndex="3" GridPane.rowIndex="1"/>
 
-                        <Label text="Telefono:" GridPane.columnIndex="4" GridPane.rowIndex="0"/>
+                        <Label text="Telefono :" GridPane.columnIndex="4" GridPane.rowIndex="0"/>
                         <TextField fx:id="telefonoLabelN" GridPane.columnIndex="4" GridPane.rowIndex="1"/>
 
                         <Button text="Salva" onAction="#saveNewInfo" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
@@ -104,6 +104,15 @@
                         <Label text="Motivo : " GridPane.columnIndex="0" GridPane.rowIndex="2" />
                         <Label fx:id="motivoR" GridPane.columnIndex="1" GridPane.rowIndex="2" />
                         <Button text="Accetta" fx:id="accettaRichiesta" GridPane.columnIndex="0" GridPane.rowIndex="3" />
+                    </GridPane>
+
+                    <GridPane hgap="5" vgap="15" fx:id="boxNewPass" GridPane.columnIndex="1" GridPane.rowIndex="10">
+                        <Label text="Inserire la nuova password  ( deve avere almeno 8 caratteri di cui una maiuscola , un numero ed un simbolo ) :" GridPane.columnSpan="10" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
+                        <Label text="Nuova password :" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
+                        <TextField fx:id="newPassL" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                        <Label text="Ripeti : " GridPane.columnIndex="0" GridPane.rowIndex="2" />
+                        <TextField fx:id="newPassLR" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                        <Button text="Salva" fx:id="changePass" onAction="#cambioPassword" GridPane.columnIndex="0" GridPane.rowIndex="3" />
                     </GridPane>
 
                     <!-- Footer -->

@@ -10,8 +10,6 @@ import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.Timestamp;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 public class UserProfileDao {
@@ -138,6 +136,7 @@ public class UserProfileDao {
         } catch (Exception e) {
             content.setText("Errore nel caricamento");
             motivo.setText("Controlla la connessione");
+            UIUtils.showAlert(Alert.AlertType.ERROR, "Errore :" , "Si è verificato un problema nel caricamento dei dati .");
             e.printStackTrace();
         }
     }
@@ -164,6 +163,23 @@ public class UserProfileDao {
             UIUtils.showAlert(Alert.AlertType.ERROR, "Errore", "Errore durante l'aggiornamento dello stato richiesta");
             throw new RuntimeException("Errore durante l'aggiornamento dello stato richiesta", e);
         }
+    }
+
+    public boolean checkNewPass(String currentUser) {
+        String sql = "SELECT COUNT(*) FROM richieste WHERE usernamePaziente = ? AND stato = ?";
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, currentUser);
+            stmt.setString(2, "accettata");
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt(1) > 0;
+                }
+            }
+        } catch (Exception e) {
+            throw new RuntimeException("Errore nel controllo richiesta accettata", e);
+        }
+        return false;
     }
 
 }

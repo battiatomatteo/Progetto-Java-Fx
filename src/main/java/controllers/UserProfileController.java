@@ -17,6 +17,8 @@ import javafx.stage.Stage;
 import utility.SessionManager;
 import utility.UIUtils;
 import javafx.scene.control.TextArea;
+import view.UserProfileView;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.util.ArrayList;
@@ -25,9 +27,9 @@ public class UserProfileController {
 
     @FXML private Label nomeLabel, tipoUtenteLabel, infoLabel, telefonoLabel, emailLabel, cognomeLabel, contentRequest, motivoR;
     @FXML private ImageView profileImage;
-    @FXML private GridPane infoN, newPass, boxRichieste;
-    @FXML private TextField nomeLabelN, telefonoLabelN, emailLabelN, cognomeLabelN;
-    @FXML private Button editProf, newPassB, logOutButton, backb, accettaRichiesta;
+    @FXML private GridPane infoN, newPass, boxRichieste, boxNewPass;
+    @FXML private TextField nomeLabelN, telefonoLabelN, emailLabelN, cognomeLabelN, newPassL, newPassLR;
+    @FXML private Button editProf, newPassB, logOutButton, backb, accettaRichiesta, changePass;
     @FXML private TextArea commentoArea;
     @FXML private ComboBox<String> tipoRichiesta;
 
@@ -38,12 +40,14 @@ public class UserProfileController {
 
     @FXML
     public void initialize() throws Exception {
-
-        checkRequet();
-
         boxRichieste.setVisible(false);
         newPass.setVisible(false);
         infoN.setVisible(false);
+        boxNewPass.setVisible(false);
+
+        checkRequet();
+
+
 
         String username = (profiloUsername != null) ? profiloUsername : SessionManager.getCurrentUser();
         infoUser(username);
@@ -70,8 +74,34 @@ public class UserProfileController {
         this.profiloUsername = username;
         infoUser(username);
         caricaImmagine(username);
-        checkRequestForAdmin(username);
-        accettaRichiesta.setOnAction(e ->  requestAccepted(username));
+        if(daoU.tipoUtente(username).equals("admin")){
+            checkRequestForAdmin(username);
+            accettaRichiesta.setOnAction(e ->  requestAccepted(username));
+        }
+    }
+
+    @FXML
+    private void cambioPassword(){
+
+        if(newPassLR.getText().equals(newPassL.getText())){
+            // salvo la nuova password
+            if(!UIUtils.controlloPassword(newPassL.getText())){
+                UIUtils.showAlert(Alert.AlertType.ERROR, "Errore :" , "La password da lei inserita non soddisfa i requisiti mini .");
+            }
+
+            System.out.println("Le due password sono uguali .");
+            Alert confirm = new Alert(Alert.AlertType.CONFIRMATION);
+            confirm.setTitle("Conferma salvataggio nuova password");
+            confirm.setHeaderText(null);
+            confirm.setContentText("Sei sicuro di voler cambiare la tua password ? Attenzione non potrai più usare la precedente .");
+
+            if (confirm.showAndWait().orElse(ButtonType.CANCEL) == ButtonType.OK) {
+
+
+                boxNewPass.setVisible(false);
+            }
+
+        }else UIUtils.showAlert(Alert.AlertType.ERROR, "Errore :", "Hai inserito due password diverse !");
 
     }
 
@@ -153,7 +183,12 @@ public class UserProfileController {
         if(dao.hasPendingRequest(SessionManager.getCurrentUser())){
             newPassB.setVisible(false);
         }
-        else newPassB.setVisible(true);
+        else if(dao.checkNewPass(SessionManager.getCurrentUser())) {
+            newPassB.setVisible(false);
+            editProf.setVisible(false);
+            boxNewPass.setVisible(true);
+            System.out.println("Ci sta una richietsa in stato : 'accettata' .");
+        }else newPassB.setVisible(true);
     }
 
     private void checkRequestForAdmin(String username){

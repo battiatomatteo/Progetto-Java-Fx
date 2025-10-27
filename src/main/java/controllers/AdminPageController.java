@@ -159,7 +159,7 @@ public class AdminPageController {
     private String controlloPass(String password){
         if (!UIUtils.controlloPassword(password)) {
             UIUtils.showAlert(Alert.AlertType.ERROR, "Errore !", "Il valore della password non è valido ( deve avere almeno " +
-                    " 8 caratteri di cui una maiuscola , un numero ed un simbolo , riprova .");
+                    " 8 caratteri di cui una maiuscola , un numero ed un simbolo ), riprova .");
             passwordInput.clear();
             return "";
         }
