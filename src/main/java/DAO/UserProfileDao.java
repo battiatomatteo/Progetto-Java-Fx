@@ -2,6 +2,7 @@ package DAO;
 
 import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
+import org.mindrot.jbcrypt.BCrypt;
 import utility.UIUtils;
 import javafx.scene.image.Image;
 import java.io.File;
@@ -141,19 +142,19 @@ public class UserProfileDao {
         }
     }
 
-    public void changeStateRequest(String user) {
-        String sql = "UPDATE richieste SET stato = ? WHERE usernamePaziente = ? AND stato = ?";
-
+    public void changeStateRequest(String user, String newState) {
+        // String sql = "UPDATE richieste SET stato = ? WHERE usernamePaziente = ? AND stato = ?";
+        String sql = "UPDATE richieste SET stato = ? WHERE usernamePaziente = ? ";
         try (Connection conn = DBConnection.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
-
-            stmt.setString(1, "accettata");
+            // cambio lo stato della richiesta da 'in corso...' -> 'accettata' -> conclusa'
+            stmt.setString(1, newState);
             stmt.setString(2, user);
-            stmt.setString(3, "in corso...");
+            //stmt.setString(3, "in corso...");
 
             int rowsUpdated = stmt.executeUpdate();
             if (rowsUpdated > 0) {
-                UIUtils.showAlert(Alert.AlertType.INFORMATION, "Cambio stato richiesta", "Stato aggiornato a 'accettata' per " + user );
+                UIUtils.showAlert(Alert.AlertType.INFORMATION, "Cambio stato richiesta", "Stato aggiornato a " + newState + " per " + user );
                 System.out.println("Stato aggiornato a 'accettata' per " + user);
             } else {
                 UIUtils.showAlert(Alert.AlertType.ERROR, "Errore", "Nessuna richiesta 'in corso...' trovata per " + user);
@@ -182,4 +183,19 @@ public class UserProfileDao {
         return false;
     }
 
+    public boolean updateNewPass(String newPass, String user) {
+        // 🔐 Cripta la password prima di salvarla
+        String hashedPassword = BCrypt.hashpw(newPass, BCrypt.gensalt());
+        String sql = "UPDATE utenti SET password = ? WHERE username = ?";
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)){
+            stmt.setString(1, hashedPassword);
+            stmt.setString(2, user);
+            stmt.executeUpdate();
+            return true;
+        }catch (Exception e) {
+            UIUtils.showAlert(Alert.AlertType.ERROR, "Errore." ,"Errore sql durante il salvataggio della nuova password .");
+            return false;
+        }
+    }
 }

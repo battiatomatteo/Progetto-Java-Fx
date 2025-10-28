@@ -82,27 +82,25 @@ public class UserProfileController {
 
     @FXML
     private void cambioPassword(){
-
         if(newPassLR.getText().equals(newPassL.getText())){
             // salvo la nuova password
             if(!UIUtils.controlloPassword(newPassL.getText())){
                 UIUtils.showAlert(Alert.AlertType.ERROR, "Errore :" , "La password da lei inserita non soddisfa i requisiti mini .");
+                return;
             }
-
             System.out.println("Le due password sono uguali .");
             Alert confirm = new Alert(Alert.AlertType.CONFIRMATION);
             confirm.setTitle("Conferma salvataggio nuova password");
             confirm.setHeaderText(null);
             confirm.setContentText("Sei sicuro di voler cambiare la tua password ? Attenzione non potrai più usare la precedente .");
-
             if (confirm.showAndWait().orElse(ButtonType.CANCEL) == ButtonType.OK) {
+                if(dao.updateNewPass(newPassL.getText(), SessionManager.getCurrentUser())){
+                    boxNewPass.setVisible(false);
+                    dao.changeStateRequest(SessionManager.getCurrentUser(), "conclusa");
+                }
 
-
-                boxNewPass.setVisible(false);
             }
-
         }else UIUtils.showAlert(Alert.AlertType.ERROR, "Errore :", "Hai inserito due password diverse !");
-
     }
 
     private void caricaImmagine(String username) {
@@ -263,7 +261,7 @@ public class UserProfileController {
         confirm.setContentText("Sei sicuro di voler accettare la richiesta cambio password ?");
 
         if (confirm.showAndWait().orElse(ButtonType.CANCEL) == ButtonType.OK) {
-            dao.changeStateRequest(user);
+            dao.changeStateRequest(user, "accettata");
             boxRichieste.setVisible(false);
         }
     }
