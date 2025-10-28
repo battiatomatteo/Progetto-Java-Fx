@@ -98,7 +98,6 @@ public class UserProfileController {
                     boxNewPass.setVisible(false);
                     dao.changeStateRequest(SessionManager.getCurrentUser(), "conclusa");
                 }
-
             }
         }else UIUtils.showAlert(Alert.AlertType.ERROR, "Errore :", "Hai inserito due password diverse !");
     }

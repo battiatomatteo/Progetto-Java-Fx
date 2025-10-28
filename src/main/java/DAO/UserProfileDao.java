@@ -155,10 +155,13 @@ public class UserProfileDao {
             int rowsUpdated = stmt.executeUpdate();
             if (rowsUpdated > 0) {
                 UIUtils.showAlert(Alert.AlertType.INFORMATION, "Cambio stato richiesta", "Stato aggiornato a " + newState + " per " + user );
-                System.out.println("Stato aggiornato a 'accettata' per " + user);
-            } else {
+                System.out.println("Stato aggiornato a " + newState + " per " + user);
+            } else if(newState.equals("in corso...")) {
                 UIUtils.showAlert(Alert.AlertType.ERROR, "Errore", "Nessuna richiesta 'in corso...' trovata per " + user);
                 System.out.println("Nessuna richiesta 'in corso...' trovata per " + user);
+            } else{
+                UIUtils.showAlert(Alert.AlertType.ERROR, "Errore", "Nessuna richiesta '" + newState + "' trovata per " + user);
+                System.out.println("Nessuna richiesta '" + newState + "' trovata per " + user);
             }
         } catch (Exception e) {
             UIUtils.showAlert(Alert.AlertType.ERROR, "Errore", "Errore durante l'aggiornamento dello stato richiesta");
