@@ -13,9 +13,17 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 
+/**
+ * Classe che gestisce l'accesso al database per la pagina profilo utente
+ * @package DAO
+ */
 public class UserProfileDao {
 
-
+    /**
+     * Questo metodo ha lo scopo di caricare tutte le info dell'utente presenti nel db
+     * @param user nome utente
+     * @return ArrayList<String> - contiene le info utente
+     */
     public ArrayList<String> caricoInfoUtente(String user){
         ArrayList<String> list = new ArrayList<>();
         String sql = "SELECT nome, cognome, tipo_utente, telefono, informazioni, mail FROM utenti WHERE username = ? ";
@@ -38,6 +46,14 @@ public class UserProfileDao {
         }
     }
 
+    /**
+     * Questo metodo ha lo scopo di salvare le nuove info dell'utente nel db
+     * @param nome nome utente
+     * @param cognome cognome utente
+     * @param telefono telefono utente
+     * @param mail mail utente
+     * @param user username utente
+     */
     public void changeInfo(String nome, String cognome, String telefono, String mail, String user) {
         String sql = "UPDATE utenti SET nome = ?, cognome = ?, telefono = ?, mail = ? WHERE username = ?";
         try (Connection conn = DBConnection.getConnection();
@@ -54,6 +70,11 @@ public class UserProfileDao {
         }
     }
 
+    /**
+     * Questo metodo ha lo scopo di aggiornare l'immagine profilo utente nel db
+     * @param user paziente
+     * @param fileImg immagine profilo da salvare
+     */
     public void aggiornaImmagineProfilo(String user, File fileImg){
         String sql = "UPDATE utenti SET img_profilo = ? WHERE username = ?";
         try (Connection conn = DBConnection.getConnection();
@@ -67,6 +88,11 @@ public class UserProfileDao {
         }
     }
 
+    /**
+     * Questo metodo ha lo scopo di caricare l'immagine profilo utente prensete nel db
+     * @param username utente
+     * @return Image - immagine profilo
+     */
     public Image caricaImmagineProfilo(String username) {
         String sql = "SELECT img_profilo FROM utenti WHERE username = ?";
         try (Connection conn = DBConnection.getConnection();
@@ -85,6 +111,12 @@ public class UserProfileDao {
         return null;
     }
 
+    /**
+     * Questo metodo ha lo scopo di creare una nuova richiesta nel db per l'utente loggato
+     * @param user username
+     * @param content contenuto richiesta
+     * @param motivo motivo richiesta
+     */
     public void sendRequest(String user, String content, String motivo) {
         String sql = "INSERT INTO richieste (usernamePaziente, contenutoRichiesta, motivo, stato ) VALUES (?, ?, ?, ?)";
         try(Connection conn = DBConnection.getConnection();
@@ -99,9 +131,13 @@ public class UserProfileDao {
         }
     }
 
+    /**
+     * Questo metodo ha lo scopo di controllare se ci sono richieste in corso
+     * @param user username
+     * @return boolean - true se ci sono richieste in corso, false altrimenti
+     */
     public boolean hasPendingRequest(String user) {
         String sql = "SELECT COUNT(*) FROM richieste WHERE usernamePaziente = ? AND stato = ?";
-
         try (Connection conn = DBConnection.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setString(1, user);
@@ -118,7 +154,12 @@ public class UserProfileDao {
         return false; // Nessuna richiesta trovata o errore
     }
 
-
+    /**
+     * Questo metodo ha lo scopo di settare i label delle richieste
+     * @param content contenuto richiesta
+     * @param motivo motivo richiesta
+     * @param user username
+     */
     public void setLabelRequest(Label content, Label motivo, String user) {
         String sql = "SELECT contenutoRichiesta, motivo FROM richieste WHERE usernamePaziente = ? AND stato = ? ORDER BY idRichiesta DESC LIMIT 1";
 
@@ -142,6 +183,11 @@ public class UserProfileDao {
         }
     }
 
+    /**
+     * Questo metodo ha lo scopo di cambiare lo stato della richiesta
+     * @param user username
+     * @param newState nuovo stato richiesta
+     */
     public void changeStateRequest(String user, String newState) {
         // String sql = "UPDATE richieste SET stato = ? WHERE usernamePaziente = ? AND stato = ?";
         String sql = "UPDATE richieste SET stato = ? WHERE usernamePaziente = ? ";
@@ -151,7 +197,6 @@ public class UserProfileDao {
             stmt.setString(1, newState);
             stmt.setString(2, user);
             //stmt.setString(3, "in corso...");
-
             int rowsUpdated = stmt.executeUpdate();
             if (rowsUpdated > 0) {
                 UIUtils.showAlert(Alert.AlertType.INFORMATION, "Cambio stato richiesta", "Stato aggiornato a " + newState + " per " + user );
@@ -169,6 +214,11 @@ public class UserProfileDao {
         }
     }
 
+    /**
+     * Questo metodo ha lo scopo di fare un controllo della nuova password
+     * @param currentUser username
+     * @return boolean - true o false
+     */
     public boolean checkNewPass(String currentUser) {
         String sql = "SELECT COUNT(*) FROM richieste WHERE usernamePaziente = ? AND stato = ?";
         try (Connection conn = DBConnection.getConnection();
@@ -186,6 +236,12 @@ public class UserProfileDao {
         return false;
     }
 
+    /**
+     * Questo metodo ha lo scopo di aggiornare la password nel db
+     * @param newPass nuova password
+     * @param user username
+     * @return boolean - true o false
+     */
     public boolean updateNewPass(String newPass, String user) {
         // 🔐 Cripta la password prima di salvarla
         String hashedPassword = BCrypt.hashpw(newPass, BCrypt.gensalt());

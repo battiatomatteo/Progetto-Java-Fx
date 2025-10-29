@@ -12,7 +12,6 @@ import models.Terapia;
 import utility.SessionManager;
 import utility.UIUtils;
 import view.UserProfileView;
-
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;

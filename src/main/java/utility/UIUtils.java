@@ -258,8 +258,13 @@ public class UIUtils {
         }
     }
 
+    /**
+     * Questo metodo ha lo scopo di indirizzare nella pagina giusta in base all'utente che logga
+     * @param nome username
+     * @param stage
+     * @throws Exception
+     */
     public static void handleBack(String nome, Stage stage) throws Exception {
-
         String tipo_utente = dao.tipoUtente(nome);
         SessionManager.signIn(nome,tipo_utente);
         if (tipo_utente.equals("paziente")) {

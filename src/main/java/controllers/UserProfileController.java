@@ -47,13 +47,10 @@ public class UserProfileController {
 
         checkRequet();
 
-
-
         String username = (profiloUsername != null) ? profiloUsername : SessionManager.getCurrentUser();
         infoUser(username);
         caricaImmagine(username);
-
-
+        
         backb.setOnAction(e -> {
             try {
                 UIUtils.handleBack(username, (Stage) backb.getScene().getWindow());
@@ -258,7 +255,6 @@ public class UserProfileController {
         confirm.setTitle("Conferma richiesta");
         confirm.setHeaderText(null);
         confirm.setContentText("Sei sicuro di voler accettare la richiesta cambio password ?");
-
         if (confirm.showAndWait().orElse(ButtonType.CANCEL) == ButtonType.OK) {
             dao.changeStateRequest(user, "accettata");
             boxRichieste.setVisible(false);

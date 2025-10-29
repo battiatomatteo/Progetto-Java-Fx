@@ -7,9 +7,18 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 import javafx.scene.Parent;
 
+/**
+ * Classe view di PatientPane
+ * @PAckege view
+ * @see <a href="https://github.com/battiatomatteo/Progetto-Java-Fx/blob/main/src/main/resources/fxml/UserProfile.fxml">UserProfile.fxml</a>
+ */
 public class UserProfileView extends Application {
     private final String username;
 
+    /**
+     * Setta lo username
+     * @param username
+     */
     public UserProfileView(String username) {
         this.username = username;
     }
