@@ -23,8 +23,18 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.util.ArrayList;
 
+/**
+ * Controller della finestra che permette la visione dei dati utente tramite una pagina dedicata.
+ * @package controllers
+ * @see DAO.UserProfileDao
+ * @see DAO.UIUtilsDao
+ * @see DAO.AdminDao
+ * @see utility.UIUtils
+ * @see <a href="https://github.com/battiatomatteo/Progetto-Java-Fx/blob/main/src/main/resources/fxml/UserProfile.fxml">UserProfile.fxml</a>
+ */
 public class UserProfileController {
 
+    // Attributi della classe
     @FXML private Label nomeLabel, tipoUtenteLabel, infoLabel, telefonoLabel, emailLabel, cognomeLabel, contentRequest, motivoR;
     @FXML private ImageView profileImage;
     @FXML private GridPane infoN, newPass, boxRichieste, boxNewPass;
@@ -38,6 +48,10 @@ public class UserProfileController {
     private AdminDao daoA = new AdminDao();
     private String profiloUsername;
 
+    /**
+     * Metodo di inizializzazione automatico eseguito al caricamento del controller.
+     * @throws Exception
+     */
     @FXML
     public void initialize() throws Exception {
         boxRichieste.setVisible(false);
@@ -50,7 +64,7 @@ public class UserProfileController {
         String username = (profiloUsername != null) ? profiloUsername : SessionManager.getCurrentUser();
         infoUser(username);
         caricaImmagine(username);
-        
+
         backb.setOnAction(e -> {
             try {
                 UIUtils.handleBack(username, (Stage) backb.getScene().getWindow());
@@ -67,6 +81,11 @@ public class UserProfileController {
         logOutButton.setOnAction(e -> UIUtils.LogOutButton((Stage) logOutButton.getScene().getWindow()));
     }
 
+    /**
+     * Questo metodo ha lo scopo di settare tutti i label coi dati del paziente presenti nel database
+     * @param username nome utente
+     * @see DAO.UIUtilsDao
+     */
     public void setProfiloUsername(String username) {
         this.profiloUsername = username;
         infoUser(username);
@@ -77,6 +96,11 @@ public class UserProfileController {
         }
     }
 
+    /**
+     * Questo metodo ha lo scopo di salvare la nuova password nel database
+     * @see utility.UIUtils
+     * @see DAO.UserProfileDao
+     */
     @FXML
     private void cambioPassword(){
         if(newPassLR.getText().equals(newPassL.getText())){
@@ -99,6 +123,11 @@ public class UserProfileController {
         }else UIUtils.showAlert(Alert.AlertType.ERROR, "Errore :", "Hai inserito due password diverse !");
     }
 
+    /**
+     * Questo metodo ha lo scopo di caricare l'immagine profilo utente
+     * @param username nome utente
+     * @see DAO.UserProfileDao
+     */
     private void caricaImmagine(String username) {
         try {
             Image img = dao.caricaImmagineProfilo(username);
@@ -113,12 +142,19 @@ public class UserProfileController {
         }
     }
 
+    /**
+     * Questo metodo ha lo scopo di mostrare le nuove informazioni dell'utente
+     */
     @FXML
     private void handleEdit() {
         infoN.setVisible(true);
         checkRequet();
     }
 
+    /**
+     * Questo metodo ha lo scopo di salvare nel database le nuove informazioni dell'utente
+     * @see DAO.UserProfileDao
+     */
     @FXML
     private void saveNewInfo(){
         String username = SessionManager.getCurrentUser();
@@ -157,6 +193,11 @@ public class UserProfileController {
         infoN.setVisible(false);
     }
 
+    /**
+     * Questo metodo ha lo scopo di settare i label coi dati utente presenti nel database
+     * @param username nome utente
+     * @see DAO.UserProfileDao
+     */
     private void infoUser(String username){
         //String username = SessionManager.getCurrentUser();
         ArrayList<String> list = dao.caricoInfoUtente(username);
@@ -173,6 +214,9 @@ public class UserProfileController {
         }
     }
 
+    /**
+     * Questo metodo ha lo scopo di controllare le richieste
+     */
     private void checkRequet() {
         if(dao.hasPendingRequest(SessionManager.getCurrentUser())){
             newPassB.setVisible(false);
@@ -185,8 +229,12 @@ public class UserProfileController {
         }else newPassB.setVisible(true);
     }
 
+    /**
+     * Questo metodo ha lo scopo di rendere visibile il box per accettare la richiesta nel caso l'utente loggato sia l'admin
+     * @param username nome utente
+     */
     private void checkRequestForAdmin(String username){
-        System.out.println("Corrent User : " + SessionManager.getCurrentUser()+ "\nUsername paziente : " + username);
+        // System.out.println("Corrent User : " + SessionManager.getCurrentUser()+ "\nUsername paziente : " + username);
         if(daoU.tipoUtente(SessionManager.getCurrentUser()).equals("admin") && daoA.checkRequest(username).equals("si")){
             // rendo visibile la richiesta all'admin
             dao.setLabelRequest(motivoR, contentRequest, username );
@@ -194,12 +242,19 @@ public class UserProfileController {
         }
     }
 
+    /**
+     * Questo metodo ha lo scopo di annullare la scelta .
+     */
     @FXML
     public void annulla() {
         infoN.setVisible(false);
         checkRequet();
     }
 
+    /**
+     * Questo metodo ha lo scopo di salvare la nuova immagine profilo nel database.
+     * @see DAO.UserProfileDao
+     */
     @FXML
     public void newImg() {
         FileChooser fileChooser = new FileChooser();
@@ -219,13 +274,19 @@ public class UserProfileController {
         }
     }
 
+    /**
+     * Questo metodo ha lo scopo di rendere visibili i box per la richiesta della nuova password
+     */
     @FXML
     private void newPassword() {
         newPass.setVisible(true);
         editProf.setVisible(false);
     }
 
-
+    /**
+     * Questo metodo ha lo scopo di creare una richiesta per la nuova password
+     * @see DAO.UserProfileDao
+     */
     public void invioRichiesta() {
         String user = SessionManager.getCurrentUser();
         String content = commentoArea.getText();
@@ -244,12 +305,19 @@ public class UserProfileController {
         tipoRichiesta.setValue(null);
     }
 
+    /**
+     * Questo metodo ha lo scopo di annullare la scelta .
+     */
     public void annullaP() {
         newPass.setVisible(false);
         editProf.setVisible(true);
     }
 
-
+    /**
+     * Questo metodo ha lo scopo di cambiare lo stato della richiesta in 'accettata'
+     * @param user
+     * @see DAO.UserProfileDao
+     */
     public void requestAccepted(String user) {
         Alert confirm = new Alert(Alert.AlertType.CONFIRMATION);
         confirm.setTitle("Conferma richiesta");

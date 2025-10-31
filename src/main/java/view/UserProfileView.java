@@ -23,6 +23,11 @@ public class UserProfileView extends Application {
         this.username = username;
     }
 
+    /**
+     *
+     * @param stage
+     * @throws Exception
+     */
     @Override
     public void start(Stage stage) throws Exception {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/UserProfile.fxml"));
@@ -38,6 +43,10 @@ public class UserProfileView extends Application {
         stage.show();
     }
 
+    /**
+     *
+     * @param args
+     */
     public static void main(String[] args) {
         launch(args);
     }

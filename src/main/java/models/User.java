@@ -47,6 +47,7 @@ public class User {
      * @param password       password dell'utente
      * @param medico         medico assegnato (se paziente)
      * @param infoPaziente   informazioni sanitarie (solo per i pazienti)
+     * @param richieste      richieste (solo per i pazienti)
      */
     public User(String username, String tipo_utente, String password, String medico, String infoPaziente, String richieste) {
         this.username = new SimpleStringProperty(username);
@@ -88,8 +89,8 @@ public class User {
     public String getInfoPaziente() { return infoPaziente.get(); }
 
     /**
-     *
-     * @return
+     * Restituisce la richiesta del paziente.
+     * @return String - richiesta paziente
      */
     public String getRichieste() { return richieste.get(); }
 
@@ -99,6 +100,10 @@ public class User {
      */
     public SimpleStringProperty usernameProperty() { return username; }
 
+    /**
+     * Property per la richiesta (JavaFX binding).
+     * @return SimpleStringProperty - richiesta property
+     */
     public SimpleStringProperty richiesteProperty() { return richieste; }
 
     /**

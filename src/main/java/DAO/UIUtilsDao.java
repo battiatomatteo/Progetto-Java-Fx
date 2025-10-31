@@ -22,8 +22,6 @@ public class UIUtilsDao {
      * @param password password utente
      * @return boolean - true in caso l'autenticazione fosse corretta, false altrimenti.
      */
-
-
     public boolean authenticateLogin(String username, String password) {
         String sql = "SELECT password FROM utenti WHERE username = ?";
         try (Connection conn = DBConnection.getConnection();
@@ -44,7 +42,6 @@ public class UIUtilsDao {
             return false;
         }
     }
-
 
     /**
      * Metodo con lo scopo di verificare l'autenticazione nella pagina del dottore, quando inserisce un nome di un paziente da cercare

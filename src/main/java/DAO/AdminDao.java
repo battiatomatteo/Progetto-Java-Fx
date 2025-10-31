@@ -191,6 +191,11 @@ public class AdminDao {
     }
 
 
+    /**
+     * Questo metodo ha lo scopo di controllare se sono presenti delle richieste 'in corso...'
+     * @param user
+     * @return
+     */
     public String checkRequest(String user) {
         String sql = "SELECT COUNT(*) FROM richieste WHERE usernamePaziente = ? AND stato = ?";
 

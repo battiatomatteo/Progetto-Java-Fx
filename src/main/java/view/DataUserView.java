@@ -15,7 +15,11 @@ import javafx.stage.Stage;
  */
 public class DataUserView extends Application {
 
-
+    /**
+     *
+     * @param stage
+     * @throws Exception
+     */
     @Override
     public void start(Stage stage) throws Exception {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/DataUser.fxml"));
