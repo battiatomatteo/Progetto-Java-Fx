@@ -39,7 +39,7 @@ public class UserProfileController {
     @FXML private ImageView profileImage;
     @FXML private GridPane infoN, newPass, boxRichieste, boxNewPass;
     @FXML private TextField nomeLabelN, telefonoLabelN, emailLabelN, cognomeLabelN, newPassL, newPassLR;
-    @FXML private Button editProf, newPassB, logOutButton, backb, accettaRichiesta, changePass;
+    @FXML private Button editProf, newPassB, logOutButton, backb, accettaRichiesta, changePass, newImgB;
     @FXML private TextArea commentoArea;
     @FXML private ComboBox<String> tipoRichiesta;
 
@@ -76,6 +76,7 @@ public class UserProfileController {
         if(!daoU.tipoUtente(SessionManager.getCurrentUser()).equals("paziente")){
             editProf.setVisible(false);
             newPassB.setVisible(false);
+            newImgB.setVisible(false);
         }
 
         logOutButton.setOnAction(e -> UIUtils.LogOutButton((Stage) logOutButton.getScene().getWindow()));
@@ -147,6 +148,7 @@ public class UserProfileController {
      */
     @FXML
     private void handleEdit() {
+        newPassB.setVisible(false);
         infoN.setVisible(true);
         checkRequet();
     }

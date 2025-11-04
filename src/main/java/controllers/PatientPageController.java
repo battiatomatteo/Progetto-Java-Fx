@@ -432,14 +432,25 @@ public class PatientPageController {
         return (pasto.getPre() == 0 || pasto.getPost() == 0) && (oraInt < oraAttuale);
     }
 
-
+    /**
+     * Questo metodo ha lo scopo di creare la nuova finestra 'profilo utente'
+     * @param stage
+     * @throws Exception
+     * @see view.UserProfileView
+     */
     private void profilo(Stage stage) throws Exception {
         String username = SessionManager.getCurrentUser();
         new UserProfileView(username).start(stage);
     }
 
+    /**
+     * Questo metodo ha lo scopo di creare la nuova finestra 'dati utente'
+     * @param stage
+     * @throws Exception
+     * @see view.DataUserView
+     */
     private void myDataPage(Stage stage) throws Exception {
-        String username = SessionManager.getCurrentUser();
+        //String username = SessionManager.getCurrentUser();
         new DataUserView().start(stage);
     }
 

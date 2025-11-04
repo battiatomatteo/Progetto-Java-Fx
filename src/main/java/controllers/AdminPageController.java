@@ -185,6 +185,13 @@ public class AdminPageController {
         }
     }
 
+    /**
+     * Questo metodo ha lo scopo di mostrare il profilo utente selezionato dalla tabella
+     * @param stage
+     * @throws Exception
+     * @see view.UserProfileView
+     * @see utility.UIUtils
+     */
     private void mostraProfilo(Stage stage) throws Exception {
         User selectedUser = table.getSelectionModel().getSelectedItem();
         if (selectedUser != null) {

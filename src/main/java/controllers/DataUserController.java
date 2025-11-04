@@ -17,8 +17,16 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.TemporalAdjusters;
 
+/**
+ * Controller della finestra che permette la visione dei dati utente tramite una pagina dedicata.
+ * @package controllers
+ * @see DAO.PatientPaneDao
+ * @see utility.UIUtils
+ * @see <a href="https://github.com/battiatomatteo/Progetto-Java-Fx/blob/main/src/main/resources/fxml/DataUser.fxml">DataUser.fxml</a>
+ */
 public class DataUserController {
 
+    // Attributi della classe
     @FXML private PatientChartController chartIncludeController;
     @FXML private TableView<Terapia> table;
     @FXML private TableColumn<Terapia, String> farmacoCol, assunzioniCol, quantFarCol, noteCol;
@@ -48,6 +56,9 @@ public class DataUserController {
      */
     private LocalDate dataAttuale = LocalDate.now().with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY));
 
+    /**
+     * Metodo di inizializzazione automatico eseguito al caricamento del controller.
+     */
     @FXML
     private void initialize() {
         terapiaCol.setCellValueFactory(cell -> cell.getValue().idTerapiaProperty().asObject());
@@ -103,6 +114,10 @@ public class DataUserController {
         ricaricaDatiGrafico();
     }
 
+    /**
+     * Questo metodo ha lo scopo di cercare tutte le terapie dell'utente presenti nel database
+     * @see DAO.PatientPaneDao
+     */
     @FXML
     private void searchTerapie() {
         String username = SessionManager.getCurrentUser();
@@ -113,6 +128,11 @@ public class DataUserController {
         chartIncludeController.setData(username, new ChartFilter(ChartFilter.NO_START_DATE, ChartFilter.NO_END_DATE,ChartFilter.NO_ID )); // passo il nome del paziente
     }
 
+    /**
+     * Questo metodo ha lo scopo di settare il profilo utente
+     * @param stage
+     * @throws Exception
+     */
     private void profilo(Stage stage) throws Exception {
         String username = SessionManager.getCurrentUser();
         new UserProfileView(username).start(stage);
