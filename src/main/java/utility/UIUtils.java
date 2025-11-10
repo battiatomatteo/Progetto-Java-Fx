@@ -231,7 +231,7 @@ public class UIUtils {
      * @return valore booleano, vero se la risposta è corretta, falso altrimenti.
      */
     public static boolean controlloParolaStringa(String input) {
-        return input != null && input.matches("^[A-Za-z]+$");
+        return input != null && input.matches("^[A-Za-z0-9 ]+$");
     }
 
     /**

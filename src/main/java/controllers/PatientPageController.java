@@ -99,6 +99,12 @@ public class PatientPageController {
         preColumn.setCellValueFactory(cellData -> cellData.getValue().preProperty().asObject());
         postColumn.setCellValueFactory(cellData -> cellData.getValue().postProperty().asObject());
 
+        pastoColumn.setEditable(false);
+        orarioColumn.setEditable(false);
+        preColumn.setEditable(true);
+        postColumn.setEditable(true);
+
+
         // Rendi le celle editabili
         pastoColumn.setCellFactory(TextFieldTableCell.forTableColumn());
         orarioColumn.setCellFactory(TextFieldTableCell.forTableColumn());

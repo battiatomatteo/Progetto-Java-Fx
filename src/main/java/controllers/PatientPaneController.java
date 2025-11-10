@@ -179,10 +179,9 @@ public class PatientPaneController {
             UIUtils.showAlert(Alert.AlertType.WARNING, "Campi mancanti", "Compila tutti i campi obbligatori!");
             return;
         }
-        if(UIUtils.controlloParolaStringa(username) ||
-                UIUtils.controlloParolaStringa(farmaco) ||
-                UIUtils.controlloFloat(assunzioni) ||
-                UIUtils.controlloFloat(quantita)){
+        if(!UIUtils.controlloParolaStringa(farmaco) ||
+                !UIUtils.controlloFloat(assunzioni) ||
+                !UIUtils.controlloFloat(quantita)){
             UIUtils.showAlert(Alert.AlertType.WARNING, "Campi Errati", "Compilare correttamente i campi inseriti");
             return;
         }
