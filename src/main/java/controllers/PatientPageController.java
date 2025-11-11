@@ -464,8 +464,6 @@ public class PatientPageController {
         //String username = SessionManager.getCurrentUser();
         new DataUserView().start(stage);
     }
-
-
 }
 
 
