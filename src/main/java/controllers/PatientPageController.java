@@ -105,7 +105,7 @@ public class PatientPageController {
         postColumn.setEditable(true);
 
 
-        // Rendi le celle editabili
+        // Rende le celle editabili
         pastoColumn.setCellFactory(TextFieldTableCell.forTableColumn());
         orarioColumn.setCellFactory(TextFieldTableCell.forTableColumn());
         preColumn.setCellFactory(TextFieldTableCell.forTableColumn(new FloatStringConverter()));
@@ -260,6 +260,11 @@ public class PatientPageController {
             float pre = p.getPre();
             float post = p.getPost();
 
+            if(pre < 0 && post > 250 ){
+                UIUtils.showAlert(Alert.AlertType.ERROR, "Errore :", "Sono stati inseriti dei valori anomali .");
+                return ;
+            }
+
             // controllo valori somministrazione
             if((pre < PREPASTOMIN || pre > PREPASTOMAX || post > POSTPASTOMAX ) && (pre != 0 && post != 0)) {
                 UIUtils.showAlert(Alert.AlertType.WARNING, "Valori somministrazione", "I valori di questa somministrazione sono fuori dal range : ");
@@ -339,7 +344,7 @@ public class PatientPageController {
         LocalDate oggi = LocalDate.now();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
-        if(dao.cercoSintomi(nuovaNota, SessionManager.getCurrentUser(), oggi, formatter)){
+        if(dao.cercoSintomi(nuovaNota, SessionManager.getCurrentUser(), oggi, formatter) ){
             System.out.println("operazione riuscita");
         }
         else{
