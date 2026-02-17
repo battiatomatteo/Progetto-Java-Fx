@@ -260,13 +260,14 @@ public class PatientPageController {
             float pre = p.getPre();
             float post = p.getPost();
 
-            if(pre < 0 && post > 250 ){
+            // controllo che i valori pre e post abbiano valori plausibili altrimenti annullo l'inserimento
+            if((pre < 0 || pre >= 500) || (post < 0 || post >= 500) ){
                 UIUtils.showAlert(Alert.AlertType.ERROR, "Errore :", "Sono stati inseriti dei valori anomali .");
                 return ;
             }
 
             // controllo valori somministrazione
-            if((pre < PREPASTOMIN || pre > PREPASTOMAX || post > POSTPASTOMAX ) && (pre != 0 && post != 0)) {
+            if((pre < PREPASTOMIN || pre > PREPASTOMAX || post < PREPASTOMIN || post > POSTPASTOMAX) || ( pre != 0 && post != 0 )) {
                 UIUtils.showAlert(Alert.AlertType.WARNING, "Valori somministrazione", "I valori di questa somministrazione sono fuori dal range : ");
                 // mess di def. somm
                 String patient = SessionManager.getCurrentUser();
@@ -350,10 +351,6 @@ public class PatientPageController {
         else{
             System.out.println("operazione non riuscita");
         }
-
-        /*if(!dao.cercoSintomiOggi(oggi, formatter, nuovaNota, SessionManager.currentUser)){// 1. Controllo se ci sono somministrazioni oggi
-            dao.cercoSintomiGiorniPrecedenti(nuovaNota, SessionManager.currentUser);  // 2. Nessuna somministrazione oggi → cerco l’ultima disponibile
-        }*/
     }
 
     /**
@@ -401,33 +398,6 @@ public class PatientPageController {
         if(! s[0].isEmpty()) {
             // warning all'utente
             UIUtils.showAlert(Alert.AlertType.WARNING, "Attenzione", "Mancano le rilevazioni delle ore precedenti \n"+ s[0]);
-            /*
-            // messaggio al medico
-            // data2 è la data di oggi e data1 è la data di 3 giorni prima di data2, controllo se data1 è nel db
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-            LocalDate oggi = LocalDate.now(); // Ottieni la data corrente
-            String data2 = oggi.format(formatter); // Converte la data in stringa formattata
-
-            // 1. Converte la stringa in LocalDate
-            LocalDate data = LocalDate.parse(data2, formatter);
-
-            // 2. Sottrae 3 giorni
-            LocalDate nuovaData = data.minusDays(3);
-
-            // 3. Converte di nuovo in stringa
-            String data1 = nuovaData.format(formatter);
-
-            ChartFilter filter = new ChartFilter(data1, data2, ChartFilter.NO_ID);
-            String patient = SessionManager.getCurrentUser();
-            if(dao.messageSommDim( filter, patient)) {
-                // content mess al dottore
-                String content = "Mancano delle somministrazioni da parte di " + patient + " da almeno 3 giorni . Oggi è il : " + data2;
-                // invio mess al dottore
-
-                if(! dao.messDuplicato(content, UIUtils.getDoctor(patient), patient)) {
-                    dao.messageSomm(content, UIUtils.getDoctor(patient), patient);
-                }
-            }*/
         }
     }
 
@@ -461,7 +431,6 @@ public class PatientPageController {
      * @see view.DataUserView
      */
     private void myDataPage(Stage stage) throws Exception {
-        //String username = SessionManager.getCurrentUser();
         new DataUserView().start(stage);
     }
 }

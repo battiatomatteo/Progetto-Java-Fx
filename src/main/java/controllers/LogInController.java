@@ -1,8 +1,10 @@
 package controllers;
 
 import DAO.UIUtilsDao;
+import DAO.UserProfileDao;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 import utility.SessionManager;
 import utility.UIUtils;
@@ -23,6 +25,8 @@ public class LogInController {
     @FXML private Label messageLabel;
     @FXML private TextField visiblePassField;
     @FXML private ToggleButton showPasswordToggle;
+
+    private UserProfileDao daoUP = new UserProfileDao();
     /**
      * Oggetto per accesso al database
      * @see DAO.UIUtilsDao
@@ -100,5 +104,30 @@ public class LogInController {
      */
     private static String getErrore() {
         return "Errore di autenticazione. Riprova.";
+    }
+
+    public void handleForgotPassword(MouseEvent mouseEvent) {
+        String user = userField.getText();
+        String content = "L'utente ha dimenticato la password";
+        String motivo = "Password dimenticata";
+
+        if(daoUP.hasPendingRequest(user)){
+            UIUtils.showAlert(Alert.AlertType.ERROR, "Errore :", "Hai già fatto richiesta di cambio password, si prega di aspettare che l'admin accetti la richiesta .");
+            return;
+        }
+
+        Alert confirm = new Alert(Alert.AlertType.CONFIRMATION);
+        confirm.setTitle("Conferma invio richiesta");
+        confirm.setHeaderText(null);
+        confirm.setContentText("Sei sicuro di voler inviare la richiesta per il cambio password ? Dopo aver premuto OK non potrai ritirare la richiesta ");
+
+        if(userField.getText().isEmpty()){
+            UIUtils.showAlert(Alert.AlertType.ERROR, "Nome utente", "Prima di fare la richiesta devi inserire il tuo username !");
+            return;
+        }
+
+        if (confirm.showAndWait().orElse(ButtonType.CANCEL) == ButtonType.OK) {
+            daoUP.sendRequest(user, content, motivo);
+        }
     }
 }

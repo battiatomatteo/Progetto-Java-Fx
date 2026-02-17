@@ -90,12 +90,12 @@ public class AdminDao {
      * @see models.User
      */
     public User aggiungiUtente(User user){
-        if(!controlloMedico(user.getMedico())) {
+        if(!controlloMedico(user.getMedico()) && (user.getTipoUtente() == "paziente")) {
             UIUtils.showAlert(Alert.AlertType.ERROR, "Errore :", "Il medico da lei inserito non esiste");
             return null;
         }
 
-        // 🔐 Cripta la password prima di salvarla
+        // Cripta la password prima di salvarla
         String hashedPassword = BCrypt.hashpw(user.getPassword(), BCrypt.gensalt());
 
         String sql = "INSERT INTO utenti(username, tipo_utente, password, medico, informazioni) VALUES (?, ?, ?, ?, ?)";

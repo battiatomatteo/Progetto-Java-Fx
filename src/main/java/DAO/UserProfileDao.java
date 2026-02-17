@@ -189,7 +189,7 @@ public class UserProfileDao {
      * @param newState nuovo stato richiesta
      */
     public void changeStateRequest(String user, String newState) {
-        // String sql = "UPDATE richieste SET stato = ? WHERE usernamePaziente = ? AND stato = ?";
+
         String sql = "UPDATE richieste SET stato = ? WHERE usernamePaziente = ? ";
         try (Connection conn = DBConnection.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {

@@ -24,6 +24,14 @@
         <ToggleButton fx:id="showPasswordToggle" text="👁" focusTraversable="false"/>
     </HBox>
 
+    <Label fx:id="messageLabelPass"
+           text="Password dimenticata"
+           onMouseClicked="#handleForgotPassword"
+           GridPane.columnIndex="1"
+           GridPane.rowIndex="5"
+           style="-fx-text-fill: blue; -fx-underline: true; -fx-cursor: hand;" />
+
+
     <Label fx:id="messageLabel" GridPane.columnIndex="1" GridPane.rowIndex="3"/>
     <Button fx:id="loginButton" text="Accedi" GridPane.columnIndex="1" GridPane.rowIndex="4"/>
 </GridPane>

@@ -223,7 +223,6 @@ public class AdminPageController {
         String oldUsername = null;
 
         User selected = table.getSelectionModel().getSelectedItem();
-        // User user = new User(username, tipoUtente, password, medico, "informazioni..."); // info paziente vengono create dal medico non dall'admin
 
         if(username.isEmpty() && tipoUtente == null && password.isEmpty() && medico.isEmpty() ){
             UIUtils.showAlert(Alert.AlertType.WARNING, "Campi mancanti", "Compila almeno un campo per modificare");

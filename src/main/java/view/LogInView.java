@@ -22,7 +22,7 @@ public class LogInView extends Application {
         Parent root = FXMLLoader.load(getClass().getResource("/fxml/LogIn.fxml"));
         primaryStage.setTitle("Login");
         primaryStage.getIcons().add(new Image(getClass().getResourceAsStream("/img/icona_dottore.jpg")));
-        primaryStage.setScene(new Scene(root, 350, 200));
+        primaryStage.setScene(new Scene(root, 400, 250));
         primaryStage.centerOnScreen();
         primaryStage.show();
     }

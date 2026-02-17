@@ -19,6 +19,7 @@ import utility.UIUtils;
 import javafx.scene.control.TextArea;
 import view.UserProfileView;
 
+import javax.net.ssl.SSLSession;
 import java.io.File;
 import java.io.FileInputStream;
 import java.util.ArrayList;
@@ -91,9 +92,12 @@ public class UserProfileController {
         this.profiloUsername = username;
         infoUser(username);
         caricaImmagine(username);
-        if(daoU.tipoUtente(username).equals("admin")){
+        if(SessionManager.getCurrentRole().equals("admin")){
+            System.out.println("Sto per chiamare checkRequestForAdmin ");
             checkRequestForAdmin(username);
             accettaRichiesta.setOnAction(e ->  requestAccepted(username));
+        }else {
+            System.out.println("non sono un admin");
         }
     }
 
@@ -107,7 +111,7 @@ public class UserProfileController {
         if(newPassLR.getText().equals(newPassL.getText())){
             // salvo la nuova password
             if(!UIUtils.controlloPassword(newPassL.getText())){
-                UIUtils.showAlert(Alert.AlertType.ERROR, "Errore :" , "La password da lei inserita non soddisfa i requisiti mini .");
+                UIUtils.showAlert(Alert.AlertType.ERROR, "Errore :" , "La password da lei inserita non soddisfa i requisiti minimi .");
                 return;
             }
             System.out.println("Le due password sono uguali .");
@@ -150,7 +154,8 @@ public class UserProfileController {
     private void handleEdit() {
         newPassB.setVisible(false);
         infoN.setVisible(true);
-        checkRequet();
+        editProf.setVisible(false);
+        //checkRequet();
     }
 
     /**
@@ -165,7 +170,7 @@ public class UserProfileController {
         String newEmail = emailLabel.getText();
         String newTelefono = telefonoLabel.getText();
 
-        if(nomeLabelN.getText().isEmpty() || cognomeLabelN.getText().isEmpty() || emailLabelN.getText().isEmpty() || telefonoLabelN.getText().isEmpty()){
+        if(nomeLabelN.getText().isEmpty() && cognomeLabelN.getText().isEmpty() && emailLabelN.getText().isEmpty() && telefonoLabelN.getText().isEmpty()){
             UIUtils.showAlert(Alert.AlertType.ERROR,"Errore", "Non è stato compilato nessun dato, si prega di compilarne almeno uno.");
             infoN.setVisible(false);
             return;
@@ -193,6 +198,8 @@ public class UserProfileController {
         nomeLabelN.clear();
 
         infoN.setVisible(false);
+        editProf.setVisible(true);
+        newPassB.setVisible(true);
     }
 
     /**
@@ -236,7 +243,6 @@ public class UserProfileController {
      * @param username nome utente
      */
     private void checkRequestForAdmin(String username){
-        // System.out.println("Corrent User : " + SessionManager.getCurrentUser()+ "\nUsername paziente : " + username);
         if(daoU.tipoUtente(SessionManager.getCurrentUser()).equals("admin") && daoA.checkRequest(username).equals("si")){
             // rendo visibile la richiesta all'admin
             dao.setLabelRequest(motivoR, contentRequest, username );
@@ -250,6 +256,7 @@ public class UserProfileController {
     @FXML
     public void annulla() {
         infoN.setVisible(false);
+        editProf.setVisible(true);
         checkRequet();
     }
 

@@ -10,7 +10,7 @@ import java.sql.*;
 public class PasswordMigrator {
 
     /**
-    * Questo metodo ha lo scopo di trovare le password nel database che non sono state salvate correttamente .
+    * Questo metodo ha lo scopo di trovare le password nel database che non sono state salvate correttamente.
      */
     public static void criptaPasswordEsistenti() {
         String selectSQL = "SELECT username, password FROM utenti";

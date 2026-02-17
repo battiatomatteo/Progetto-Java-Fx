@@ -188,69 +188,6 @@ public class PatientPageDao {
     }
 
     /**
-     * Metodo con lo scopo di controllare se non sono state inserite da 3 giorni delle somministrazioni
-     * @param filter Filtro da applicare
-     * @param user paziente
-     * @return boolean - valore booleano, true nel caso non ci sono somministrazioni, false altrimenti
-     */ //javadoc -d C:\javadoc\test com.test
-    public boolean messageSommDim(ChartFilter filter, String user) {
-        String sql = "SELECT data_rilevazione ,  count(data_rilevazione) FROM rilevazioni_giornaliere WHERE username = ? " + filter.getSqlView() + " GROUP BY data_rilevazione";
-
-        try(Connection conn = DBConnection.getConnection();
-            PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setString(1, user);
-            try (ResultSet rs = stmt.executeQuery()) {
-                int count = 0 ;
-                while (rs.next()) {
-                    String dataRilevazione = rs.getString("data_rilevazione");
-                    System.out.println("dataRilevazione " + dataRilevazione);
-
-                    if(dataRilevazione != null) count ++;
-                }
-                if(count != 0)
-                    return false ;
-                else
-                    return true;
-            }
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    /**
-     * Questo metodo ha lo scopo di controllare se un determinato messaggio è gia presente nel database
-     * @param content Corpo del Messaggio
-     * @param receiver Destinatario
-     * @param user Mittente
-     * @return boolean - Esito della valutazione
-     */
-    public boolean messDuplicato(String content, String receiver, String user) {
-        UIUtils.printMessage("entro nella funzione");
-        String sql = "SELECT content ,  count(content) FROM messages WHERE sender = ? AND receiver = ? AND content = ? GROUP BY content ";
-        try(Connection conn = DBConnection.getConnection();
-            PreparedStatement stmt = conn.prepareStatement(sql)) {
-
-            stmt.setString(1, user);
-            stmt.setString(2, receiver);
-            stmt.setString(3, content);
-            try (ResultSet rs = stmt.executeQuery()) {
-                // mettere if(rs.next())   return true  perchè basta che ne trova uno
-                while(rs.next()) {
-                    String contentDb = rs.getString("content");
-                    System.out.println(contentDb);
-                    if(contentDb.equals(content)){
-                        return true;
-                    }
-                }
-            }
-            return false;
-        } catch (Exception e) {
-            UIUtils.showAlert(Alert.AlertType.ERROR, "Errore", "Errore nel cercare il messaggio da confrontare .");
-            return false;
-        }
-    }
-
-    /**
      * Questo metodo ha lo scopo di salvare i sintomi inseriti dal paziente
      * @param nuovaNota - nota da salvare
      * @param username - username paziente
