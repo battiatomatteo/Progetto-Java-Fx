@@ -352,7 +352,7 @@ public class PatientPageController {
             System.out.println("operazione non riuscita");
         }
     }
-
+doc
     /**
      * Questo metodo ha lo scopo di mostrare a video il contenuto della tabella inserito dall'utente.
      */
