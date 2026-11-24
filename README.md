@@ -53,6 +53,8 @@ Il progetto utilizza:
 
 Le dipendenze vengono gestite tramite Maven.
 
+> **Nota:** il file `pom.xml` incluso nel repository è una configurazione Maven generica, creata successivamente per facilitare la gestione delle dipendenze e l'avvio del progetto. Non corrisponde necessariamente alla configurazione originale dell'ambiente di sviluppo. Potrebbe quindi essere necessario modificarlo o ricrearlo in base alla propria configurazione locale, alle versioni di Java e JavaFX e alle dipendenze effettivamente utilizzate.
+
 ## Avvio del progetto
 
 Dopo aver clonato il repository, posizionati nella cartella principale ed esegui:
