@@ -6,12 +6,9 @@ Applicazione per la gestione di pazienti e medici per il diabete, sviluppata con
 
 ## Requisiti
 
-- Java JDK (versione 11 o superiore consigliata)  
-- Maven o un IDE che supporti progetti JavaFX (IntelliJ IDEA, Eclipse, NetBeans…)  
-- Libreria JavaFX compatibile con la versione di Java  
-- SQLite (il DB è incluso, non serve installare separatamente SQLite server)  
-
----
+- Java JDK 19.
+- Maven.
+- Un IDE compatibile con Java, ad esempio IntelliJ IDEA, Eclipse o NetBeans.
 
 ## Come scaricare il progetto
 
@@ -20,43 +17,67 @@ Puoi ottenere il codice sorgente in due modi:
 ```bash
 git clone https://github.com/battiatomatteo/Progetto-Java-Fx.git
 ```
-oppure scaricare un archivio ZIP tramite l’interfaccia di GitHub e decomprimerlo.
 
-## Struttura del progetto 
-``` css
+Oppure scaricare un archivio ZIP tramite l'interfaccia di GitHub e decomprimerlo.
+
+## Struttura del progetto
+
+```text
 Progetto-Java-Fx/
 │
-├── lib/                  ← librerie esterne (jar) necessarie
-├── src/main/             ← codice fonte Java
-├── doc/                  ← documentazione
-├── relazione/            ← relazione progetto
-├── identifier.sqlite     ← database SQLite usato per il salvataggio dati
-├── miodatabase.db        ← eventualmente un altro file di database
-├── .idea/                ← file del progetto IDE (se usato IntelliJ, ecc.)
-├── README.md             ← questo file
-└── ProgettoJavaFX.iml    ← file di configurazione del progetto per IntelliJ
+├── src/
+│   ├── main/
+│   │   ├── java/          # Codice sorgente Java
+│   │   └── resources/     # FXML, CSS e risorse grafiche
+│   │
+│   └── Test/              # Test automatici
+│
+├── lib/                   # Librerie originali
+├── doc/                   # Documentazione Javadoc
+├── relazione/             # Relazione del progetto
+├── miodatabase.db         # Database SQLite utilizzato
+├── identifier.sqlite     # File SQLite aggiuntivo
+├── pom.xml                # Configurazione Maven
+└── README.md
 ```
 
 ## Librerie / dipendenze
 
-Nel progetto sono presenti:
+Il progetto utilizza:
 
-- JavaFX: usata per l’interfaccia grafica
-- SQLite JDBC: per la connessione al database SQLite
-- Altre librerie se presenti nella cartella lib/ (da verificare caso per caso)
+- JavaFX: interfaccia grafica.
+- SQLite JDBC: connessione al database.
+- BCrypt: gestione delle password.
+- OpenPDF: generazione di documenti PDF.
+- JUnit 5: test automatici.
 
-Assicurati che:
+Le dipendenze vengono gestite tramite Maven.
 
-- La cartella lib/ sia inclusa nel classpath quando esegui l’applicazione
-- Le versioni delle librerie siano compatibili con la versione di Java in uso
+## Avvio del progetto
 
+Dopo aver clonato il repository, posizionati nella cartella principale ed esegui:
+
+```bash
+mvn clean javafx:run
+```
+
+Per eseguire i test automatici:
+
+```bash
+mvn test
+```
 
 ## Database
 
-Il progetto include un file SQLite (identifier.sqlite oppure miodatabase.db) già popolato con le tabelle necessarie.
-Se vuoi resettare il database, puoi cancellare o rinominare questi file: verranno ricreati o potrai importare quelli di backup, se disponibili.
+Il progetto utilizza SQLite per la memorizzazione dei dati.
 
-Documentazione
+Il database utilizzato dall'applicazione è `miodatabase.db`.
 
-- Nella cartella doc/ trovi la documentazione di progetto.
-- Commenti nel codice: le classi e i metodi principali dovrebbero avere javadoc o commenti che spiegano cosa fanno.
+Il file `identifier.sqlite` è presente nel repository, ma non viene utilizzato dalla connessione applicativa attuale.
+
+## Documentazione
+
+- Nella cartella `doc/` trovi la documentazione Javadoc generata.
+- Nella cartella `relazione/` è presente la relazione del progetto.
+
+Per consultare la documentazione Javadoc, apri il file `doc/index.html` con un browser.
